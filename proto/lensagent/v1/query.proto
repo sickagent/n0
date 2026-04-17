@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package lensagent.v1;
+
+option go_package = "n0/proto/gen/go/lensagent/v1;lensagentv1";
+
+import "google/protobuf/struct.proto";
+
+message SubmitQueryRequest {
+  string tenant_id = 1;
+  string dataset_id = 2;
+  string connection_id = 3;
+  string sql = 4;
+  google.protobuf.Struct parameters = 5;
+}
+
+message SubmitQueryResponse {
+  string job_id = 1;
+  string status = 2;
+}
+
+message GetJobStatusRequest {
+  string job_id = 1;
+}
+
+message GetJobStatusResponse {
+  string job_id = 1;
+  string status = 2; // pending, running, success, failed, cancelled
+  string error_message = 3;
+}
+
+message GetJobResultRequest {
+  string job_id = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+}
+
+message GetJobResultResponse {
+  string job_id = 1;
+  repeated google.protobuf.Struct rows = 2;
+  string next_page_token = 3;
+  bool truncated = 4;
+}
+
+message SuggestChartConfigRequest {
+  string tenant_id = 1;
+  repeated google.protobuf.Struct sample_rows = 2;
+  string intent = 3;
+}
+
+message SuggestChartConfigResponse {
+  string chart_type = 1;
+  google.protobuf.Struct config = 2;
+}
+
+service QueryEngine {
+  rpc SubmitQuery(SubmitQueryRequest) returns (SubmitQueryResponse);
+  rpc GetJobStatus(GetJobStatusRequest) returns (GetJobStatusResponse);
+  rpc GetJobResult(GetJobResultRequest) returns (GetJobResultResponse);
+  rpc SuggestChartConfig(SuggestChartConfigRequest) returns (SuggestChartConfigResponse);
+}

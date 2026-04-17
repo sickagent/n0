@@ -1,0 +1,24 @@
+run:
+  timeout: 5m
+  skip-dirs:
+    - proto/gen
+
+linters:
+  enable:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    - gocritic
+    - gofmt
+    - goimports
+    - misspell
+    - revive
+    - unconvert
+
+issues:
+  exclude-use-default: false
+  max-issues-per-linter: 0
+  max-same-issues: 0

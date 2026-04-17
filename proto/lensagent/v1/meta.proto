@@ -1,0 +1,117 @@
+syntax = "proto3";
+
+package lensagent.v1;
+
+option go_package = "n0/proto/gen/go/lensagent/v1;lensagentv1";
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+import "lensagent/v1/common.proto";
+
+message Workspace {
+  string id = 1;
+  string tenant_id = 2;
+  string name = 3;
+  google.protobuf.Timestamp created_at = 4;
+}
+
+message Connection {
+  string id = 1;
+  string workspace_id = 2;
+  string tenant_id = 3;
+  string name = 4;
+  string adapter_type = 5;
+  google.protobuf.Struct params = 6;
+  google.protobuf.Timestamp created_at = 7;
+}
+
+message SchemaSnapshot {
+  string connection_id = 1;
+  repeated Table tables = 2;
+  google.protobuf.Timestamp captured_at = 3;
+}
+
+message GetSchemaRequest {
+  string connection_id = 1;
+  string tenant_id = 2;
+}
+
+message GetSchemaResponse {
+  SchemaSnapshot snapshot = 1;
+}
+
+message ListWorkspacesRequest {
+  string tenant_id = 1;
+  Pagination pagination = 2;
+}
+
+message ListWorkspacesResponse {
+  repeated Workspace workspaces = 1;
+  ListMeta meta = 2;
+}
+
+message CreateConnectionRequest {
+  string workspace_id = 1;
+  string tenant_id = 2;
+  string name = 3;
+  string adapter_type = 4;
+  google.protobuf.Struct params = 5;
+}
+
+message CreateConnectionResponse {
+  Connection connection = 1;
+}
+
+message GetConnectionRequest {
+  string connection_id = 1;
+  string tenant_id = 2;
+}
+
+message GetConnectionResponse {
+  Connection connection = 1;
+}
+
+message ListConnectionsRequest {
+  string tenant_id = 1;
+  string workspace_id = 2;
+  Pagination pagination = 3;
+}
+
+message ListConnectionsResponse {
+  repeated Connection connections = 1;
+  ListMeta meta = 2;
+}
+
+message DeleteConnectionRequest {
+  string connection_id = 1;
+  string tenant_id = 2;
+}
+
+message DeleteConnectionResponse {
+  bool deleted = 1;
+}
+
+message RegisterPluginRequest {
+  string plugin_type = 1; // DB_ADAPTER, AGENT_CAPABILITY, QUERY_TRANSFORMER, FORMATTER
+  string name = 2;
+  string version = 3;
+  string endpoint = 4;
+  string protocol = 5;
+  string tenant_id = 6;
+  bool global = 7;
+}
+
+message RegisterPluginResponse {
+  string plugin_id = 1;
+  string status = 2;
+}
+
+service MetaService {
+  rpc GetSchema(GetSchemaRequest) returns (GetSchemaResponse);
+  rpc ListWorkspaces(ListWorkspacesRequest) returns (ListWorkspacesResponse);
+  rpc CreateConnection(CreateConnectionRequest) returns (CreateConnectionResponse);
+  rpc GetConnection(GetConnectionRequest) returns (GetConnectionResponse);
+  rpc ListConnections(ListConnectionsRequest) returns (ListConnectionsResponse);
+  rpc DeleteConnection(DeleteConnectionRequest) returns (DeleteConnectionResponse);
+  rpc RegisterPlugin(RegisterPluginRequest) returns (RegisterPluginResponse);
+}

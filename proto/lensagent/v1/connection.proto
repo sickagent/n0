@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package lensagent.v1;
+
+option go_package = "n0/proto/gen/go/lensagent/v1;lensagentv1";
+
+import "google/protobuf/struct.proto";
+import "lensagent/v1/common.proto";
+
+message TestConnectionRequest {
+  string adapter_type = 1;
+  google.protobuf.Struct params = 2;
+}
+
+message TestConnectionResponse {
+  bool ok = 1;
+  string error_message = 2;
+  int64 latency_ms = 3;
+}
+
+message GetPoolHealthRequest {
+  string connection_id = 1;
+}
+
+message GetPoolHealthResponse {
+  bool healthy = 1;
+  int32 active_connections = 2;
+  int32 idle_connections = 3;
+}
+
+message ExecuteQueryRequest {
+  string connection_id = 1;
+  string sql = 2;
+  int32 limit = 3;
+  int32 timeout_seconds = 4;
+  string adapter_type = 5;
+  google.protobuf.Struct params = 6;
+}
+
+message Row {
+  repeated google.protobuf.Value values = 1;
+}
+
+message ExecuteQueryResponse {
+  repeated string columns = 1;
+  repeated Row rows = 2;
+  int64 row_count = 3;
+  bool truncated = 4;
+}
+
+message GetConnectionSchemaRequest {
+  string connection_id = 1;
+  string adapter_type = 2;
+  google.protobuf.Struct params = 3;
+}
+
+message GetConnectionSchemaResponse {
+  repeated Table tables = 1;
+}
+
+service ConnectionManager {
+  rpc TestConnection(TestConnectionRequest) returns (TestConnectionResponse);
+  rpc GetPoolHealth(GetPoolHealthRequest) returns (GetPoolHealthResponse);
+  rpc ExecuteQuery(ExecuteQueryRequest) returns (ExecuteQueryResponse);
+  rpc GetSchema(GetConnectionSchemaRequest) returns (GetConnectionSchemaResponse);
+}

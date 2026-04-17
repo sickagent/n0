@@ -1,0 +1,104 @@
+syntax = "proto3";
+
+package lensagent.v1;
+
+option go_package = "n0/proto/gen/go/lensagent/v1;lensagentv1";
+
+import "google/protobuf/struct.proto";
+import "lensagent/v1/common.proto";
+import "lensagent/v1/connection.proto";
+
+// Database Adapter Plugin
+message GetAdapterInfoRequest {}
+
+message GetAdapterInfoResponse {
+  string name = 1;
+  string version = 2;
+  string author = 3;
+  repeated string supported_features = 4;
+}
+
+message AdapterTestConnectionRequest {
+  google.protobuf.Struct params = 1;
+}
+
+message AdapterTestConnectionResponse {
+  bool ok = 1;
+  string error_message = 2;
+}
+
+message AdapterGetSchemaRequest {
+  google.protobuf.Struct params = 1;
+  google.protobuf.Struct options = 2;
+}
+
+message AdapterGetSchemaResponse {
+  repeated Table tables = 1;
+}
+
+message AdapterExecuteQueryRequest {
+  google.protobuf.Struct params = 1;
+  string query = 2;
+  google.protobuf.Struct options = 3;
+}
+
+message AdapterExecuteQueryResponse {
+  repeated string columns = 1;
+  repeated Row rows = 2;
+  int64 row_count = 3;
+  bool truncated = 4;
+}
+
+message DialectCapability {
+  string function_name = 1;
+  bool supported = 2;
+  string notes = 3;
+}
+
+message GetDialectCapabilitiesRequest {}
+
+message GetDialectCapabilitiesResponse {
+  repeated DialectCapability capabilities = 1;
+  repeated string supported_types = 2;
+}
+
+service DatabaseAdapter {
+  rpc GetAdapterInfo(GetAdapterInfoRequest) returns (GetAdapterInfoResponse);
+  rpc TestConnection(AdapterTestConnectionRequest) returns (AdapterTestConnectionResponse);
+  rpc GetSchema(AdapterGetSchemaRequest) returns (AdapterGetSchemaResponse);
+  rpc ExecuteQuery(AdapterExecuteQueryRequest) returns (AdapterExecuteQueryResponse);
+  rpc GetDialectCapabilities(GetDialectCapabilitiesRequest) returns (GetDialectCapabilitiesResponse);
+}
+
+// Agent Capability Plugin
+message Capability {
+  string name = 1;
+  string description = 2;
+  google.protobuf.Struct input_schema = 3;
+  google.protobuf.Struct output_schema = 4;
+}
+
+message ListCapabilitiesRequest {
+  string tenant_id = 1;
+}
+
+message ListCapabilitiesResponse {
+  repeated Capability capabilities = 1;
+}
+
+message InvokeCapabilityRequest {
+  string tenant_id = 1;
+  string capability_name = 2;
+  google.protobuf.Struct input = 3;
+}
+
+message InvokeCapabilityResponse {
+  google.protobuf.Struct output = 1;
+  bool success = 2;
+  string error_message = 3;
+}
+
+service AgentCapability {
+  rpc ListCapabilities(ListCapabilitiesRequest) returns (ListCapabilitiesResponse);
+  rpc InvokeCapability(InvokeCapabilityRequest) returns (InvokeCapabilityResponse);
+}

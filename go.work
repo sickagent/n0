@@ -1,0 +1,10 @@
+go 1.26
+
+use (
+	./pkg/shared
+	./proto/gen/go
+	./services/agent-gateway
+	./services/connection-manager
+	./services/meta-service
+	./services/query-engine
+)

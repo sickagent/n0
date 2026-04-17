@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package lensagent.v1;
+
+option go_package = "n0/proto/gen/go/lensagent/v1;lensagentv1";
+
+message Empty {}
+
+message Pagination {
+  int32 limit = 1;
+  int32 offset = 2;
+}
+
+message ListMeta {
+  int32 total = 1;
+  int32 limit = 2;
+  int32 offset = 3;
+}
+
+message Column {
+  string name = 1;
+  string data_type = 2;
+  bool nullable = 3;
+}
+
+message Table {
+  string name = 1;
+  repeated Column columns = 2;
+}
