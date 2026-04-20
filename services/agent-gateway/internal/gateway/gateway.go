@@ -32,6 +32,8 @@ type MetaClient interface {
 // QueryClient defines the subset of QueryEngine client used by the gateway.
 type QueryClient interface {
 	SubmitQuery(ctx context.Context, req *pb.SubmitQueryRequest) (*pb.SubmitQueryResponse, error)
+	GetJobStatus(ctx context.Context, req *pb.GetJobStatusRequest) (*pb.GetJobStatusResponse, error)
+	GetJobResult(ctx context.Context, req *pb.GetJobResultRequest) (*pb.GetJobResultResponse, error)
 }
 
 // CMClient defines the subset of ConnectionManager client used by the gateway.
@@ -137,6 +139,8 @@ func (s *Server) handler() http.Handler {
 
 		r.Get("/v1/schema", s.handleGetSchema)
 		r.Get("/v1/query", s.handleSubmitQuery)
+		r.Get("/v1/query/status", s.handleGetJobStatus)
+		r.Get("/v1/query/result", s.handleGetJobResult)
 		r.Post("/v1/test-connection", s.handleTestConnection)
 		r.Post("/v1/execute-query", s.handleExecuteQuery)
 		r.Post("/v1/schema", s.handleGetConnectionSchema)
@@ -304,6 +308,36 @@ func (s *Server) handleSubmitQuery(w http.ResponseWriter, r *http.Request) {
 		Sql:          r.URL.Query().Get("sql"),
 	}
 	resp, err := s.queryCli.SubmitQuery(ctx, req)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	_ = json.NewEncoder(w).Encode(resp)
+}
+
+func (s *Server) handleGetJobStatus(w http.ResponseWriter, r *http.Request) {
+	resp, err := s.queryCli.GetJobStatus(r.Context(), &pb.GetJobStatusRequest{
+		JobId: r.URL.Query().Get("job_id"),
+	})
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	_ = json.NewEncoder(w).Encode(resp)
+}
+
+func (s *Server) handleGetJobResult(w http.ResponseWriter, r *http.Request) {
+	page, _ := strconv.Atoi(r.URL.Query().Get("page"))
+	pageSize, _ := strconv.Atoi(r.URL.Query().Get("page_size"))
+	resp, err := s.queryCli.GetJobResult(r.Context(), &pb.GetJobResultRequest{
+		JobId:    r.URL.Query().Get("job_id"),
+		Page:     int32(page),
+		PageSize: int32(pageSize),
+	})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

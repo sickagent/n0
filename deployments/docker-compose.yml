@@ -101,7 +101,9 @@ services:
       APP_NAME: meta-service
       LOG_LEVEL: info
       GRPC_ADDR: :8080
+      GRPC_ADVERTISE_ADDR: meta-service:8080
       HTTP_ADDR: :8081
+      CONNECTION_MANAGER_ADDR: connection-manager:8080
     ports:
       - "8080:8080"
       - "8085:8081"
@@ -126,6 +128,7 @@ services:
       APP_NAME: connection-manager
       LOG_LEVEL: info
       GRPC_ADDR: :8080
+      GRPC_ADVERTISE_ADDR: connection-manager:8080
       HTTP_ADDR: :8082
     ports:
       - "8081:8080"
@@ -155,8 +158,11 @@ services:
       APP_NAME: query-engine
       LOG_LEVEL: info
       GRPC_ADDR: :8080
+      GRPC_ADVERTISE_ADDR: query-engine:8080
       HTTP_ADDR: :8082
       WORKER_COUNT: "4"
+      META_SERVICE_ADDR: meta-service:8080
+      CONNECTION_MANAGER_ADDR: connection-manager:8080
     ports:
       - "8082:8080"
       - "8087:8082"
@@ -182,6 +188,9 @@ services:
       LOG_LEVEL: info
       GRPC_ADDR: :8080
       HTTP_ADDR: :8081
+      META_SERVICE_ADDR: meta-service:8080
+      QUERY_ENGINE_ADDR: query-engine:8080
+      CONNECTION_MANAGER_ADDR: connection-manager:8080
     ports:
       - "8083:8081"
       - "8084:8080"

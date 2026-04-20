@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 	"n0/pkg/shared/config"
+	"n0/pkg/shared/discovery"
 	"n0/pkg/shared/graceful"
 	"n0/pkg/shared/logger"
 	"n0/pkg/shared/natsclient"
@@ -17,9 +18,10 @@ import (
 
 type Config struct {
 	config.BaseConfig
-	GRPCAddr  string `mapstructure:"grpc_addr"`
-	HTTPAddr  string `mapstructure:"http_addr"`
-	VaultAddr string `mapstructure:"vault_addr"`
+	GRPCAddr          string `mapstructure:"grpc_addr"`
+	GRPCAdvertiseAddr string `mapstructure:"grpc_advertise_addr"`
+	HTTPAddr          string `mapstructure:"http_addr"`
+	VaultAddr         string `mapstructure:"vault_addr"`
 }
 
 func main() {
@@ -59,6 +61,12 @@ func main() {
 			}
 			defer grpcSrv.GracefulStop()
 
+			discoverySub, err := discovery.RegisterGRPCResponder(nc, "connection-manager", cfg.GRPCAddr, cfg.GRPCAdvertiseAddr, log)
+			if err != nil {
+				log.Fatal("grpc discovery register failed", zap.Error(err))
+			}
+			defer discoverySub.Unsubscribe()
+
 			httpSrv := server.NewHTTPServer(cfg.HTTPAddr, log, reg)
 			go func() {
 				if err := httpSrv.Start(ctx); err != nil {
@@ -78,6 +86,7 @@ func main() {
 	cmd.Flags().String("log_level", "info", "log level")
 	cmd.Flags().String("nats_url", "nats://localhost:4222", "NATS URL")
 	cmd.Flags().String("grpc_addr", ":8080", "gRPC listen address")
+	cmd.Flags().String("grpc_advertise_addr", "", "advertised gRPC address for discovery")
 	cmd.Flags().String("http_addr", ":8082", "HTTP listen address")
 	cmd.Flags().String("vault_addr", "http://localhost:8200", "Vault address")
 

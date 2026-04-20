@@ -23,7 +23,8 @@ import {
   IconUser,
   IconLogout,
 } from '@tabler/icons-react';
-import { Link, useLocation, Outlet } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../auth/AuthContext';
 
 const navItems = [
   { label: 'Dashboard', path: '/', icon: IconLayoutDashboard },
@@ -38,6 +39,8 @@ export function AppLayout() {
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const location = useLocation();
+  const navigate = useNavigate();
+  const { session, logout } = useAuth();
 
   const links = navItems.map((item) => (
     <NavLink
@@ -91,8 +94,16 @@ export function AppLayout() {
                 </ActionIcon>
               </Menu.Target>
               <Menu.Dropdown>
-                <Menu.Label>Admin User</Menu.Label>
-                <Menu.Item leftSection={<IconLogout size={14} />}>Logout</Menu.Item>
+                <Menu.Label>{session?.email || 'Signed in'}</Menu.Label>
+                <Menu.Item
+                  leftSection={<IconLogout size={14} />}
+                  onClick={() => {
+                    logout();
+                    navigate('/auth', { replace: true });
+                  }}
+                >
+                  Logout
+                </Menu.Item>
               </Menu.Dropdown>
             </Menu>
           </Group>

@@ -7,11 +7,12 @@ import (
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 	"n0/pkg/shared/config"
+	"n0/pkg/shared/crypto"
+	"n0/pkg/shared/discovery"
 	"n0/pkg/shared/graceful"
 	"n0/pkg/shared/logger"
 	"n0/pkg/shared/natsclient"
 	"n0/pkg/shared/observability"
-	"n0/pkg/shared/crypto"
 	"n0/services/meta-service/internal/app"
 	"n0/services/meta-service/internal/client"
 	"n0/services/meta-service/internal/repository"
@@ -22,6 +23,7 @@ type Config struct {
 	config.BaseConfig
 	HTTPAddr              string `mapstructure:"http_addr"`
 	GRPCAddr              string `mapstructure:"grpc_addr"`
+	GRPCAdvertiseAddr     string `mapstructure:"grpc_advertise_addr"`
 	PostgresDSN           string `mapstructure:"postgres_dsn"`
 	ConnectionManagerAddr string `mapstructure:"connection_manager_addr"`
 	EncryptionKey         string `mapstructure:"encryption_key"`
@@ -64,7 +66,7 @@ func main() {
 			}
 			defer repo.Close()
 
-			cmCli, err := client.NewCMClient(cfg.ConnectionManagerAddr)
+			cmCli, err := client.NewCMClient(ctx, nc, cfg.ConnectionManagerAddr)
 			if err != nil {
 				log.Fatal("cm client init failed", zap.Error(err))
 			}
@@ -86,6 +88,12 @@ func main() {
 			}
 			defer grpcSrv.GracefulStop()
 
+			discoverySub, err := discovery.RegisterGRPCResponder(nc, "meta-service", cfg.GRPCAddr, cfg.GRPCAdvertiseAddr, log)
+			if err != nil {
+				log.Fatal("grpc discovery register failed", zap.Error(err))
+			}
+			defer discoverySub.Unsubscribe()
+
 			grpcHandler := server.NewGRPCServer(metaSvc)
 			httpSrv := server.NewHTTPServer(cfg.HTTPAddr, log, grpcHandler, metaSvc)
 			go func() {
@@ -105,6 +113,7 @@ func main() {
 	cmd.Flags().String("log_level", "info", "log level")
 	cmd.Flags().String("nats_url", "nats://localhost:4222", "NATS URL")
 	cmd.Flags().String("grpc_addr", ":8080", "gRPC listen address")
+	cmd.Flags().String("grpc_advertise_addr", "", "advertised gRPC address for discovery")
 	cmd.Flags().String("http_addr", ":8081", "HTTP listen address")
 	cmd.Flags().String("postgres_dsn", "postgres://postgres:postgres@localhost:5432/meta?sslmode=disable", "Postgres DSN")
 	cmd.Flags().String("connection_manager_addr", "localhost:8081", "Connection Manager gRPC address")

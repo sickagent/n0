@@ -10,6 +10,7 @@ import (
 	"n0/pkg/shared/graceful"
 	"n0/pkg/shared/jwt"
 	"n0/pkg/shared/logger"
+	"n0/pkg/shared/natsclient"
 	"n0/pkg/shared/observability"
 	"n0/services/agent-gateway/internal/client"
 	"n0/services/agent-gateway/internal/gateway"
@@ -42,19 +43,25 @@ func main() {
 			ctx, cancel := graceful.ContextWithShutdown(30 * time.Second)
 			defer cancel()
 
-			metaCli, err := client.NewMetaClient(cfg.MetaServiceAddr)
+			nc, err := natsclient.New(cfg.NATSURL, 5*time.Second, log)
+			if err != nil {
+				log.Fatal("nats connect failed", zap.Error(err))
+			}
+			defer nc.Close()
+
+			metaCli, err := client.NewMetaClient(ctx, nc, cfg.MetaServiceAddr)
 			if err != nil {
 				log.Fatal("meta client init failed", zap.Error(err))
 			}
 			defer metaCli.Close()
 
-			queryCli, err := client.NewQueryEngineClient(cfg.QueryEngineAddr)
+			queryCli, err := client.NewQueryEngineClient(ctx, nc, cfg.QueryEngineAddr)
 			if err != nil {
 				log.Fatal("query engine client init failed", zap.Error(err))
 			}
 			defer queryCli.Close()
 
-			cmCli, err := client.NewConnectionManagerClient(cfg.ConnectionManagerAddr)
+			cmCli, err := client.NewConnectionManagerClient(ctx, nc, cfg.ConnectionManagerAddr)
 			if err != nil {
 				log.Fatal("connection manager client init failed", zap.Error(err))
 			}

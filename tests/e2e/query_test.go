@@ -8,9 +8,9 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestQuery_Submit(t *testing.T) {
+func TestQuery_SubmitLifecycle(t *testing.T) {
 	WaitForService(t, GatewayBaseURL+"/health")
-	client := NewHTTPClient(GatewayBaseURL)
+	client := NewGatewayClient(t)
 
 	// Fetch workspace
 	var wsRes struct {
@@ -56,5 +56,30 @@ func TestQuery_Submit(t *testing.T) {
 	err = client.JSON("GET", fmt.Sprintf("/v1/query?tenant_id=default&connection_id=%s&sql=SELECT+1", connID), nil, &res)
 	require.NoError(t, err, "submit query should succeed")
 	require.NotEmpty(t, res.JobID, "job_id should be returned")
-	require.NotEmpty(t, res.Status, "status should be returned")
+	require.Equal(t, "pending", res.Status, "new jobs should start in pending status")
+
+	var statusRes struct {
+		JobID        string `json:"job_id"`
+		Status       string `json:"status"`
+		ErrorMessage string `json:"error_message"`
+	}
+	require.Eventually(t, func() bool {
+		err = client.JSON("GET", fmt.Sprintf("/v1/query/status?job_id=%s", res.JobID), nil, &statusRes)
+		require.NoError(t, err)
+		return statusRes.Status == "success" || statusRes.Status == "failed"
+	}, 15*time.Second, 250*time.Millisecond, "job should reach terminal state")
+
+	require.Equal(t, "success", statusRes.Status, "query should complete successfully, error: %s", statusRes.ErrorMessage)
+
+	var resultRes struct {
+		JobID         string           `json:"job_id"`
+		Rows          []map[string]any `json:"rows"`
+		NextPageToken string           `json:"next_page_token"`
+		Truncated     bool             `json:"truncated"`
+	}
+	err = client.JSON("GET", fmt.Sprintf("/v1/query/result?job_id=%s&page=1&page_size=10", res.JobID), nil, &resultRes)
+	require.NoError(t, err, "get job result should succeed")
+	require.Equal(t, res.JobID, resultRes.JobID)
+	require.NotEmpty(t, resultRes.Rows, "result rows should be returned")
+	require.Equal(t, "1", fmt.Sprint(resultRes.Rows[0]["?column?"]), "SELECT 1 should return 1")
 }

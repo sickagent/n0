@@ -8,8 +8,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	pb "n0/proto/gen/go/lensagent/v1"
 	"go.uber.org/zap"
+	pb "n0/proto/gen/go/lensagent/v1"
 )
 
 type fakeMetaClient struct {
@@ -64,6 +64,14 @@ func (c *fakeQueryClient) SubmitQuery(ctx context.Context, req *pb.SubmitQueryRe
 		return nil, c.submitErr
 	}
 	return c.submitResp, nil
+}
+
+func (c *fakeQueryClient) GetJobStatus(ctx context.Context, req *pb.GetJobStatusRequest) (*pb.GetJobStatusResponse, error) {
+	return &pb.GetJobStatusResponse{JobId: req.JobId, Status: "pending"}, nil
+}
+
+func (c *fakeQueryClient) GetJobResult(ctx context.Context, req *pb.GetJobResultRequest) (*pb.GetJobResultResponse, error) {
+	return &pb.GetJobResultResponse{JobId: req.JobId}, nil
 }
 
 func (c *fakeQueryClient) Close() error { return nil }

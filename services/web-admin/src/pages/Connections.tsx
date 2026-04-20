@@ -23,12 +23,11 @@ import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import { IconTrash, IconEye, IconRefresh, IconPlug, IconPlus } from '@tabler/icons-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useAuth } from '../auth/AuthContext';
 import { connectionsApi } from '../api/connections';
 import { workspacesApi } from '../api/workspaces';
 import type { Connection, TableInfo } from '../types';
-
-const tenantId = 'default';
 
 const adapterOptions = [
   { value: 'postgres', label: 'PostgreSQL' },
@@ -49,6 +48,8 @@ const defaultParamsByAdapter: Record<string, Record<string, any>> = {
 };
 
 export function Connections() {
+  const { session } = useAuth();
+  const tenantId = session?.user_id || '';
   const queryClient = useQueryClient();
   const [createOpened, { open: openCreate, close: closeCreate }] = useDisclosure(false);
   const [schemaOpened, { open: openSchema, close: closeSchema }] = useDisclosure(false);
@@ -63,16 +64,18 @@ export function Connections() {
   const { data: workspacesData } = useQuery({
     queryKey: ['workspaces', tenantId],
     queryFn: () => workspacesApi.list(tenantId),
+    enabled: !!tenantId,
   });
 
   const workspaces = workspacesData?.workspaces || [];
   const defaultWorkspace = workspaces.find((w) => w.name === 'Default Workspace') || workspaces[0];
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string>(defaultWorkspace?.id || '');
 
-  // Sync selected workspace when workspaces load
-  if (defaultWorkspace && !selectedWorkspaceId) {
-    setSelectedWorkspaceId(defaultWorkspace.id);
-  }
+  useEffect(() => {
+    if (defaultWorkspace && !selectedWorkspaceId) {
+      setSelectedWorkspaceId(defaultWorkspace.id);
+    }
+  }, [defaultWorkspace, selectedWorkspaceId]);
 
   const workspaceId = selectedWorkspaceId || defaultWorkspace?.id || '';
 

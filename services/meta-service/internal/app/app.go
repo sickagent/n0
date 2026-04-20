@@ -2,6 +2,8 @@ package app
 
 import (
 	"context"
+	"crypto/rand"
+	"encoding/base64"
 	"fmt"
 	"time"
 
@@ -24,9 +26,10 @@ type Repository interface {
 	RegisterPlugin(ctx context.Context, p PluginDefinition) (uuid.UUID, error)
 
 	// Auth / Users
-	CreateUser(ctx context.Context, email, passwordHash, role string) (uuid.UUID, error)
+	CreateUser(ctx context.Context, email, passwordHash, passwordSalt, role string) (uuid.UUID, error)
 	GetUserByEmail(ctx context.Context, email string) (*User, error)
 	GetUserByID(ctx context.Context, id string) (*User, error)
+	CreateWorkspace(ctx context.Context, userID, tenantID, name string) (uuid.UUID, error)
 
 	// Agents
 	CreateAgent(ctx context.Context, userID uuid.UUID, name string) (uuid.UUID, error)
@@ -93,6 +96,7 @@ type User struct {
 	ID           uuid.UUID
 	Email        string
 	PasswordHash string
+	PasswordSalt string
 	Role         string
 	CreatedAt    time.Time
 }
@@ -279,11 +283,22 @@ func (s *MetaService) RegisterUser(ctx context.Context, email, password, role st
 	if role == "" {
 		role = "user"
 	}
-	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	salt, err := generatePasswordSalt()
+	if err != nil {
+		return uuid.Nil, fmt.Errorf("generate password salt: %w", err)
+	}
+	hash, err := bcrypt.GenerateFromPassword([]byte(hashPasswordInput(password, salt)), bcrypt.DefaultCost)
 	if err != nil {
 		return uuid.Nil, fmt.Errorf("hash password: %w", err)
 	}
-	return s.repo.CreateUser(ctx, email, string(hash), role)
+	id, err := s.repo.CreateUser(ctx, email, string(hash), salt, role)
+	if err != nil {
+		return uuid.Nil, err
+	}
+	if _, err := s.repo.CreateWorkspace(ctx, id.String(), id.String(), "Default Workspace"); err != nil {
+		return uuid.Nil, fmt.Errorf("create default workspace: %w", err)
+	}
+	return id, nil
 }
 
 // LoginUser validates credentials and returns the user.
@@ -295,10 +310,25 @@ func (s *MetaService) LoginUser(ctx context.Context, email, password string) (*U
 	if u == nil {
 		return nil, fmt.Errorf("invalid credentials")
 	}
-	if err := bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(password)); err != nil {
+	if err := bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(hashPasswordInput(password, u.PasswordSalt))); err != nil {
 		return nil, fmt.Errorf("invalid credentials")
 	}
 	return u, nil
+}
+
+func generatePasswordSalt() (string, error) {
+	buf := make([]byte, 16)
+	if _, err := rand.Read(buf); err != nil {
+		return "", err
+	}
+	return base64.RawURLEncoding.EncodeToString(buf), nil
+}
+
+func hashPasswordInput(password, salt string) string {
+	if salt == "" {
+		return password
+	}
+	return password + ":" + salt
 }
 
 // CreateAgent registers a new agent for a user.

@@ -1,14 +1,16 @@
 import { Title, Paper, Table, Text, Loader, Group, ScrollArea, Badge } from '@mantine/core';
 import { IconBuilding } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
+import { useAuth } from '../auth/AuthContext';
 import { workspacesApi } from '../api/workspaces';
 
-const tenantId = 'default';
-
 export function Workspaces() {
+  const { session } = useAuth();
+  const tenantId = session?.user_id || '';
   const { data, isLoading } = useQuery({
     queryKey: ['workspaces', tenantId],
     queryFn: () => workspacesApi.list(tenantId),
+    enabled: !!tenantId,
   });
 
   const rows = (data?.workspaces || []).map((ws) => (

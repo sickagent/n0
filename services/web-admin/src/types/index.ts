@@ -33,6 +33,22 @@ export interface Workspace {
   created_at: string;
 }
 
+export interface AuthSession {
+  user_id: string;
+  email: string;
+  role: string;
+  token: string;
+}
+
+export interface LoginPayload {
+  email: string;
+  password: string;
+}
+
+export interface RegisterPayload extends LoginPayload {
+  role?: string;
+}
+
 export interface TableInfo {
   name: string;
   columns: ColumnInfo[];

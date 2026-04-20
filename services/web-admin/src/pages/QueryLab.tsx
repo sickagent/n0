@@ -3,14 +3,16 @@ import { notifications } from '@mantine/notifications';
 import { IconPlayerPlay } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useAuth } from '../auth/AuthContext';
 import { connectionsApi } from '../api/connections';
 
-const tenantId = 'default';
-
 export function QueryLab() {
+  const { session } = useAuth();
+  const tenantId = session?.user_id || '';
   const { data: connectionsData } = useQuery({
     queryKey: ['connections', tenantId],
     queryFn: () => connectionsApi.list(tenantId),
+    enabled: !!tenantId,
   });
 
   const [selectedId, setSelectedId] = useState<string | null>(null);

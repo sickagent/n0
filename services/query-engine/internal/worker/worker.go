@@ -2,6 +2,7 @@ package worker
 
 import (
 	"context"
+	"encoding/json"
 	"sync"
 	"time"
 
@@ -11,10 +12,10 @@ import (
 
 // Job represents an analytical query job.
 type Job struct {
-	ID           string
-	TenantID     string
-	ConnectionID string
-	SQL          string
+	ID           string `json:"id"`
+	TenantID     string `json:"tenant_id"`
+	ConnectionID string `json:"connection_id"`
+	SQL          string `json:"sql"`
 }
 
 // Processor handles the actual execution of a job.
@@ -82,7 +83,12 @@ func (p *Pool) run(ctx context.Context, id int) {
 		}
 
 		for msg := range msgs.Messages() {
-			job := Job{ID: string(msg.Data())}
+			var job Job
+			if err := json.Unmarshal(msg.Data(), &job); err != nil {
+				p.log.Error("invalid job payload", zap.Int("worker_id", id), zap.Error(err))
+				_ = msg.NakWithDelay(5 * time.Second)
+				continue
+			}
 			if err := p.processor.Process(ctx, job); err != nil {
 				p.log.Error("job processing failed", zap.Int("worker_id", id), zap.Error(err))
 				_ = msg.NakWithDelay(5 * time.Second)

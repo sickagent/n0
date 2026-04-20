@@ -1,10 +1,9 @@
 import { Grid, Paper, Text, Group, ThemeIcon, Title, Skeleton } from '@mantine/core';
 import { IconDatabase, IconPlug, IconBuilding, IconChartBar } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
+import { useAuth } from '../auth/AuthContext';
 import { connectionsApi } from '../api/connections';
 import { workspacesApi } from '../api/workspaces';
-
-const tenantId = 'default';
 
 function StatCard({
   title,
@@ -41,14 +40,19 @@ function StatCard({
 }
 
 export function Dashboard() {
+  const { session } = useAuth();
+  const tenantId = session?.user_id || '';
+
   const { data: connectionsData, isLoading: connectionsLoading } = useQuery({
     queryKey: ['connections', tenantId],
     queryFn: () => connectionsApi.list(tenantId),
+    enabled: !!tenantId,
   });
 
   const { data: workspacesData, isLoading: workspacesLoading } = useQuery({
     queryKey: ['workspaces', tenantId],
     queryFn: () => workspacesApi.list(tenantId),
+    enabled: !!tenantId,
   });
 
   return (

@@ -6,6 +6,8 @@ import (
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"n0/pkg/shared/discovery"
+	"n0/pkg/shared/natsclient"
 	pb "n0/proto/gen/go/lensagent/v1"
 )
 
@@ -16,10 +18,15 @@ type ConnectionManagerClient struct {
 }
 
 // NewConnectionManagerClient creates a new ConnectionManager client.
-func NewConnectionManagerClient(addr string) (*ConnectionManagerClient, error) {
-	conn, err := grpc.NewClient(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+func NewConnectionManagerClient(ctx context.Context, nc *natsclient.Client, addr string) (*ConnectionManagerClient, error) {
+	target, err := discovery.ResolveGRPCAddr(ctx, nc, "connection-manager", addr)
 	if err != nil {
-		return nil, fmt.Errorf("dial connection-manager: %w", err)
+		return nil, err
+	}
+
+	conn, err := grpc.NewClient(target, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		return nil, fmt.Errorf("dial connection-manager at %s: %w", target, err)
 	}
 	return &ConnectionManagerClient{
 		conn:   conn,

@@ -10,7 +10,7 @@ import (
 
 func TestAdmin_Workspaces(t *testing.T) {
 	WaitForService(t, GatewayBaseURL+"/health")
-	client := NewHTTPClient(GatewayBaseURL)
+	client := NewGatewayClient(t)
 
 	var res struct {
 		Workspaces []Workspace `json:"workspaces"`
@@ -33,7 +33,7 @@ func TestAdmin_Workspaces(t *testing.T) {
 
 func TestAdmin_Connections_CRUD(t *testing.T) {
 	WaitForService(t, GatewayBaseURL+"/health")
-	client := NewHTTPClient(GatewayBaseURL)
+	client := NewGatewayClient(t)
 
 	// Fetch a valid workspace
 	var wsRes struct {
@@ -110,7 +110,7 @@ func TestAdmin_Connections_CRUD(t *testing.T) {
 
 func TestAdmin_Plugins_Register(t *testing.T) {
 	WaitForService(t, GatewayBaseURL+"/health")
-	client := NewHTTPClient(GatewayBaseURL)
+	client := NewGatewayClient(t)
 
 	payload := map[string]any{
 		"plugin_type": "adapter",

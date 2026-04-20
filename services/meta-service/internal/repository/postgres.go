@@ -54,6 +54,27 @@ func (r *PostgresRepository) ListWorkspaces(ctx context.Context, userID string, 
 	return out, nil
 }
 
+// CreateWorkspace inserts a workspace for a user.
+func (r *PostgresRepository) CreateWorkspace(ctx context.Context, userID, tenantID, name string) (uuid.UUID, error) {
+	const q = `
+		INSERT INTO workspaces (tenant_id, user_id, name)
+		VALUES ($1, $2, $3)
+		RETURNING id
+	`
+	uid, err := uuid.Parse(userID)
+	if err != nil {
+		return uuid.Nil, fmt.Errorf("parse user_id: %w", err)
+	}
+	var id uuid.UUID
+	if err := r.pool.QueryRow(ctx, q, tenantID, uid, name).Scan(&id); err != nil {
+		if pgErr, ok := err.(*pgconn.PgError); ok && pgErr.Code == "23505" {
+			return uuid.Nil, fmt.Errorf("workspace already exists")
+		}
+		return uuid.Nil, fmt.Errorf("insert workspace: %w", err)
+	}
+	return id, nil
+}
+
 // GetSchemaSnapshot returns the latest schema snapshot for a connection.
 func (r *PostgresRepository) GetSchemaSnapshot(ctx context.Context, connectionID string) (*app.SchemaSnapshot, error) {
 	const q = `SELECT tables, captured_at FROM schema_snapshots WHERE connection_id = $1 ORDER BY captured_at DESC LIMIT 1`
@@ -205,10 +226,10 @@ func (r *PostgresRepository) RegisterPlugin(ctx context.Context, p app.PluginDef
 }
 
 // CreateUser inserts a new user.
-func (r *PostgresRepository) CreateUser(ctx context.Context, email, passwordHash, role string) (uuid.UUID, error) {
-	const q = `INSERT INTO users (email, password_hash, role) VALUES ($1, $2, $3) RETURNING id`
+func (r *PostgresRepository) CreateUser(ctx context.Context, email, passwordHash, passwordSalt, role string) (uuid.UUID, error) {
+	const q = `INSERT INTO users (email, password_hash, password_salt, role) VALUES ($1, $2, $3, $4) RETURNING id`
 	var id uuid.UUID
-	if err := r.pool.QueryRow(ctx, q, email, passwordHash, role).Scan(&id); err != nil {
+	if err := r.pool.QueryRow(ctx, q, email, passwordHash, passwordSalt, role).Scan(&id); err != nil {
 		if pgErr, ok := err.(*pgconn.PgError); ok && pgErr.Code == "23505" {
 			return uuid.Nil, fmt.Errorf("user already exists")
 		}
@@ -219,9 +240,9 @@ func (r *PostgresRepository) CreateUser(ctx context.Context, email, passwordHash
 
 // GetUserByEmail fetches a user by email.
 func (r *PostgresRepository) GetUserByEmail(ctx context.Context, email string) (*app.User, error) {
-	const q = `SELECT id, email, password_hash, role, created_at FROM users WHERE email = $1`
+	const q = `SELECT id, email, password_hash, password_salt, role, created_at FROM users WHERE email = $1`
 	var u app.User
-	if err := r.pool.QueryRow(ctx, q, email).Scan(&u.ID, &u.Email, &u.PasswordHash, &u.Role, &u.CreatedAt); err != nil {
+	if err := r.pool.QueryRow(ctx, q, email).Scan(&u.ID, &u.Email, &u.PasswordHash, &u.PasswordSalt, &u.Role, &u.CreatedAt); err != nil {
 		if err == pgx.ErrNoRows {
 			return nil, nil
 		}
@@ -232,9 +253,9 @@ func (r *PostgresRepository) GetUserByEmail(ctx context.Context, email string) (
 
 // GetUserByID fetches a user by ID.
 func (r *PostgresRepository) GetUserByID(ctx context.Context, id string) (*app.User, error) {
-	const q = `SELECT id, email, password_hash, role, created_at FROM users WHERE id = $1`
+	const q = `SELECT id, email, password_hash, password_salt, role, created_at FROM users WHERE id = $1`
 	var u app.User
-	if err := r.pool.QueryRow(ctx, q, id).Scan(&u.ID, &u.Email, &u.PasswordHash, &u.Role, &u.CreatedAt); err != nil {
+	if err := r.pool.QueryRow(ctx, q, id).Scan(&u.ID, &u.Email, &u.PasswordHash, &u.PasswordSalt, &u.Role, &u.CreatedAt); err != nil {
 		if err == pgx.ErrNoRows {
 			return nil, nil
 		}

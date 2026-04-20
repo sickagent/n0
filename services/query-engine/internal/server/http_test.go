@@ -6,11 +6,12 @@ import (
 	"testing"
 
 	"go.uber.org/zap"
+	"n0/services/query-engine/internal/job"
 )
 
 func TestHTTPServer_Health(t *testing.T) {
 	log := zap.NewNop()
-	grpcHandler := NewGRPCServer(log)
+	grpcHandler := NewGRPCServer(log, job.NewStore(), nil)
 	srv := NewHTTPServer(":0", log, grpcHandler)
 
 	req := httptest.NewRequest(http.MethodGet, "/healthz", nil)

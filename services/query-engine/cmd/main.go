@@ -3,25 +3,29 @@ package main
 import (
 	"time"
 
+	"github.com/nats-io/nats.go/jetstream"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 	"n0/pkg/shared/config"
+	"n0/pkg/shared/discovery"
 	"n0/pkg/shared/graceful"
 	"n0/pkg/shared/logger"
 	"n0/pkg/shared/natsclient"
 	"n0/pkg/shared/observability"
 	"n0/services/query-engine/internal/client"
+	"n0/services/query-engine/internal/job"
 	"n0/services/query-engine/internal/server"
 	"n0/services/query-engine/internal/worker"
-	"github.com/nats-io/nats.go/jetstream"
 )
 
 type Config struct {
 	config.BaseConfig
 	GRPCAddr              string `mapstructure:"grpc_addr"`
+	GRPCAdvertiseAddr     string `mapstructure:"grpc_advertise_addr"`
 	HTTPAddr              string `mapstructure:"http_addr"`
 	RedisAddr             string `mapstructure:"redis_addr"`
 	WorkerCount           int    `mapstructure:"worker_count"`
+	MetaServiceAddr       string `mapstructure:"meta_service_addr"`
 	ConnectionManagerAddr string `mapstructure:"connection_manager_addr"`
 }
 
@@ -63,24 +67,37 @@ func main() {
 				log.Fatal("consumer create failed", zap.Error(err))
 			}
 
-			cmCli, err := client.NewConnectionManagerClient(cfg.ConnectionManagerAddr)
+			metaCli, err := client.NewMetaClient(ctx, nc, cfg.MetaServiceAddr)
+			if err != nil {
+				log.Fatal("meta-service client init failed", zap.Error(err))
+			}
+			defer metaCli.Close()
+
+			cmCli, err := client.NewConnectionManagerClient(ctx, nc, cfg.ConnectionManagerAddr)
 			if err != nil {
 				log.Fatal("connection manager client init failed", zap.Error(err))
 			}
 			defer cmCli.Close()
 
-			proc := worker.NewQueryProcessor(log, cmCli)
+			store := job.NewStore()
+			proc := worker.NewQueryProcessor(log, cmCli, metaCli, store)
 			pool := worker.NewPool(cons, proc, log, cfg.WorkerCount)
 			pool.Start(ctx)
 			defer pool.Stop()
 
-			grpcSrv, err := server.StartGRPC(cfg.GRPCAddr, log)
+			grpcHandler := server.NewGRPCServer(log, store, nc.Conn)
+			grpcSrv, err := server.StartGRPC(cfg.GRPCAddr, grpcHandler, log)
 			if err != nil {
 				log.Fatal("grpc start failed", zap.Error(err))
 			}
 			defer grpcSrv.GracefulStop()
 
-			grpcHandler := server.NewGRPCServer(log)
+			discoverySub, err := discovery.RegisterGRPCResponder(nc, "query-engine", cfg.GRPCAddr, cfg.GRPCAdvertiseAddr, log)
+			if err != nil {
+				log.Fatal("grpc discovery register failed", zap.Error(err))
+			}
+			defer discoverySub.Unsubscribe()
+
 			httpSrv := server.NewHTTPServer(cfg.HTTPAddr, log, grpcHandler)
 			go func() {
 				if err := httpSrv.Start(ctx); err != nil {
@@ -100,9 +117,11 @@ func main() {
 	cmd.Flags().String("log_level", "info", "log level")
 	cmd.Flags().String("nats_url", "nats://localhost:4222", "NATS URL")
 	cmd.Flags().String("grpc_addr", ":8080", "gRPC listen address")
+	cmd.Flags().String("grpc_advertise_addr", "", "advertised gRPC address for discovery")
 	cmd.Flags().String("http_addr", ":8082", "HTTP listen address")
 	cmd.Flags().String("redis_addr", "localhost:6379", "Redis address")
 	cmd.Flags().Int("worker_count", 4, "number of query workers")
+	cmd.Flags().String("meta_service_addr", "localhost:8080", "Meta Service gRPC address")
 	cmd.Flags().String("connection_manager_addr", "localhost:8081", "Connection Manager gRPC address")
 
 	cobra.CheckErr(config.InitCobra(cmd, "N0"))

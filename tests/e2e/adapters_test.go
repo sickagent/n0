@@ -123,7 +123,7 @@ func getAdapterCases() []AdapterTestCase {
 
 func TestAdapters_TestConnection(t *testing.T) {
 	WaitForService(t, GatewayBaseURL+"/health")
-	client := NewHTTPClient(GatewayBaseURL)
+	client := NewGatewayClient(t)
 
 	for _, tc := range getAdapterCases() {
 		t.Run(tc.Name, func(t *testing.T) {
@@ -151,7 +151,7 @@ func TestAdapters_TestConnection(t *testing.T) {
 
 func TestAdapters_GetSchema(t *testing.T) {
 	WaitForService(t, GatewayBaseURL+"/health")
-	client := NewHTTPClient(GatewayBaseURL)
+	client := NewGatewayClient(t)
 
 	for _, tc := range getAdapterCases() {
 		if tc.ShouldFail {
@@ -228,7 +228,7 @@ func TestAdapters_GetSchema(t *testing.T) {
 
 func TestAdapters_ExecuteQuery(t *testing.T) {
 	WaitForService(t, GatewayBaseURL+"/health")
-	client := NewHTTPClient(GatewayBaseURL)
+	client := NewGatewayClient(t)
 
 	for _, tc := range getAdapterCases() {
 		if tc.ShouldFail {

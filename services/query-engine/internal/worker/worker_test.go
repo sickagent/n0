@@ -2,6 +2,7 @@ package worker
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"testing"
 	"time"
@@ -100,7 +101,11 @@ func (p *fakeProcessor) Process(ctx context.Context, job Job) error {
 
 func TestPool_ProcessJob(t *testing.T) {
 	log := zap.NewNop()
-	msg := &fakeMsg{data: []byte("job-42")}
+	payload, err := json.Marshal(Job{ID: "job-42", ConnectionID: "conn-1", SQL: "SELECT 1"})
+	if err != nil {
+		t.Fatalf("marshal payload: %v", err)
+	}
+	msg := &fakeMsg{data: payload}
 	cons := &fakeConsumer{msgs: []jetstream.Msg{msg}}
 	proc := &fakeProcessor{}
 
@@ -125,7 +130,11 @@ func TestPool_ProcessJob(t *testing.T) {
 
 func TestPool_ProcessJobFailure(t *testing.T) {
 	log := zap.NewNop()
-	msg := &fakeMsg{data: []byte("job-fail")}
+	payload, err := json.Marshal(Job{ID: "job-fail", ConnectionID: "conn-1", SQL: "SELECT 1"})
+	if err != nil {
+		t.Fatalf("marshal payload: %v", err)
+	}
+	msg := &fakeMsg{data: payload}
 	cons := &fakeConsumer{msgs: []jetstream.Msg{msg}}
 	proc := &fakeProcessor{err: errors.New("boom")}
 

@@ -84,6 +84,7 @@ func (s *GRPCServer) ListWorkspaces(ctx context.Context, req *pb.ListWorkspacesR
 func (s *GRPCServer) CreateConnection(ctx context.Context, req *pb.CreateConnectionRequest) (*pb.CreateConnectionResponse, error) {
 	id, err := s.svc.CreateConnection(ctx, app.Connection{
 		WorkspaceID: req.WorkspaceId,
+		UserID:      req.TenantId,
 		TenantID:    req.TenantId,
 		Name:        req.Name,
 		AdapterType: req.AdapterType,

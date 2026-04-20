@@ -4,12 +4,13 @@ import { notifications } from '@mantine/notifications';
 import { IconPlus } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
+import { useAuth } from '../auth/AuthContext';
 import { pluginsApi } from '../api/plugins';
 import { Modal } from '@mantine/core';
 
-const tenantId = 'default';
-
 export function Plugins() {
+  const { session } = useAuth();
+  const tenantId = session?.user_id || '';
   const [opened, { open, close }] = useDisclosure(false);
   const [name, setName] = useState('');
   const [version, setVersion] = useState('1.0.0');
@@ -39,7 +40,7 @@ export function Plugins() {
       endpoint,
       protocol,
       tenant_id: tenantId,
-      global: true,
+      global: false,
     });
   };
 
