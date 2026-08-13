@@ -11,7 +11,7 @@ require (
 	github.com/nats-io/nats.go v1.36.0
 	github.com/sickagent/n0/pkg/shared v0.0.0
 	github.com/sickagent/n0/proto/gen/go v0.0.0
-	github.com/spf13/cobra v1.8.1
+	github.com/spf13/cobra v1.10.2
 	go.uber.org/zap v1.27.1
 	google.golang.org/grpc v1.64.1
 	google.golang.org/protobuf v1.34.2
@@ -58,7 +58,7 @@ require (
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
 	github.com/spf13/cast v1.6.0 // indirect
-	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/spf13/pflag v1.0.9 // indirect
 	github.com/spf13/viper v1.19.0 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	go.opentelemetry.io/otel v1.41.0 // indirect
