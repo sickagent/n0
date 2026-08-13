@@ -4,9 +4,10 @@ import { notifications } from '@mantine/notifications';
 import { IconPlus } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { useAuth } from '../auth/AuthContext';
+import { useAuth } from '../auth/useAuth';
 import { pluginsApi } from '../api/plugins';
 import { Modal } from '@mantine/core';
+import { errorMessage } from '../utils/errors';
 
 export function Plugins() {
   const { session } = useAuth();
@@ -27,8 +28,8 @@ export function Plugins() {
       setVersion('1.0.0');
       setEndpoint('');
     },
-    onError: (err: any) => {
-      notifications.show({ title: 'Error', message: err?.message || 'Failed to register plugin', color: 'red' });
+    onError: (err: unknown) => {
+	  notifications.show({ title: 'Error', message: errorMessage(err, 'Failed to register plugin'), color: 'red' });
     },
   });
 

@@ -77,13 +77,22 @@ func (m *Manager) Verify(tokenStr string) (*Claims, error) {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 		return m.secret, nil
-	})
+	},
+		jwt.WithValidMethods([]string{jwt.SigningMethodHS256.Alg()}),
+		jwt.WithIssuer(m.issuer),
+		jwt.WithAudience("n0-platform"),
+		jwt.WithExpirationRequired(),
+		jwt.WithIssuedAt(),
+	)
 	if err != nil {
 		return nil, fmt.Errorf("parse token: %w", err)
 	}
 	claims, ok := token.Claims.(*Claims)
 	if !ok || !token.Valid {
 		return nil, fmt.Errorf("invalid token")
+	}
+	if claims.UserID == "" || (claims.Type != "user" && claims.Type != "agent") {
+		return nil, fmt.Errorf("invalid token claims")
 	}
 	return claims, nil
 }

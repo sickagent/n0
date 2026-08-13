@@ -75,7 +75,7 @@ func main() {
 			}()
 
 			metrics := observability.StartMetricsServer(":9090", log)
-			defer func() { _ = metrics.Close() }()
+			defer observability.Shutdown(metrics, log)
 
 			<-ctx.Done()
 			log.Info("shutting down connection-manager")
@@ -83,6 +83,7 @@ func main() {
 	}
 
 	cmd.Flags().String("app_name", "connection-manager", "application name")
+	cmd.Flags().String("environment", "development", "runtime environment")
 	cmd.Flags().String("log_level", "info", "log level")
 	cmd.Flags().String("nats_url", "nats://localhost:4222", "NATS URL")
 	cmd.Flags().String("grpc_addr", ":8080", "gRPC listen address")

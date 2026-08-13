@@ -76,12 +76,18 @@ func (r *PostgresRepository) CreateWorkspace(ctx context.Context, userID, tenant
 }
 
 // GetSchemaSnapshot returns the latest schema snapshot for a connection.
-func (r *PostgresRepository) GetSchemaSnapshot(ctx context.Context, connectionID string) (*app.SchemaSnapshot, error) {
-	const q = `SELECT tables, captured_at FROM schema_snapshots WHERE connection_id = $1 ORDER BY captured_at DESC LIMIT 1`
+func (r *PostgresRepository) GetSchemaSnapshot(ctx context.Context, connectionID, tenantID string) (*app.SchemaSnapshot, error) {
+	const q = `
+		SELECT s.tables, s.captured_at
+		FROM schema_snapshots s
+		JOIN connections c ON c.id = s.connection_id
+		WHERE s.connection_id = $1 AND c.tenant_id = $2
+		ORDER BY s.captured_at DESC
+		LIMIT 1`
 	var snap app.SchemaSnapshot
 	snap.ConnectionID = connectionID
 	var tablesJSON []byte
-	if err := r.pool.QueryRow(ctx, q, connectionID).Scan(&tablesJSON, &snap.CapturedAt); err != nil {
+	if err := r.pool.QueryRow(ctx, q, connectionID, tenantID).Scan(&tablesJSON, &snap.CapturedAt); err != nil {
 		if err == pgx.ErrNoRows {
 			return nil, nil
 		}
@@ -136,12 +142,12 @@ func (r *PostgresRepository) CreateConnection(ctx context.Context, c app.Connect
 }
 
 // GetConnection returns a connection by ID.
-func (r *PostgresRepository) GetConnection(ctx context.Context, connectionID string) (*app.Connection, error) {
-	const q = `SELECT id, workspace_id, tenant_id, name, adapter_type, config, created_at FROM connections WHERE id = $1`
+func (r *PostgresRepository) GetConnection(ctx context.Context, connectionID, tenantID string) (*app.Connection, error) {
+	const q = `SELECT id, workspace_id, tenant_id, name, adapter_type, config, created_at FROM connections WHERE id = $1 AND tenant_id = $2`
 	var c app.Connection
 	var configJSON []byte
 	var id, wsID uuid.UUID
-	if err := r.pool.QueryRow(ctx, q, connectionID).Scan(&id, &wsID, &c.TenantID, &c.Name, &c.AdapterType, &configJSON, &c.CreatedAt); err != nil {
+	if err := r.pool.QueryRow(ctx, q, connectionID, tenantID).Scan(&id, &wsID, &c.TenantID, &c.Name, &c.AdapterType, &configJSON, &c.CreatedAt); err != nil {
 		if err == pgx.ErrNoRows {
 			return nil, nil
 		}
@@ -200,10 +206,14 @@ func (r *PostgresRepository) ListConnections(ctx context.Context, userID, worksp
 }
 
 // DeleteConnection removes a connection.
-func (r *PostgresRepository) DeleteConnection(ctx context.Context, connectionID string) error {
-	const q = `DELETE FROM connections WHERE id = $1`
-	if _, err := r.pool.Exec(ctx, q, connectionID); err != nil {
+func (r *PostgresRepository) DeleteConnection(ctx context.Context, connectionID, tenantID string) error {
+	const q = `DELETE FROM connections WHERE id = $1 AND tenant_id = $2`
+	result, err := r.pool.Exec(ctx, q, connectionID, tenantID)
+	if err != nil {
 		return fmt.Errorf("delete connection: %w", err)
+	}
+	if result.RowsAffected() == 0 {
+		return fmt.Errorf("connection not found")
 	}
 	return nil
 }

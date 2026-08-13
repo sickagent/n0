@@ -2,7 +2,10 @@ package server
 
 import (
 	"context"
+	"strings"
 
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	pb "n0/proto/gen/go/lensagent/v1"
@@ -22,7 +25,10 @@ func NewGRPCServer(svc *app.MetaService) *GRPCServer {
 
 // GetSchema returns the schema snapshot for a connection.
 func (s *GRPCServer) GetSchema(ctx context.Context, req *pb.GetSchemaRequest) (*pb.GetSchemaResponse, error) {
-	snap, err := s.svc.GetSchema(ctx, req.ConnectionId)
+	if strings.TrimSpace(req.ConnectionId) == "" || strings.TrimSpace(req.TenantId) == "" {
+		return nil, status.Error(codes.InvalidArgument, "connection_id and tenant_id are required")
+	}
+	snap, err := s.svc.GetSchema(ctx, req.ConnectionId, req.TenantId)
 	if err != nil {
 		return nil, err
 	}
@@ -93,7 +99,7 @@ func (s *GRPCServer) CreateConnection(ctx context.Context, req *pb.CreateConnect
 	if err != nil {
 		return nil, err
 	}
-	conn, err := s.svc.GetConnection(ctx, id.String())
+	conn, err := s.svc.GetConnection(ctx, id.String(), req.TenantId)
 	if err != nil {
 		return nil, err
 	}
@@ -102,7 +108,10 @@ func (s *GRPCServer) CreateConnection(ctx context.Context, req *pb.CreateConnect
 
 // GetConnection returns a connection by ID.
 func (s *GRPCServer) GetConnection(ctx context.Context, req *pb.GetConnectionRequest) (*pb.GetConnectionResponse, error) {
-	conn, err := s.svc.GetConnection(ctx, req.ConnectionId)
+	if strings.TrimSpace(req.ConnectionId) == "" || strings.TrimSpace(req.TenantId) == "" {
+		return nil, status.Error(codes.InvalidArgument, "connection_id and tenant_id are required")
+	}
+	conn, err := s.svc.GetConnection(ctx, req.ConnectionId, req.TenantId)
 	if err != nil {
 		return nil, err
 	}
@@ -133,7 +142,10 @@ func (s *GRPCServer) ListConnections(ctx context.Context, req *pb.ListConnection
 
 // DeleteConnection removes a connection.
 func (s *GRPCServer) DeleteConnection(ctx context.Context, req *pb.DeleteConnectionRequest) (*pb.DeleteConnectionResponse, error) {
-	if err := s.svc.DeleteConnection(ctx, req.ConnectionId); err != nil {
+	if strings.TrimSpace(req.ConnectionId) == "" || strings.TrimSpace(req.TenantId) == "" {
+		return nil, status.Error(codes.InvalidArgument, "connection_id and tenant_id are required")
+	}
+	if err := s.svc.DeleteConnection(ctx, req.ConnectionId, req.TenantId); err != nil {
 		return nil, err
 	}
 	return &pb.DeleteConnectionResponse{Deleted: true}, nil

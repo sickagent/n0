@@ -86,7 +86,7 @@ func (p *Pool) run(ctx context.Context, id int) {
 			var job Job
 			if err := json.Unmarshal(msg.Data(), &job); err != nil {
 				p.log.Error("invalid job payload", zap.Int("worker_id", id), zap.Error(err))
-				_ = msg.NakWithDelay(5 * time.Second)
+				_ = msg.TermWithReason("invalid JSON job payload")
 				continue
 			}
 			if err := p.processor.Process(ctx, job); err != nil {

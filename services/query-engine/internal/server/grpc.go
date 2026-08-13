@@ -85,7 +85,10 @@ func (s *GRPCServer) SubmitQuery(ctx context.Context, req *pb.SubmitQueryRequest
 
 // GetJobStatus returns job status.
 func (s *GRPCServer) GetJobStatus(ctx context.Context, req *pb.GetJobStatusRequest) (*pb.GetJobStatusResponse, error) {
-	record, err := s.store.Get(req.JobId)
+	if strings.TrimSpace(req.JobId) == "" || strings.TrimSpace(req.TenantId) == "" {
+		return nil, status.Error(codes.InvalidArgument, "job_id and tenant_id are required")
+	}
+	record, err := s.store.GetForTenant(req.JobId, req.TenantId)
 	if err != nil {
 		if err == job.ErrJobNotFound {
 			return nil, status.Error(codes.NotFound, "job not found")
@@ -101,7 +104,10 @@ func (s *GRPCServer) GetJobStatus(ctx context.Context, req *pb.GetJobStatusReque
 
 // GetJobResult returns query results.
 func (s *GRPCServer) GetJobResult(ctx context.Context, req *pb.GetJobResultRequest) (*pb.GetJobResultResponse, error) {
-	record, rows, nextToken, err := s.store.GetResultPage(req.JobId, req.Page, req.PageSize)
+	if strings.TrimSpace(req.JobId) == "" || strings.TrimSpace(req.TenantId) == "" {
+		return nil, status.Error(codes.InvalidArgument, "job_id and tenant_id are required")
+	}
+	record, rows, nextToken, err := s.store.GetResultPageForTenant(req.JobId, req.TenantId, req.Page, req.PageSize)
 	if err != nil {
 		if err == job.ErrJobNotFound {
 			return nil, status.Error(codes.NotFound, "job not found")

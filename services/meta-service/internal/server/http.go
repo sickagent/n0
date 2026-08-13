@@ -5,13 +5,16 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
-	"n0/services/meta-service/internal/app"
+	"n0/pkg/shared/graceful"
+	"n0/pkg/shared/httpserver"
 	pb "n0/proto/gen/go/lensagent/v1"
+	"n0/services/meta-service/internal/app"
 )
 
 // HTTPServer hosts the REST API for meta-service.
@@ -25,7 +28,7 @@ type HTTPServer struct {
 // NewHTTPServer creates a new HTTP server.
 func NewHTTPServer(addr string, log *zap.Logger, svc *GRPCServer, metaSvc *app.MetaService) *HTTPServer {
 	r := chi.NewRouter()
-	r.Use(middleware.Logger, middleware.Recoverer)
+	r.Use(middleware.RequestID, middleware.Logger, middleware.Recoverer, middleware.RequestSize(1<<20))
 	r.Get("/healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte("ok"))
@@ -103,6 +106,7 @@ func NewHTTPServer(addr string, log *zap.Logger, svc *GRPCServer, metaSvc *app.M
 	r.Get("/v1/connections/{id}", func(w http.ResponseWriter, r *http.Request) {
 		resp, err := svc.GetConnection(r.Context(), &pb.GetConnectionRequest{
 			ConnectionId: chi.URLParam(r, "id"),
+			TenantId:     r.URL.Query().Get("tenant_id"),
 		})
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -118,6 +122,7 @@ func NewHTTPServer(addr string, log *zap.Logger, svc *GRPCServer, metaSvc *app.M
 	r.Delete("/v1/connections/{id}", func(w http.ResponseWriter, r *http.Request) {
 		resp, err := svc.DeleteConnection(r.Context(), &pb.DeleteConnectionRequest{
 			ConnectionId: chi.URLParam(r, "id"),
+			TenantId:     r.URL.Query().Get("tenant_id"),
 		})
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -146,13 +151,12 @@ func NewHTTPServer(addr string, log *zap.Logger, svc *GRPCServer, metaSvc *app.M
 		var req struct {
 			Email    string `json:"email"`
 			Password string `json:"password"`
-			Role     string `json:"role"`
 		}
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		id, err := metaSvc.RegisterUser(r.Context(), req.Email, req.Password, req.Role)
+		id, err := metaSvc.RegisterUser(r.Context(), req.Email, req.Password, "user")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -260,7 +264,7 @@ func NewHTTPServer(addr string, log *zap.Logger, svc *GRPCServer, metaSvc *app.M
 	})
 
 	return &HTTPServer{
-		srv:     &http.Server{Addr: addr, Handler: r},
+		srv:     httpserver.New(addr, r),
 		log:     log,
 		svc:     svc,
 		metaSvc: metaSvc,
@@ -276,7 +280,11 @@ func (s *HTTPServer) Handler() http.Handler {
 func (s *HTTPServer) Start(ctx context.Context) error {
 	go func() {
 		<-ctx.Done()
-		_ = s.srv.Shutdown(context.Background())
+		shutdownCtx, cancel := graceful.WithTimeout(30 * time.Second)
+		defer cancel()
+		if err := s.srv.Shutdown(shutdownCtx); err != nil {
+			s.log.Warn("meta-service HTTP shutdown failed", zap.Error(err))
+		}
 	}()
 	s.log.Info("meta-service HTTP listening", zap.String("addr", s.srv.Addr))
 	if err := s.srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {

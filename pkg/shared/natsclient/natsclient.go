@@ -25,7 +25,9 @@ func New(url string, timeout time.Duration, log *zap.Logger) (*Client, error) {
 		nats.Name("n0"),
 		nats.Timeout(timeout),
 		nats.ReconnectWait(2*time.Second),
-		nats.MaxReconnects(10),
+		nats.MaxReconnects(-1),
+		nats.RetryOnFailedConnect(true),
+		nats.DrainTimeout(30*time.Second),
 		nats.DisconnectErrHandler(func(_ *nats.Conn, err error) {
 			if err != nil {
 				log.Warn("nats disconnected", zap.Error(err))
@@ -66,17 +68,19 @@ func New(url string, timeout time.Duration, log *zap.Logger) (*Client, error) {
 
 // Close terminates the NATS connection.
 func (c *Client) Close() {
-	c.Conn.Close()
+	if c == nil || c.Conn == nil {
+		return
+	}
+	if err := c.Conn.Drain(); err != nil {
+		c.Conn.Close()
+	}
 }
 
 // EnsureStream creates a JetStream stream if it does not exist.
 func (c *Client) EnsureStream(ctx context.Context, cfg jetstream.StreamConfig) (jetstream.Stream, error) {
-	stream, err := c.JS.CreateStream(ctx, cfg)
+	stream, err := c.JS.CreateOrUpdateStream(ctx, cfg)
 	if err != nil {
-		stream, err = c.JS.Stream(ctx, cfg.Name)
-		if err != nil {
-			return nil, fmt.Errorf("ensure stream %s: %w", cfg.Name, err)
-		}
+		return nil, fmt.Errorf("ensure stream %s: %w", cfg.Name, err)
 	}
 	return stream, nil
 }

@@ -6,14 +6,18 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"net"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/structpb"
+	"n0/pkg/shared/graceful"
+	"n0/pkg/shared/httpserver"
 	"n0/pkg/shared/jwt"
 	pb "n0/proto/gen/go/lensagent/v1"
 )
@@ -39,39 +43,74 @@ type QueryClient interface {
 // CMClient defines the subset of ConnectionManager client used by the gateway.
 type CMClient interface {
 	TestConnection(ctx context.Context, req *pb.TestConnectionRequest) (*pb.TestConnectionResponse, error)
-	GetSchema(ctx context.Context, req *pb.GetConnectionSchemaRequest) (*pb.GetConnectionSchemaResponse, error)
-	ExecuteQuery(ctx context.Context, req *pb.ExecuteQueryRequest) (*pb.ExecuteQueryResponse, error)
 }
 
 // Server hosts both gRPC and HTTP interfaces.
 type Server struct {
-	grpcAddr     string
-	httpAddr     string
-	log          *zap.Logger
-	metaCli      MetaClient
-	queryCli     QueryClient
-	cmCli        CMClient
-	jwtManager   *jwt.Manager
-	metaHTTPBase string
+	grpcAddr       string
+	httpAddr       string
+	log            *zap.Logger
+	metaCli        MetaClient
+	queryCli       QueryClient
+	cmCli          CMClient
+	jwtManager     *jwt.Manager
+	metaHTTPBase   string
+	allowedOrigins map[string]struct{}
+	httpClient     *http.Client
 }
 
 // NewServer creates a new gateway server.
-func NewServer(grpcAddr, httpAddr string, log *zap.Logger, metaCli MetaClient, queryCli QueryClient, cmCli CMClient, jwtManager *jwt.Manager) *Server {
-	return &Server{
-		grpcAddr:     grpcAddr,
-		httpAddr:     httpAddr,
-		log:          log,
-		metaCli:      metaCli,
-		queryCli:     queryCli,
-		cmCli:        cmCli,
-		jwtManager:   jwtManager,
-		metaHTTPBase: "http://meta-service:8081",
+func NewServer(grpcAddr, httpAddr string, log *zap.Logger, metaCli MetaClient, queryCli QueryClient, cmCli CMClient, jwtManager *jwt.Manager, allowedOrigins ...string) *Server {
+	s := &Server{
+		grpcAddr:       grpcAddr,
+		httpAddr:       httpAddr,
+		log:            log,
+		metaCli:        metaCli,
+		queryCli:       queryCli,
+		cmCli:          cmCli,
+		jwtManager:     jwtManager,
+		metaHTTPBase:   "http://meta-service:8081",
+		allowedOrigins: make(map[string]struct{}, len(allowedOrigins)),
+		httpClient: &http.Client{
+			Timeout: 30 * time.Second,
+			Transport: &http.Transport{
+				Proxy:                 http.ProxyFromEnvironment,
+				DialContext:           (&net.Dialer{Timeout: 5 * time.Second, KeepAlive: 30 * time.Second}).DialContext,
+				ForceAttemptHTTP2:     true,
+				MaxIdleConns:          100,
+				MaxIdleConnsPerHost:   20,
+				IdleConnTimeout:       90 * time.Second,
+				TLSHandshakeTimeout:   5 * time.Second,
+				ResponseHeaderTimeout: 10 * time.Second,
+			},
+		},
+	}
+	for _, origin := range allowedOrigins {
+		if origin = strings.TrimSpace(origin); origin != "" {
+			s.allowedOrigins[origin] = struct{}{}
+		}
+	}
+	return s
+}
+
+// SetMetaHTTPBase configures the internal Meta Service HTTP endpoint.
+func (s *Server) SetMetaHTTPBase(baseURL string) {
+	if baseURL = strings.TrimRight(strings.TrimSpace(baseURL), "/"); baseURL != "" {
+		s.metaHTTPBase = baseURL
 	}
 }
 
-func corsMiddleware(next http.Handler) http.Handler {
+func (s *Server) corsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
+		origin := r.Header.Get("Origin")
+		if origin != "" {
+			if _, ok := s.allowedOrigins[origin]; !ok {
+				http.Error(w, "origin not allowed", http.StatusForbidden)
+				return
+			}
+			w.Header().Set("Access-Control-Allow-Origin", origin)
+			w.Header().Set("Vary", "Origin")
+		}
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 		if r.Method == "OPTIONS" {
@@ -119,7 +158,7 @@ func getUserID(r *http.Request) string {
 
 func (s *Server) handler() http.Handler {
 	r := chi.NewRouter()
-	r.Use(corsMiddleware)
+	r.Use(middleware.RequestID, middleware.Recoverer, middleware.RequestSize(1<<20), s.corsMiddleware)
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte("ok"))
@@ -138,12 +177,10 @@ func (s *Server) handler() http.Handler {
 		r.Post("/v1/agents/{id}/token", s.handleGenerateAgentToken)
 
 		r.Get("/v1/schema", s.handleGetSchema)
-		r.Get("/v1/query", s.handleSubmitQuery)
+		r.Post("/v1/query", s.handleSubmitQuery)
 		r.Get("/v1/query/status", s.handleGetJobStatus)
 		r.Get("/v1/query/result", s.handleGetJobResult)
 		r.Post("/v1/test-connection", s.handleTestConnection)
-		r.Post("/v1/execute-query", s.handleExecuteQuery)
-		r.Post("/v1/schema", s.handleGetConnectionSchema)
 		r.Post("/v1/connections", s.handleCreateConnection)
 		r.Get("/v1/connections", s.handleListConnections)
 		r.Get("/v1/connections/{id}", s.handleGetConnection)
@@ -175,7 +212,7 @@ func (s *Server) proxyToMetaHTTP(w http.ResponseWriter, r *http.Request) {
 		req.URL.RawQuery = q.Encode()
 	}
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := s.httpClient.Do(req)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -202,7 +239,7 @@ func (s *Server) handleLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	req.Header.Set("Content-Type", r.Header.Get("Content-Type"))
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := s.httpClient.Do(req)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -269,11 +306,13 @@ func (s *Server) handleGenerateAgentToken(w http.ResponseWriter, r *http.Request
 
 // Start launches the HTTP server. gRPC server can be added here later.
 func (s *Server) Start(ctx context.Context) error {
-	srv := &http.Server{Addr: s.httpAddr, Handler: s.handler()}
+	srv := httpserver.New(s.httpAddr, s.handler())
 
 	go func() {
 		<-ctx.Done()
-		if err := srv.Shutdown(context.Background()); err != nil {
+		shutdownCtx, cancel := graceful.WithTimeout(30 * time.Second)
+		defer cancel()
+		if err := srv.Shutdown(shutdownCtx); err != nil {
 			s.log.Error("http shutdown error", zap.Error(err))
 		}
 	}()
@@ -289,6 +328,7 @@ func (s *Server) handleGetSchema(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	req := &pb.GetSchemaRequest{
 		ConnectionId: r.URL.Query().Get("connection_id"),
+		TenantId:     getUserID(r),
 	}
 	resp, err := s.metaCli.GetSchema(ctx, req)
 	if err != nil {
@@ -302,10 +342,20 @@ func (s *Server) handleGetSchema(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) handleSubmitQuery(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+	var body struct {
+		ConnectionID string `json:"connection_id"`
+		SQL          string `json:"sql"`
+	}
+	decoder := json.NewDecoder(r.Body)
+	decoder.DisallowUnknownFields()
+	if err := decoder.Decode(&body); err != nil {
+		http.Error(w, "invalid request body", http.StatusBadRequest)
+		return
+	}
 	req := &pb.SubmitQueryRequest{
 		TenantId:     getUserID(r),
-		ConnectionId: r.URL.Query().Get("connection_id"),
-		Sql:          r.URL.Query().Get("sql"),
+		ConnectionId: body.ConnectionID,
+		Sql:          body.SQL,
 	}
 	resp, err := s.queryCli.SubmitQuery(ctx, req)
 	if err != nil {
@@ -319,7 +369,8 @@ func (s *Server) handleSubmitQuery(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) handleGetJobStatus(w http.ResponseWriter, r *http.Request) {
 	resp, err := s.queryCli.GetJobStatus(r.Context(), &pb.GetJobStatusRequest{
-		JobId: r.URL.Query().Get("job_id"),
+		JobId:    r.URL.Query().Get("job_id"),
+		TenantId: getUserID(r),
 	})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -335,6 +386,7 @@ func (s *Server) handleGetJobResult(w http.ResponseWriter, r *http.Request) {
 	pageSize, _ := strconv.Atoi(r.URL.Query().Get("page_size"))
 	resp, err := s.queryCli.GetJobResult(r.Context(), &pb.GetJobResultRequest{
 		JobId:    r.URL.Query().Get("job_id"),
+		TenantId: getUserID(r),
 		Page:     int32(page),
 		PageSize: int32(pageSize),
 	})
@@ -375,53 +427,6 @@ func (s *Server) handleTestConnection(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewEncoder(w).Encode(resp)
 }
 
-func (s *Server) handleGetConnectionSchema(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-	var body struct {
-		ConnectionID string                 `json:"connection_id"`
-		AdapterType  string                 `json:"adapter_type"`
-		Params       map[string]interface{} `json:"params"`
-	}
-	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-	params, err := structpb.NewStruct(body.Params)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-	resp, err := s.cmCli.GetSchema(ctx, &pb.GetConnectionSchemaRequest{
-		ConnectionId: body.ConnectionID,
-		AdapterType:  body.AdapterType,
-		Params:       params,
-	})
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	_ = json.NewEncoder(w).Encode(resp)
-}
-
-func (s *Server) handleExecuteQuery(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-	var req pb.ExecuteQueryRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-	resp, err := s.cmCli.ExecuteQuery(ctx, &req)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	_ = json.NewEncoder(w).Encode(resp)
-}
-
 func (s *Server) handleCreateConnection(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	var req pb.CreateConnectionRequest
@@ -436,6 +441,7 @@ func (s *Server) handleCreateConnection(w http.ResponseWriter, r *http.Request) 
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	redactConnectionParams(resp.Connection)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	_ = json.NewEncoder(w).Encode(resp)
@@ -457,6 +463,9 @@ func (s *Server) handleListConnections(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	for _, connection := range resp.Connections {
+		redactConnectionParams(connection)
+	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	_ = json.NewEncoder(w).Encode(resp)
@@ -466,6 +475,7 @@ func (s *Server) handleGetConnection(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	resp, err := s.metaCli.GetConnection(ctx, &pb.GetConnectionRequest{
 		ConnectionId: chi.URLParam(r, "id"),
+		TenantId:     getUserID(r),
 	})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -475,6 +485,8 @@ func (s *Server) handleGetConnection(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "not found", http.StatusNotFound)
 		return
 	}
+	// Credentials are an internal execution concern and must never cross the public API boundary.
+	redactConnectionParams(resp.Connection)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	_ = json.NewEncoder(w).Encode(resp)
@@ -484,6 +496,7 @@ func (s *Server) handleDeleteConnection(w http.ResponseWriter, r *http.Request) 
 	ctx := r.Context()
 	resp, err := s.metaCli.DeleteConnection(ctx, &pb.DeleteConnectionRequest{
 		ConnectionId: chi.URLParam(r, "id"),
+		TenantId:     getUserID(r),
 	})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -501,6 +514,8 @@ func (s *Server) handleRegisterPlugin(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	req.TenantId = getUserID(r)
+	req.Global = false
 	resp, err := s.metaCli.RegisterPlugin(ctx, &req)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -509,6 +524,12 @@ func (s *Server) handleRegisterPlugin(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	_ = json.NewEncoder(w).Encode(resp)
+}
+
+func redactConnectionParams(connection *pb.Connection) {
+	if connection != nil {
+		connection.Params = nil
+	}
 }
 
 func (s *Server) handleListWorkspaces(w http.ResponseWriter, r *http.Request) {
@@ -529,8 +550,4 @@ func (s *Server) handleListWorkspaces(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	_ = json.NewEncoder(w).Encode(resp)
-}
-
-func init() {
-	http.DefaultClient.Timeout = 30 * time.Second
 }

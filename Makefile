@@ -8,6 +8,7 @@ COMPOSE := docker compose
 PROTOC_IMAGE := namely/protoc-all:1.53_2
 
 SERVICES := services/agent-gateway services/meta-service services/query-engine services/connection-manager
+GO_MODULES := pkg/shared proto/gen/go $(SERVICES)
 
 .PHONY: all
 all: build
@@ -62,15 +63,25 @@ down:
 .PHONY: lint
 lint:
 	@echo "Running golangci-lint..."
-	@for svc in $(SERVICES); do \
-		cd $$svc && golangci-lint run ./... && cd ../..; \
+	@for module in $(GO_MODULES); do \
+		echo "  -> $$module"; \
+		(cd $$module && golangci-lint run ./...); \
 	done
 
 .PHONY: test
 test:
 	@echo "Running tests..."
-	@for svc in $(SERVICES); do \
-		cd $$svc && $(GO) test ./... && cd ../..; \
+	@for module in $(GO_MODULES); do \
+		echo "  -> $$module"; \
+		(cd $$module && $(GO) test ./...); \
+	done
+
+.PHONY: test-race
+test-race:
+	@echo "Running Go race detector..."
+	@for module in $(GO_MODULES); do \
+		echo "  -> $$module"; \
+		(cd $$module && $(GO) test -race ./...); \
 	done
 
 .PHONY: migrate-up

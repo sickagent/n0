@@ -1,5 +1,5 @@
 import { api } from './client';
-import type { Connection, CreateConnectionPayload, TableInfo } from '../types';
+import type { Connection, CreateConnectionPayload, JsonObject, JsonValue, SchemaSnapshot } from '../types';
 
 export interface CreateConnectionResponse {
   connection: Connection;
@@ -41,7 +41,7 @@ export const connectionsApi = {
     return data;
   },
 
-  testConnection: async (adapterType: string, params: Record<string, any>) => {
+  testConnection: async (adapterType: string, params: JsonObject) => {
     const { data } = await api.post<{ ok: boolean; error_message?: string; latency_ms: number }>(
       '/v1/test-connection',
       { adapter_type: adapterType, params }
@@ -49,24 +49,30 @@ export const connectionsApi = {
     return data;
   },
 
-  getSchema: async (connectionId: string, adapterType: string, params: Record<string, any>) => {
-    const { data } = await api.post<{ tables: TableInfo[] }>('/v1/schema', {
-      connection_id: connectionId,
-      adapter_type: adapterType,
-      params,
+  getSchema: async (connectionId: string) => {
+    const { data } = await api.get<{ snapshot?: SchemaSnapshot }>('/v1/schema', {
+      params: { connection_id: connectionId },
     });
     return data;
   },
 
-  executeQuery: async (connectionId: string, adapterType: string, params: Record<string, any>, sql: string, limit = 100) => {
-    const { data } = await api.post<any>('/v1/execute-query', {
-      connection_id: connectionId,
-      adapter_type: adapterType,
-      params,
-      sql,
-      limit,
-      timeout_seconds: 30,
+  submitQuery: async (connectionId: string, sql: string) => {
+    const { data } = await api.post<{ job_id: string; status: string }>('/v1/query', { connection_id: connectionId, sql });
+    return data;
+  },
+
+  getJobStatus: async (jobId: string) => {
+    const { data } = await api.get<{ job_id: string; status: string; error_message?: string }>('/v1/query/status', {
+      params: { job_id: jobId },
     });
+    return data;
+  },
+
+  getJobResult: async (jobId: string) => {
+    const { data } = await api.get<{ job_id: string; rows: Record<string, JsonValue>[]; truncated: boolean }>(
+      '/v1/query/result',
+      { params: { job_id: jobId, page: 1, page_size: 100 } },
+    );
     return data;
   },
 };

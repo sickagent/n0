@@ -24,10 +24,11 @@ import { notifications } from '@mantine/notifications';
 import { IconTrash, IconEye, IconRefresh, IconPlug, IconPlus } from '@tabler/icons-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { useAuth } from '../auth/AuthContext';
+import { useAuth } from '../auth/useAuth';
 import { connectionsApi } from '../api/connections';
 import { workspacesApi } from '../api/workspaces';
-import type { Connection, TableInfo } from '../types';
+import type { Connection, JsonObject, TableInfo } from '../types';
+import { errorMessage } from '../utils/errors';
 
 const adapterOptions = [
   { value: 'postgres', label: 'PostgreSQL' },
@@ -38,7 +39,7 @@ const adapterOptions = [
   { value: 'bigquery', label: 'BigQuery' },
 ];
 
-const defaultParamsByAdapter: Record<string, Record<string, any>> = {
+const defaultParamsByAdapter: Record<string, JsonObject> = {
   postgres: { host: 'postgres', port: '5432', user: 'postgres', password: 'postgres', database: 'meta', sslmode: 'disable' },
   clickhouse: { host: 'clickhouse', port: '9000', user: 'default', password: '', database: 'default' },
   mysql: { host: 'mysql', port: '3306', user: 'root', password: 'root', database: 'meta' },
@@ -93,8 +94,8 @@ export function Connections() {
       closeCreate();
       resetForm();
     },
-    onError: (err: any) => {
-      notifications.show({ title: 'Error', message: err?.message || 'Failed to create connection', color: 'red' });
+    onError: (err: unknown) => {
+	  notifications.show({ title: 'Error', message: errorMessage(err, 'Failed to create connection'), color: 'red' });
     },
   });
 
@@ -104,8 +105,8 @@ export function Connections() {
       notifications.show({ title: 'Success', message: 'Connection deleted', color: 'green' });
       queryClient.invalidateQueries({ queryKey: ['connections', tenantId] });
     },
-    onError: (err: any) => {
-      notifications.show({ title: 'Error', message: err?.message || 'Failed to delete connection', color: 'red' });
+    onError: (err: unknown) => {
+	  notifications.show({ title: 'Error', message: errorMessage(err, 'Failed to delete connection'), color: 'red' });
     },
   });
 
@@ -116,9 +117,9 @@ export function Connections() {
   };
 
   const handleCreate = () => {
-    let params: Record<string, any> = {};
+    let params: JsonObject = {};
     try {
-      params = JSON.parse(newParams);
+      params = JSON.parse(newParams) as JsonObject;
     } catch {
       notifications.show({ title: 'Error', message: 'Invalid JSON in params', color: 'red' });
       return;
@@ -137,9 +138,9 @@ export function Connections() {
   };
 
   const handleTest = async () => {
-    let params: Record<string, any> = {};
+    let params: JsonObject = {};
     try {
-      params = JSON.parse(newParams);
+      params = JSON.parse(newParams) as JsonObject;
     } catch {
       notifications.show({ title: 'Error', message: 'Invalid JSON in params', color: 'red' });
       return;
@@ -151,8 +152,8 @@ export function Connections() {
       } else {
         notifications.show({ title: 'Failed', message: res.error_message || 'Connection failed', color: 'red' });
       }
-    } catch (err: any) {
-      notifications.show({ title: 'Error', message: err?.message || 'Test failed', color: 'red' });
+    } catch (err: unknown) {
+	  notifications.show({ title: 'Error', message: errorMessage(err, 'Test failed'), color: 'red' });
     }
   };
 
@@ -161,10 +162,10 @@ export function Connections() {
     openSchema();
     setSchemaLoading(true);
     try {
-      const res = await connectionsApi.getSchema(conn.id, conn.adapter_type, conn.params);
-      setSchemaTables(res.tables || []);
-    } catch (err: any) {
-      notifications.show({ title: 'Error', message: err?.message || 'Failed to load schema', color: 'red' });
+      const res = await connectionsApi.getSchema(conn.id);
+	  setSchemaTables(res.snapshot?.tables || []);
+    } catch (err: unknown) {
+	  notifications.show({ title: 'Error', message: errorMessage(err, 'Failed to load schema'), color: 'red' });
     } finally {
       setSchemaLoading(false);
     }

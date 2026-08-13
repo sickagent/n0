@@ -1,7 +1,7 @@
 import { Grid, Paper, Text, Group, ThemeIcon, Title, Skeleton } from '@mantine/core';
 import { IconDatabase, IconPlug, IconBuilding, IconChartBar } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
-import { useAuth } from '../auth/AuthContext';
+import { useAuth } from '../auth/useAuth';
 import { connectionsApi } from '../api/connections';
 import { workspacesApi } from '../api/workspaces';
 

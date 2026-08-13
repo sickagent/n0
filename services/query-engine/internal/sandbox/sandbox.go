@@ -21,6 +21,12 @@ var (
 		regexp.MustCompile(`(?i)\bTRUNCATE\b`),
 		regexp.MustCompile(`(?i)\bGRANT\b`),
 		regexp.MustCompile(`(?i)\bREVOKE\b`),
+		regexp.MustCompile(`(?i)\bCOPY\b`),
+		regexp.MustCompile(`(?i)\bCALL\b`),
+		regexp.MustCompile(`(?i)\bEXECUTE\b`),
+		regexp.MustCompile(`(?i)\bMERGE\b`),
+		regexp.MustCompile(`(?i)\bINTO\b`),
+		regexp.MustCompile(`(?i)\bFOR\s+(UPDATE|SHARE)\b`),
 	}
 
 	// whitelist: query must contain at least one of these
@@ -42,6 +48,12 @@ func Validate(sql string, allowedTables []string) Result {
 	if trimmed == "" {
 		return Result{Allowed: false, Reason: "empty query"}
 	}
+
+	withoutTrailingSemicolon := strings.TrimSpace(strings.TrimSuffix(trimmed, ";"))
+	if strings.Contains(withoutTrailingSemicolon, ";") {
+		return Result{Allowed: false, Reason: "multiple SQL statements are not allowed"}
+	}
+	trimmed = withoutTrailingSemicolon
 
 	for _, re := range forbiddenPatterns {
 		if re.MatchString(trimmed) {
@@ -71,9 +83,21 @@ func Validate(sql string, allowedTables []string) Result {
 		}
 	}
 
-	// Inject LIMIT if absent
+	// Enforce a finite row bound. Existing non-numeric or excessive limits are
+	// rejected instead of being silently trusted.
 	sanitized := trimmed
-	if !regexp.MustCompile(`(?i)\bLIMIT\b`).MatchString(sanitized) {
+	limitKeyword := regexp.MustCompile(`(?i)\bLIMIT\b`)
+	limitValue := regexp.MustCompile(`(?i)\bLIMIT\s+([0-9]+)\b`)
+	if limitKeyword.MatchString(sanitized) {
+		match := limitValue.FindStringSubmatch(sanitized)
+		if len(match) != 2 {
+			return Result{Allowed: false, Reason: "LIMIT must be a numeric value"}
+		}
+		var limit int
+		if _, err := fmt.Sscanf(match[1], "%d", &limit); err != nil || limit < 0 || limit > DefaultRowLimit {
+			return Result{Allowed: false, Reason: fmt.Sprintf("LIMIT must be between 0 and %d", DefaultRowLimit)}
+		}
+	} else {
 		sanitized = fmt.Sprintf("%s LIMIT %d", sanitized, DefaultRowLimit)
 	}
 

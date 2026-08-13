@@ -21,7 +21,7 @@ func (r *fakeRepo) ListWorkspaces(ctx context.Context, userID string, limit, off
 	return nil, nil
 }
 
-func (r *fakeRepo) GetSchemaSnapshot(ctx context.Context, connectionID string) (*app.SchemaSnapshot, error) {
+func (r *fakeRepo) GetSchemaSnapshot(ctx context.Context, connectionID, tenantID string) (*app.SchemaSnapshot, error) {
 	return nil, nil
 }
 
@@ -37,7 +37,7 @@ func (r *fakeRepo) CreateConnection(ctx context.Context, c app.Connection) (uuid
 	return r.connectionID, nil
 }
 
-func (r *fakeRepo) GetConnection(ctx context.Context, connectionID string) (*app.Connection, error) {
+func (r *fakeRepo) GetConnection(ctx context.Context, connectionID, tenantID string) (*app.Connection, error) {
 	if r.connection != nil {
 		return r.connection, nil
 	}
@@ -57,7 +57,7 @@ func (r *fakeRepo) ListConnections(ctx context.Context, userID, workspaceID stri
 	return nil, nil
 }
 
-func (r *fakeRepo) DeleteConnection(ctx context.Context, connectionID string) error {
+func (r *fakeRepo) DeleteConnection(ctx context.Context, connectionID, tenantID string) error {
 	return nil
 }
 

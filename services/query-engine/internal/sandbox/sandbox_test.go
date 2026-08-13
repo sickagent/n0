@@ -56,3 +56,30 @@ func TestValidate_LimitAlreadyPresent(t *testing.T) {
 		t.Errorf("expected exactly one LIMIT, got: %s", res.Sanitized)
 	}
 }
+
+func TestValidateRejectsStackedStatements(t *testing.T) {
+	res := Validate("SELECT 1; DROP TABLE users", nil)
+	if res.Allowed || !strings.Contains(res.Reason, "multiple") {
+		t.Fatalf("expected stacked statement rejection, got %+v", res)
+	}
+}
+
+func TestValidateAllowsSingleTrailingSemicolon(t *testing.T) {
+	res := Validate("SELECT 1;", nil)
+	if !res.Allowed || res.Sanitized != "SELECT 1 LIMIT 10000" {
+		t.Fatalf("unexpected result: %+v", res)
+	}
+}
+
+func TestValidateRejectsUnsafeOrUnboundedLimit(t *testing.T) {
+	for _, query := range []string{
+		"SELECT * FROM users LIMIT 10001",
+		"SELECT * FROM users LIMIT ALL",
+		"SELECT * INTO backup FROM users",
+		"SELECT * FROM users FOR UPDATE",
+	} {
+		if res := Validate(query, nil); res.Allowed {
+			t.Errorf("expected query to be rejected: %s", query)
+		}
+	}
+}

@@ -21,6 +21,7 @@ message SubmitQueryResponse {
 
 message GetJobStatusRequest {
   string job_id = 1;
+  string tenant_id = 2;
 }
 
 message GetJobStatusResponse {
@@ -33,6 +34,7 @@ message GetJobResultRequest {
   string job_id = 1;
   int32 page = 2;
   int32 page_size = 3;
+  string tenant_id = 4;
 }
 
 message GetJobResultResponse {

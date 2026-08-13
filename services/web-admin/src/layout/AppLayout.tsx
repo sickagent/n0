@@ -24,7 +24,7 @@ import {
   IconLogout,
 } from '@tabler/icons-react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../auth/AuthContext';
+import { useAuth } from '../auth/useAuth';
 
 const navItems = [
   { label: 'Dashboard', path: '/', icon: IconLayoutDashboard },

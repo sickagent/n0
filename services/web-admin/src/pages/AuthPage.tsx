@@ -12,7 +12,8 @@ import {
 import { notifications } from '@mantine/notifications';
 import { useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../auth/AuthContext';
+import { useAuth } from '../auth/useAuth';
+import { errorMessage } from '../utils/errors';
 
 type LocationState = {
   from?: {
@@ -32,7 +33,6 @@ export function AuthPage() {
 
   const [registerEmail, setRegisterEmail] = useState('');
   const [registerPassword, setRegisterPassword] = useState('');
-  const [registerRole, setRegisterRole] = useState('user');
   const [registerLoading, setRegisterLoading] = useState(false);
 
   if (isAuthenticated) {
@@ -47,8 +47,8 @@ export function AuthPage() {
       await login({ email: loginEmail, password: loginPassword });
       notifications.show({ title: 'Welcome back', message: 'You are signed in.', color: 'green' });
       navigate(redirectTo, { replace: true });
-    } catch (err: any) {
-      notifications.show({ title: 'Sign in failed', message: err?.message || 'Unable to sign in.', color: 'red' });
+    } catch (err: unknown) {
+      notifications.show({ title: 'Sign in failed', message: errorMessage(err, 'Unable to sign in.'), color: 'red' });
     } finally {
       setLoginLoading(false);
     }
@@ -57,11 +57,11 @@ export function AuthPage() {
   const handleRegister = async () => {
     setRegisterLoading(true);
     try {
-      await register({ email: registerEmail, password: registerPassword, role: registerRole });
+      await register({ email: registerEmail, password: registerPassword });
       notifications.show({ title: 'Account created', message: 'You are signed in.', color: 'green' });
       navigate('/', { replace: true });
-    } catch (err: any) {
-      notifications.show({ title: 'Registration failed', message: err?.message || 'Unable to register.', color: 'red' });
+    } catch (err: unknown) {
+      notifications.show({ title: 'Registration failed', message: errorMessage(err, 'Unable to register.'), color: 'red' });
     } finally {
       setRegisterLoading(false);
     }
@@ -143,16 +143,11 @@ export function AuthPage() {
                 />
                 <PasswordInput
                   label="Password"
-                  placeholder="Create a password"
+                  placeholder="At least 12 characters"
                   value={registerPassword}
                   onChange={(event) => setRegisterPassword(event.currentTarget.value)}
                   autoComplete="new-password"
-                />
-                <TextInput
-                  label="Role"
-                  value={registerRole}
-                  onChange={(event) => setRegisterRole(event.currentTarget.value)}
-                  description="Defaults to user. Keep this unless you need a custom role."
+                  minLength={12}
                 />
                 <Button onClick={handleRegister} loading={registerLoading}>
                   Create Account

@@ -1,7 +1,7 @@
 import { Title, Paper, Table, Text, Loader, Group, ScrollArea, Badge } from '@mantine/core';
 import { IconBuilding } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
-import { useAuth } from '../auth/AuthContext';
+import { useAuth } from '../auth/useAuth';
 import { workspacesApi } from '../api/workspaces';
 
 export function Workspaces() {

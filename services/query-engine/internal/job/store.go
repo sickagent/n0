@@ -72,6 +72,16 @@ func (s *Store) Get(id string) (Record, error) {
 	return cloneRecord(*rec), nil
 }
 
+// GetForTenant returns a job only when it belongs to the requested tenant.
+// A mismatch is intentionally indistinguishable from a missing job.
+func (s *Store) GetForTenant(id, tenantID string) (Record, error) {
+	record, err := s.Get(id)
+	if err != nil || record.TenantID != tenantID {
+		return Record{}, ErrJobNotFound
+	}
+	return record, nil
+}
+
 // MarkRunning moves a job into running state.
 func (s *Store) MarkRunning(id string) error {
 	s.mu.Lock()
@@ -154,6 +164,14 @@ func (s *Store) GetResultPage(id string, page, pageSize int32) (Record, []map[st
 	}
 
 	return record, cloneRows(record.Rows[start:end]), nextToken, nil
+}
+
+// GetResultPageForTenant returns a result page only to the owning tenant.
+func (s *Store) GetResultPageForTenant(id, tenantID string, page, pageSize int32) (Record, []map[string]any, string, error) {
+	if _, err := s.GetForTenant(id, tenantID); err != nil {
+		return Record{}, nil, "", err
+	}
+	return s.GetResultPage(id, page, pageSize)
 }
 
 func cloneRecord(record Record) Record {

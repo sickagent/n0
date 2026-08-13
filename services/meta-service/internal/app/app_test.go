@@ -26,7 +26,7 @@ func (r *fakeRepo) ListWorkspaces(ctx context.Context, userID string, limit, off
 	return nil, nil
 }
 
-func (r *fakeRepo) GetSchemaSnapshot(ctx context.Context, connectionID string) (*SchemaSnapshot, error) {
+func (r *fakeRepo) GetSchemaSnapshot(ctx context.Context, connectionID, tenantID string) (*SchemaSnapshot, error) {
 	return nil, nil
 }
 
@@ -38,7 +38,7 @@ func (r *fakeRepo) CreateConnection(ctx context.Context, c Connection) (uuid.UUI
 	return uuid.Nil, nil
 }
 
-func (r *fakeRepo) GetConnection(ctx context.Context, connectionID string) (*Connection, error) {
+func (r *fakeRepo) GetConnection(ctx context.Context, connectionID, tenantID string) (*Connection, error) {
 	return nil, nil
 }
 
@@ -46,7 +46,7 @@ func (r *fakeRepo) ListConnections(ctx context.Context, userID, workspaceID stri
 	return nil, nil
 }
 
-func (r *fakeRepo) DeleteConnection(ctx context.Context, connectionID string) error {
+func (r *fakeRepo) DeleteConnection(ctx context.Context, connectionID, tenantID string) error {
 	return nil
 }
 
@@ -103,7 +103,7 @@ func TestRegisterUserStoresSaltAndCreatesDefaultWorkspace(t *testing.T) {
 	repo := &fakeRepo{}
 	svc := NewMetaService(repo, nil, nil)
 
-	id, err := svc.RegisterUser(context.Background(), "user@example.com", "secret123", "")
+	id, err := svc.RegisterUser(context.Background(), "User@Example.com", "secret123456", "admin")
 	if err != nil {
 		t.Fatalf("register user: %v", err)
 	}
@@ -117,6 +117,12 @@ func TestRegisterUserStoresSaltAndCreatesDefaultWorkspace(t *testing.T) {
 	if repo.createdUser.passwordSalt == "" {
 		t.Fatal("expected password salt to be stored")
 	}
+	if repo.createdUser.email != "user@example.com" {
+		t.Fatalf("expected normalized email, got %q", repo.createdUser.email)
+	}
+	if repo.createdUser.role != "user" {
+		t.Fatalf("expected least-privileged role, got %q", repo.createdUser.role)
+	}
 	if repo.createdWorkspace.userID != id.String() {
 		t.Fatalf("expected workspace user id %s, got %s", id, repo.createdWorkspace.userID)
 	}
@@ -129,7 +135,7 @@ func TestLoginUserUsesStoredSalt(t *testing.T) {
 	repo := &fakeRepo{}
 	svc := NewMetaService(repo, nil, nil)
 
-	_, err := svc.RegisterUser(context.Background(), "user@example.com", "secret123", "")
+	_, err := svc.RegisterUser(context.Background(), "user@example.com", "secret123456", "")
 	if err != nil {
 		t.Fatalf("register user: %v", err)
 	}
@@ -142,7 +148,7 @@ func TestLoginUserUsesStoredSalt(t *testing.T) {
 		Role:         "user",
 	}
 
-	user, err := svc.LoginUser(context.Background(), "user@example.com", "secret123")
+	user, err := svc.LoginUser(context.Background(), "USER@example.com", "secret123456")
 	if err != nil {
 		t.Fatalf("login user: %v", err)
 	}

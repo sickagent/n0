@@ -13,7 +13,7 @@ func TestAuth_RegisterLoginAndDefaultWorkspace(t *testing.T) {
 	client := NewHTTPClient(GatewayBaseURL)
 
 	email := fmt.Sprintf("e2e-auth-%d@example.com", time.Now().UnixNano())
-	password := "secret123"
+	password := "secret123456"
 
 	var registerRes struct {
 		UserID string `json:"user_id"`

@@ -5,6 +5,8 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"fmt"
+	"net/mail"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -17,12 +19,12 @@ import (
 // Repository defines persistence operations required by Meta Service.
 type Repository interface {
 	ListWorkspaces(ctx context.Context, userID string, limit, offset int) ([]Workspace, error)
-	GetSchemaSnapshot(ctx context.Context, connectionID string) (*SchemaSnapshot, error)
+	GetSchemaSnapshot(ctx context.Context, connectionID, tenantID string) (*SchemaSnapshot, error)
 	SaveSchemaSnapshot(ctx context.Context, connectionID string, tables []TableInfo) error
 	CreateConnection(ctx context.Context, c Connection) (uuid.UUID, error)
-	GetConnection(ctx context.Context, connectionID string) (*Connection, error)
+	GetConnection(ctx context.Context, connectionID, tenantID string) (*Connection, error)
 	ListConnections(ctx context.Context, userID, workspaceID string, limit, offset int) ([]Connection, error)
-	DeleteConnection(ctx context.Context, connectionID string) error
+	DeleteConnection(ctx context.Context, connectionID, tenantID string) error
 	RegisterPlugin(ctx context.Context, p PluginDefinition) (uuid.UUID, error)
 
 	// Auth / Users
@@ -130,8 +132,8 @@ func NewMetaService(repo Repository, cmCli CMClient, cr *crypto.Encrypter) *Meta
 
 // GetSchema returns the latest schema snapshot for a connection.
 // If no cached snapshot exists, it fetches fresh schema from the connection manager and persists it.
-func (s *MetaService) GetSchema(ctx context.Context, connectionID string) (*SchemaSnapshot, error) {
-	snap, err := s.repo.GetSchemaSnapshot(ctx, connectionID)
+func (s *MetaService) GetSchema(ctx context.Context, connectionID, tenantID string) (*SchemaSnapshot, error) {
+	snap, err := s.repo.GetSchemaSnapshot(ctx, connectionID, tenantID)
 	if err != nil {
 		return nil, fmt.Errorf("get schema snapshot: %w", err)
 	}
@@ -140,7 +142,7 @@ func (s *MetaService) GetSchema(ctx context.Context, connectionID string) (*Sche
 	}
 
 	// No cached snapshot — fetch from connection manager.
-	conn, err := s.repo.GetConnection(ctx, connectionID)
+	conn, err := s.repo.GetConnection(ctx, connectionID, tenantID)
 	if err != nil {
 		return nil, fmt.Errorf("get connection: %w", err)
 	}
@@ -220,8 +222,8 @@ func (s *MetaService) CreateConnection(ctx context.Context, c Connection) (uuid.
 }
 
 // GetConnection returns a connection by ID.
-func (s *MetaService) GetConnection(ctx context.Context, connectionID string) (*Connection, error) {
-	c, err := s.repo.GetConnection(ctx, connectionID)
+func (s *MetaService) GetConnection(ctx context.Context, connectionID, tenantID string) (*Connection, error) {
+	c, err := s.repo.GetConnection(ctx, connectionID, tenantID)
 	if err != nil {
 		return nil, fmt.Errorf("get connection: %w", err)
 	}
@@ -255,8 +257,8 @@ func (s *MetaService) ListConnections(ctx context.Context, userID, workspaceID s
 }
 
 // DeleteConnection removes a connection.
-func (s *MetaService) DeleteConnection(ctx context.Context, connectionID string) error {
-	if err := s.repo.DeleteConnection(ctx, connectionID); err != nil {
+func (s *MetaService) DeleteConnection(ctx context.Context, connectionID, tenantID string) error {
+	if err := s.repo.DeleteConnection(ctx, connectionID, tenantID); err != nil {
 		return fmt.Errorf("delete connection: %w", err)
 	}
 	return nil
@@ -280,9 +282,16 @@ func (s *MetaService) RegisterPlugin(ctx context.Context, p PluginDefinition) (u
 
 // RegisterUser creates a new user with a hashed password.
 func (s *MetaService) RegisterUser(ctx context.Context, email, password, role string) (uuid.UUID, error) {
-	if role == "" {
-		role = "user"
+	email, err := normalizeEmail(email)
+	if err != nil {
+		return uuid.Nil, err
 	}
+	if len(password) < 12 || len(password) > 64 {
+		return uuid.Nil, fmt.Errorf("password must be between 12 and 64 characters")
+	}
+	// Self-registration is intentionally least-privileged. Elevated roles must
+	// be assigned through a separate administrative workflow.
+	role = "user"
 	salt, err := generatePasswordSalt()
 	if err != nil {
 		return uuid.Nil, fmt.Errorf("generate password salt: %w", err)
@@ -303,6 +312,10 @@ func (s *MetaService) RegisterUser(ctx context.Context, email, password, role st
 
 // LoginUser validates credentials and returns the user.
 func (s *MetaService) LoginUser(ctx context.Context, email, password string) (*User, error) {
+	email, err := normalizeEmail(email)
+	if err != nil {
+		return nil, fmt.Errorf("invalid credentials")
+	}
 	u, err := s.repo.GetUserByEmail(ctx, email)
 	if err != nil {
 		return nil, fmt.Errorf("find user: %w", err)
@@ -314,6 +327,15 @@ func (s *MetaService) LoginUser(ctx context.Context, email, password string) (*U
 		return nil, fmt.Errorf("invalid credentials")
 	}
 	return u, nil
+}
+
+func normalizeEmail(value string) (string, error) {
+	value = strings.ToLower(strings.TrimSpace(value))
+	address, err := mail.ParseAddress(value)
+	if err != nil || address.Address != value {
+		return "", fmt.Errorf("invalid email address")
+	}
+	return value, nil
 }
 
 func generatePasswordSalt() (string, error) {

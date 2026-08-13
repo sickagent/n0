@@ -8,16 +8,18 @@ import (
 	"time"
 )
 
-// ContextWithShutdown returns a context that is cancelled when an OS interrupt
-// signal is received, after an optional graceful shutdown timeout.
-func ContextWithShutdown(timeout time.Duration) (context.Context, context.CancelFunc) {
-	ctx, cancel := context.WithCancel(context.Background())
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-	go func() {
-		<-c
-		time.Sleep(timeout)
-		cancel()
-	}()
-	return ctx, cancel
+// ContextWithShutdown returns a context that is cancelled immediately when an
+// interrupt is received. The retained timeout parameter keeps the public API
+// compatible; shutdown deadlines belong to individual resource drains.
+func ContextWithShutdown(_ time.Duration) (context.Context, context.CancelFunc) {
+	return signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+}
+
+// WithTimeout creates a bounded cleanup context that is independent from the
+// already-cancelled application context.
+func WithTimeout(timeout time.Duration) (context.Context, context.CancelFunc) {
+	if timeout <= 0 {
+		timeout = 30 * time.Second
+	}
+	return context.WithTimeout(context.Background(), timeout)
 }

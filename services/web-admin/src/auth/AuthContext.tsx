@@ -1,33 +1,18 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { PropsWithChildren } from 'react';
 import { authApi } from '../api/auth';
 import { getStoredSession, setStoredSession } from './session';
-import type { AuthSession, LoginPayload, RegisterPayload } from '../types';
+import type { AuthSession } from '../types';
 
-type AuthContextValue = {
-  session: AuthSession | null;
-  isAuthenticated: boolean;
-  isReady: boolean;
-  login: (payload: LoginPayload) => Promise<void>;
-  register: (payload: RegisterPayload) => Promise<void>;
-  logout: () => void;
-};
-
-const AuthContext = createContext<AuthContextValue | null>(null);
+import { AuthContext, type AuthContextValue } from './context';
 
 export function AuthProvider({ children }: PropsWithChildren) {
-  const [session, setSession] = useState<AuthSession | null>(null);
-  const [isReady, setIsReady] = useState(false);
-
-  useEffect(() => {
-    setSession(getStoredSession());
-    setIsReady(true);
-  }, []);
+  const [session, setSession] = useState<AuthSession | null>(() => getStoredSession());
 
   const value = useMemo<AuthContextValue>(() => ({
     session,
     isAuthenticated: !!session?.token,
-    isReady,
+    isReady: true,
     login: async (payload) => {
       const nextSession = await authApi.login(payload);
       setStoredSession(nextSession);
@@ -46,15 +31,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
       setStoredSession(null);
       setSession(null);
     },
-  }), [isReady, session]);
+  }), [session]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within AuthProvider');
-  }
-  return context;
 }

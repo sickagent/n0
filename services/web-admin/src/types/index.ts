@@ -1,10 +1,13 @@
+export type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
+export type JsonObject = Record<string, JsonValue>;
+
 export interface Connection {
   id: string;
   workspace_id: string;
   tenant_id: string;
   name: string;
   adapter_type: string;
-  params: Record<string, any>;
+  params?: JsonObject;
   created_at: string;
 }
 
@@ -13,7 +16,7 @@ export interface CreateConnectionPayload {
   tenant_id: string;
   name: string;
   adapter_type: string;
-  params: Record<string, any>;
+  params: JsonObject;
 }
 
 export interface Plugin {
@@ -45,9 +48,7 @@ export interface LoginPayload {
   password: string;
 }
 
-export interface RegisterPayload extends LoginPayload {
-  role?: string;
-}
+export type RegisterPayload = LoginPayload;
 
 export interface TableInfo {
   name: string;

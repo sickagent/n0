@@ -3,8 +3,19 @@ import { notifications } from '@mantine/notifications';
 import { IconPlayerPlay } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useAuth } from '../auth/AuthContext';
+import { useAuth } from '../auth/useAuth';
 import { connectionsApi } from '../api/connections';
+import type { JsonValue } from '../types';
+import { errorMessage } from '../utils/errors';
+
+type QueryResult = {
+  job_id: string;
+  rows: Record<string, JsonValue>[];
+  truncated: boolean;
+};
+
+const pollDelayMs = 500;
+const maxPollAttempts = 120;
 
 export function QueryLab() {
   const { session } = useAuth();
@@ -17,7 +28,7 @@ export function QueryLab() {
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [sql, setSql] = useState('SELECT 1');
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<QueryResult | null>(null);
   const [loading, setLoading] = useState(false);
 
   const connections = connectionsData?.connections || [];
@@ -30,16 +41,21 @@ export function QueryLab() {
     }
     setLoading(true);
     try {
-      const res = await connectionsApi.executeQuery(
-        selectedConn.id,
-        selectedConn.adapter_type,
-        selectedConn.params,
-        sql,
-        100
-      );
-      setResult(res);
-    } catch (err: any) {
-      notifications.show({ title: 'Error', message: err?.message || 'Query failed', color: 'red' });
+      const submitted = await connectionsApi.submitQuery(selectedConn.id, sql);
+      for (let attempt = 0; attempt < maxPollAttempts; attempt += 1) {
+        const status = await connectionsApi.getJobStatus(submitted.job_id);
+        if (status.status === 'failed') {
+          throw new Error(status.error_message || 'Query failed');
+        }
+        if (status.status === 'success') {
+          setResult(await connectionsApi.getJobResult(submitted.job_id));
+          return;
+        }
+        await new Promise((resolve) => window.setTimeout(resolve, pollDelayMs));
+      }
+      throw new Error('Query timed out while waiting for a result');
+    } catch (err: unknown) {
+      notifications.show({ title: 'Error', message: errorMessage(err, 'Query failed'), color: 'red' });
     } finally {
       setLoading(false);
     }
@@ -87,25 +103,23 @@ export function QueryLab() {
           <Text fw={700} mb="sm">
             Result
           </Text>
-          {result.error_message ? (
-            <Text c="red">{result.error_message}</Text>
-          ) : result.rows && result.rows.length > 0 ? (
+          {result.rows.length > 0 ? (
             <ScrollArea>
               <Table striped>
                 <Table.Thead>
                   <Table.Tr>
-                    {result.columns.map((col: string) => (
+                    {Object.keys(result.rows[0]).map((col) => (
                       <Table.Th key={col}>{col}</Table.Th>
                     ))}
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
-                  {result.rows.map((row: any, idx: number) => (
+                  {result.rows.map((row, idx) => (
                     <Table.Tr key={idx}>
-                      {result.columns.map((col: string) => (
+                      {Object.keys(result.rows[0]).map((col) => (
                         <Table.Td key={col}>
                           <Text size="sm">
-                            {row.values?.[result.columns.indexOf(col)] ?? JSON.stringify(row[col])}
+                            {typeof row[col] === 'string' ? row[col] : JSON.stringify(row[col])}
                           </Text>
                         </Table.Td>
                       ))}

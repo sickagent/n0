@@ -1,6 +1,6 @@
 import { Center, Loader } from '@mantine/core';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { useAuth } from './AuthContext';
+import { useAuth } from './useAuth';
 
 export function RequireAuth() {
   const { isAuthenticated, isReady } = useAuth();

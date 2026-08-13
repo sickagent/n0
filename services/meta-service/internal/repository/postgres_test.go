@@ -41,7 +41,7 @@ func TestPostgresRepository_GetSchemaSnapshot(t *testing.T) {
 	defer repo.Close()
 
 	ctx := context.Background()
-	snap, err := repo.GetSchemaSnapshot(ctx, "conn-1")
+	snap, err := repo.GetSchemaSnapshot(ctx, "conn-1", "tenant-1")
 	if err != nil {
 		t.Logf("get schema snapshot returned error (table may not exist): %v", err)
 	}

@@ -51,7 +51,7 @@ func TestGRPCServer_SubmitQueryAndReadResult(t *testing.T) {
 		t.Fatalf("expected job id %s in payload, got %s", submitResp.JobId, payload.ID)
 	}
 
-	statusResp, err := svc.GetJobStatus(context.Background(), &pb.GetJobStatusRequest{JobId: submitResp.JobId})
+	statusResp, err := svc.GetJobStatus(context.Background(), &pb.GetJobStatusRequest{JobId: submitResp.JobId, TenantId: "tenant-1"})
 	if err != nil {
 		t.Fatalf("get status: %v", err)
 	}
@@ -68,6 +68,7 @@ func TestGRPCServer_SubmitQueryAndReadResult(t *testing.T) {
 
 	resultResp, err := svc.GetJobResult(context.Background(), &pb.GetJobResultRequest{
 		JobId:    submitResp.JobId,
+		TenantId: "tenant-1",
 		Page:     1,
 		PageSize: 1,
 	})
@@ -79,5 +80,16 @@ func TestGRPCServer_SubmitQueryAndReadResult(t *testing.T) {
 	}
 	if resultResp.NextPageToken != "2" {
 		t.Fatalf("expected next page token 2, got %q", resultResp.NextPageToken)
+	}
+}
+
+func TestGRPCServer_DoesNotExposeJobAcrossTenants(t *testing.T) {
+	store := job.NewStore()
+	store.Create(job.Record{ID: "job-1", TenantID: "tenant-1", Status: job.StatusPending})
+	svc := NewGRPCServer(zap.NewNop(), store, &fakePublisher{})
+
+	_, err := svc.GetJobStatus(context.Background(), &pb.GetJobStatusRequest{JobId: "job-1", TenantId: "tenant-2"})
+	if err == nil {
+		t.Fatal("expected cross-tenant job lookup to fail")
 	}
 }

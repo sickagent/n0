@@ -5,10 +5,13 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"go.uber.org/zap"
+	"n0/pkg/shared/graceful"
+	"n0/pkg/shared/httpserver"
 	pb "n0/proto/gen/go/lensagent/v1"
 )
 
@@ -22,7 +25,7 @@ type HTTPServer struct {
 // NewHTTPServer creates a new HTTP server.
 func NewHTTPServer(addr string, log *zap.Logger, svc *GRPCServer) *HTTPServer {
 	r := chi.NewRouter()
-	r.Use(middleware.Logger, middleware.Recoverer)
+	r.Use(middleware.RequestID, middleware.Logger, middleware.Recoverer, middleware.RequestSize(1<<20))
 	r.Get("/healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte("ok"))
@@ -44,7 +47,8 @@ func NewHTTPServer(addr string, log *zap.Logger, svc *GRPCServer) *HTTPServer {
 	})
 	r.Get("/v1/query/status", func(w http.ResponseWriter, r *http.Request) {
 		resp, err := svc.GetJobStatus(r.Context(), &pb.GetJobStatusRequest{
-			JobId: r.URL.Query().Get("job_id"),
+			JobId:    r.URL.Query().Get("job_id"),
+			TenantId: r.URL.Query().Get("tenant_id"),
 		})
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -56,6 +60,7 @@ func NewHTTPServer(addr string, log *zap.Logger, svc *GRPCServer) *HTTPServer {
 	r.Get("/v1/query/result", func(w http.ResponseWriter, r *http.Request) {
 		resp, err := svc.GetJobResult(r.Context(), &pb.GetJobResultRequest{
 			JobId:    r.URL.Query().Get("job_id"),
+			TenantId: r.URL.Query().Get("tenant_id"),
 			Page:     int32(parseInt(r.URL.Query().Get("page"))),
 			PageSize: int32(parseInt(r.URL.Query().Get("page_size"))),
 		})
@@ -82,7 +87,7 @@ func NewHTTPServer(addr string, log *zap.Logger, svc *GRPCServer) *HTTPServer {
 	})
 
 	return &HTTPServer{
-		srv: &http.Server{Addr: addr, Handler: r},
+		srv: httpserver.New(addr, r),
 		log: log,
 		svc: svc,
 	}
@@ -97,7 +102,11 @@ func (s *HTTPServer) Handler() http.Handler {
 func (s *HTTPServer) Start(ctx context.Context) error {
 	go func() {
 		<-ctx.Done()
-		_ = s.srv.Shutdown(context.Background())
+		shutdownCtx, cancel := graceful.WithTimeout(30 * time.Second)
+		defer cancel()
+		if err := s.srv.Shutdown(shutdownCtx); err != nil {
+			s.log.Warn("query-engine HTTP shutdown failed", zap.Error(err))
+		}
 	}()
 	s.log.Info("query-engine HTTP listening", zap.String("addr", s.srv.Addr))
 	if err := s.srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {

@@ -48,7 +48,7 @@ func main() {
 			}
 			defer nc.Close()
 
-			_, err = nc.EnsureStream(ctx, jetstream.StreamConfig{
+			queryStream, err := nc.EnsureStream(ctx, jetstream.StreamConfig{
 				Name:     "QUERIES",
 				Subjects: []string{"QUERIES.*"},
 				Replicas: 1,
@@ -57,11 +57,13 @@ func main() {
 				log.Fatal("stream ensure failed", zap.Error(err))
 			}
 
-			cons, err := nc.JS.CreateConsumer(ctx, "QUERIES", jetstream.ConsumerConfig{
-				Durable:   "query-workers",
-				Name:      "query-workers",
-				Replicas:  1,
-				AckPolicy: jetstream.AckExplicitPolicy,
+			cons, err := queryStream.CreateOrUpdateConsumer(ctx, jetstream.ConsumerConfig{
+				Durable:    "query-workers",
+				Name:       "query-workers",
+				Replicas:   1,
+				AckPolicy:  jetstream.AckExplicitPolicy,
+				AckWait:    90 * time.Second,
+				MaxDeliver: 3,
 			})
 			if err != nil {
 				log.Fatal("consumer create failed", zap.Error(err))
@@ -106,7 +108,7 @@ func main() {
 			}()
 
 			metrics := observability.StartMetricsServer(":9090", log)
-			defer func() { _ = metrics.Close() }()
+			defer observability.Shutdown(metrics, log)
 
 			<-ctx.Done()
 			log.Info("shutting down query-engine")
@@ -114,6 +116,7 @@ func main() {
 	}
 
 	cmd.Flags().String("app_name", "query-engine", "application name")
+	cmd.Flags().String("environment", "development", "runtime environment")
 	cmd.Flags().String("log_level", "info", "log level")
 	cmd.Flags().String("nats_url", "nats://localhost:4222", "NATS URL")
 	cmd.Flags().String("grpc_addr", ":8080", "gRPC listen address")
