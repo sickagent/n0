@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.6.1
 // - protoc             v7.34.1
-// source: lensagent/v1/query.proto
+// source: n0/platform/v1/query.proto
 
-package lensagentv1
+package n0v1
 
 import (
 	context "context"
@@ -19,10 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	QueryEngine_SubmitQuery_FullMethodName        = "/lensagent.v1.QueryEngine/SubmitQuery"
-	QueryEngine_GetJobStatus_FullMethodName       = "/lensagent.v1.QueryEngine/GetJobStatus"
-	QueryEngine_GetJobResult_FullMethodName       = "/lensagent.v1.QueryEngine/GetJobResult"
-	QueryEngine_SuggestChartConfig_FullMethodName = "/lensagent.v1.QueryEngine/SuggestChartConfig"
+	QueryEngine_SubmitQuery_FullMethodName        = "/n0.platform.v1.QueryEngine/SubmitQuery"
+	QueryEngine_GetJobStatus_FullMethodName       = "/n0.platform.v1.QueryEngine/GetJobStatus"
+	QueryEngine_GetJobResult_FullMethodName       = "/n0.platform.v1.QueryEngine/GetJobResult"
+	QueryEngine_SuggestChartConfig_FullMethodName = "/n0.platform.v1.QueryEngine/SuggestChartConfig"
 )
 
 // QueryEngineClient is the client API for QueryEngine service.
@@ -210,7 +210,7 @@ func _QueryEngine_SuggestChartConfig_Handler(srv interface{}, ctx context.Contex
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var QueryEngine_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "lensagent.v1.QueryEngine",
+	ServiceName: "n0.platform.v1.QueryEngine",
 	HandlerType: (*QueryEngineServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -231,5 +231,5 @@ var QueryEngine_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "lensagent/v1/query.proto",
+	Metadata: "n0/platform/v1/query.proto",
 }

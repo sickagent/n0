@@ -4,15 +4,15 @@ import (
 	"context"
 	"strings"
 
+	pb "github.com/sickagent/n0/proto/gen/go/n0/platform/v1"
+	"github.com/sickagent/n0/services/meta-service/internal/app"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
-	pb "n0/proto/gen/go/lensagent/v1"
-	"n0/services/meta-service/internal/app"
 )
 
-// GRPCServer implements lensagent.v1.MetaService.
+// GRPCServer implements n0.platform.v1.MetaService.
 type GRPCServer struct {
 	pb.UnimplementedMetaServiceServer
 	svc *app.MetaService
@@ -159,13 +159,15 @@ func (s *GRPCServer) RegisterPlugin(ctx context.Context, req *pb.RegisterPluginR
 		Version:    req.Version,
 		Endpoint:   req.Endpoint,
 		Protocol:   req.Protocol,
+		TenantID:   req.TenantId,
+		IsGlobal:   req.Global,
 	})
 	if err != nil {
 		return nil, err
 	}
 	return &pb.RegisterPluginResponse{
 		PluginId: id.String(),
-		Status:   "registered",
+		Status:   "validated",
 	}, nil
 }
 

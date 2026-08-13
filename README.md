@@ -2,13 +2,17 @@
 
 [Русский](./README.ru.md) · **English**
 
+[![CI](https://github.com/sickagent/n0/actions/workflows/ci.yml/badge.svg)](https://github.com/sickagent/n0/actions/workflows/ci.yml)
+[![Container images](https://github.com/sickagent/n0/actions/workflows/docker.yml/badge.svg)](https://github.com/sickagent/n0/actions/workflows/docker.yml)
+[![Go](https://img.shields.io/badge/Go-1.26-00ADD8?logo=go&logoColor=white)](https://go.dev/)
+
 **Data becomes an agent tool—without giving agents direct access to your databases.**
 
 n0 is a Go-based AI-BI platform for connecting AI agents to enterprise data safely. An agent discovers the schemas it is allowed to use, submits analytical SQL as an asynchronous job, and receives structured results ready for analysis, charts, and reports.
 
 n0 is not another chatbot or dashboard builder. It is an execution and metadata layer between agents and data sources. The platform owns authentication, tenant isolation, connection management, query validation, execution, job lifecycle, and result delivery.
 
-> n0 is under active development. The primary end-to-end flow works today, while several capabilities from the architecture decision record—including MCP, distributed result storage, Vault, PostgreSQL RLS, and Kubernetes deployment—remain on the roadmap. See the current status table below for exact details.
+> n0 is under active development. The primary end-to-end flow, policy-enforced query execution, durable result storage, plugin health routing, and audit persistence work today. MCP, Vault, metadata-table RLS, and Kubernetes deployment remain on the roadmap.
 
 [Features](#features) · [Quick start](#quick-start) · [First API query](#your-first-query-through-the-api) · [Architecture](#how-a-query-runs) · [Security](#production-security) · [Development](#development) · [Roadmap](#roadmap)
 
@@ -105,10 +109,10 @@ This README deliberately separates implemented behavior from the target architec
 | Tenant isolation | ✅ Baseline | Connections and jobs are checked against `tenant_id` |
 | Built-in database adapters | ✅ Working | PostgreSQL, MySQL, ClickHouse, SQLite, MSSQL, BigQuery |
 | Credential protection | ✅ Baseline | AES-256-GCM at rest and redaction at the public boundary |
-| Query sandbox | 🟡 Partial | Token-level guardrails; AST parsing and RLS injection are still required |
-| Plugin platform | 🟡 Partial | Registry and contracts exist; lifecycle and health routing are in progress |
-| Result persistence | 🟡 Prototype | Currently in memory; Redis/S3 storage is on the roadmap |
-| Audit pipeline | 🟡 Partial | Event architecture is defined; a durable audit sink is still required |
+| Query sandbox | ✅ Implemented | Structural SELECT parser, table allowlists, tenant predicate injection, statement/limit enforcement |
+| Plugin platform | ✅ Implemented | Registration validation, persistent lifecycle, gRPC health probes, automatic route add/remove |
+| Result persistence | ✅ Implemented | Redis job metadata and small results; S3-compatible storage for large payloads, both with retention |
+| Audit pipeline | ✅ Implemented | JetStream producer acknowledgement, durable consumer, explicit ack, idempotent PostgreSQL sink |
 | MCP server | ⏳ Roadmap | Included in the architecture but not connected to Agent Gateway yet |
 | Vault integration | ⏳ Roadmap | Configuration exists; runtime lease management is not implemented yet |
 | Kubernetes / HA | ⏳ Roadmap | Manifests, HPA, PDB, mTLS, and a production NATS topology are still needed |
@@ -286,6 +290,8 @@ A worker acknowledges the message only after processing it. Poison payloads rece
 | **NATS** | Messaging, JetStream queues, discovery, coordination foundation | NATS Core + JetStream |
 | **PostgreSQL** | Platform metadata | PostgreSQL 16 in development Compose |
 
+All persisted platform tables use `id UUID PRIMARY KEY DEFAULT gen_random_uuid()`. Join-table natural keys are retained as separate `UNIQUE` constraints, keeping identifiers uniform without losing domain-level deduplication.
+
 ### Why multiple services?
 
 - Gateway can scale on incoming request volume independently of query workers.
@@ -306,7 +312,15 @@ Internal services must never be exposed through a public ingress. Production acc
 | `mssql` | Built in | host, port, user, password, database |
 | `bigquery` | Built in | project_id, location, and provider credentials |
 
-The adapter registry lives in [services/connection-manager/internal/registry](./services/connection-manager/internal/registry). External plugin contracts are defined in [proto/lensagent/v1/plugin.proto](./proto/lensagent/v1/plugin.proto).
+The adapter registry lives in [services/connection-manager/internal/registry](./services/connection-manager/internal/registry). External plugin contracts are defined in [proto/n0/platform/v1/plugin.proto](./proto/n0/platform/v1/plugin.proto).
+
+External database adapters use a persisted lifecycle: registration validates the contract and endpoint, Meta Service probes the standard gRPC Health service every 15 seconds, and three consecutive failures move the plugin to `degraded`. `active` routes are broadcast to Connection Manager; degraded or disabled routes are removed immediately. A restarted Connection Manager is repopulated by the recurring health cycle. External plugins must implement the standard `grpc.health.v1.Health` service in addition to the n0 plugin contract.
+
+## Result and audit durability
+
+Query jobs, states, and small result sets are stored in Redis with the configured TTL. Results larger than `RESULT_INLINE_MAX_BYTES` are written to the `results/` prefix of the configured S3-compatible bucket; startup installs a matching bucket expiration policy. Production startup fails if Redis is unavailable, and oversized results fail closed if object storage is not configured.
+
+Every terminal query execution publishes a tenant-partitioned event to `audit.events.{tenant}` using JetStream's acknowledged publish API. Meta Service consumes through the durable `postgres-audit-sink` consumer, inserts the event into `audit_events` with its stable event ID, and acknowledges the message only after the transaction succeeds. Redelivery is idempotent through the table's primary key.
 
 ## Query guardrails
 
@@ -320,7 +334,18 @@ The current sandbox implementation:
 - rejects non-numeric or excessive limits;
 - propagates an execution timeout to the database driver.
 
-These checks are defence in depth—not a complete SQL security boundary. Before connecting sensitive production data, n0 still needs a dialect-aware AST parser, a real table allowlist, tenant predicate/RLS enforcement, and read-only database roles.
+The Query Engine parses a conservative analytical SELECT subset, extracts every base table, checks it against the connection's `query_policy.allowed_tables`, rejects unsupported constructs, and caps `LIMIT`. When `query_policy.tenant_column` is configured, it injects a tenant predicate while preserving boolean precedence. Unsupported or ambiguous SQL is rejected. Keep database credentials read-only as an independent defence-in-depth boundary.
+
+Example connection policy:
+
+```json
+{
+  "query_policy": {
+    "allowed_tables": ["public.orders", "public.customers"],
+    "tenant_column": "tenant_id"
+  }
+}
+```
 
 ## Configuration
 
@@ -341,7 +366,11 @@ Configuration is supplied through flags or environment variables. Both regular n
 | `QUERY_ENGINE_ADDR` | Query Engine gRPC endpoint | `localhost:8082` |
 | `CONNECTION_MANAGER_ADDR` | Connection Manager gRPC endpoint | `localhost:8081` |
 | `WORKER_COUNT` | Number of query workers | `4` |
-| `REDIS_ADDR` | Reserved for distributed result storage | `localhost:6379` |
+| `REDIS_ADDR` | Durable job metadata and inline result storage | `localhost:6379` |
+| `JOB_TTL_HOURS` | Job/result retention | `24` |
+| `S3_ENDPOINT` | S3-compatible endpoint for large results | empty (disabled) |
+| `S3_BUCKET` | Large-result bucket | `n0-results` |
+| `RESULT_INLINE_MAX_BYTES` | Redis-to-object-storage threshold | `1048576` |
 | `VAULT_ADDR` | Reserved for Vault integration | `http://localhost:8200` |
 
 Invalid integer and boolean environment values cause a startup error instead of being silently ignored.
@@ -364,7 +393,7 @@ Before a production deployment, you must also:
 - configure NATS Accounts/ACLs and tenant-specific subjects;
 - create read-only roles in every source database;
 - enable PostgreSQL RLS for metadata tables;
-- connect a durable audit sink;
+- size JetStream, PostgreSQL audit retention, Redis, and object storage for the expected workload;
 - define backup, restore, and key-rotation procedures;
 - add distributed rate limiting and external quota storage;
 - remove or replace every development credential from Compose.
@@ -433,7 +462,7 @@ n0/
 │   ├── natsclient/         # Core, JetStream, and KV client
 │   └── observability/      # metrics and health
 ├── proto/
-│   ├── lensagent/v1/       # source protobuf contracts
+│   ├── n0/platform/v1/     # source protobuf contracts
 │   └── gen/go/             # committed generated Go module
 ├── services/
 │   ├── agent-gateway/
@@ -494,6 +523,11 @@ CI performs:
 - ESLint for Web Admin;
 - a TypeScript and Vite production build.
 
+The container workflow builds every service for `linux/amd64` and
+`linux/arm64`. Pull requests are build-only; pushes to `main` and version tags
+publish images such as `ghcr.io/sickagent/n0-agent-gateway` to GitHub Container
+Registry. Dependabot monitors Go, npm, Docker, and GitHub Actions dependencies.
+
 Run the main checks locally:
 
 ```bash
@@ -512,15 +546,14 @@ The end-to-end suite lives in [tests/e2e](./tests/e2e) and requires the Docker C
 ### Security and tenancy
 
 - PostgreSQL Row-Level Security for metadata;
-- tenant-aware table allowlists and AST-based SQL validation;
+- additional SQL dialect coverage beyond the conservative portable SELECT subset;
 - mTLS and service identity between internal services;
 - agent ownership verification and token revocation lifecycle;
 - distributed rate limiting and quotas through NATS KV or Redis.
 
 ### Reliability and scale
 
-- Redis-backed job metadata instead of process memory;
-- Redis for small results and S3-compatible storage for large results;
+- optional result compression, storage-class transitions, replication, and signed download URLs;
 - idempotency keys and deduplication by `job_id`;
 - the retry and dead-letter topology defined in the ADR;
 - Kubernetes deployments, HPA, PDB, and readiness probes;
@@ -536,7 +569,7 @@ The end-to-end suite lives in [tests/e2e](./tests/e2e) and requires the Docker C
 
 ### Governance and observability
 
-- a durable audit stream and dedicated audit sink;
+- audit archival/export integrations and configurable retention policies;
 - OpenTelemetry traces across gateway, queue, and worker;
 - per-tenant usage metrics and budgets;
 - credential rotation through Vault leases;
@@ -558,7 +591,7 @@ When implementation and ADR differ, the status table in this README describes th
 
 ## The name
 
-`n0` is pronounced **“en-zero.”** It represents a neutral zero layer between an AI agent and data. The agent can change, the model can change, and the source can change—the execution and security contract remains stable.
+`n0` is pronounced **“en-zero.”** The name comes from zero-based array indexing: element `0` is the first element in a collection. In the same way, n0 is intended to be the first foundational element in the domain this project represents—AI agents working safely with data.
 
 ## Contributing
 

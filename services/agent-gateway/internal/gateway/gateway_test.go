@@ -9,9 +9,9 @@ import (
 	"strings"
 	"testing"
 
+	pb "github.com/sickagent/n0/proto/gen/go/n0/platform/v1"
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/structpb"
-	pb "n0/proto/gen/go/lensagent/v1"
 )
 
 type fakeMetaClient struct {

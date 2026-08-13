@@ -7,7 +7,7 @@ import (
 	"time"
 
 	_ "github.com/microsoft/go-mssqldb"
-	"n0/pkg/shared/adapter"
+	"github.com/sickagent/n0/pkg/shared/adapter"
 )
 
 // MSSQLAdapter implements a built-in adapter for Microsoft SQL Server.

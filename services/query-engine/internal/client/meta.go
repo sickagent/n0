@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/sickagent/n0/pkg/shared/discovery"
+	"github.com/sickagent/n0/pkg/shared/natsclient"
+	pb "github.com/sickagent/n0/proto/gen/go/n0/platform/v1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"n0/pkg/shared/discovery"
-	"n0/pkg/shared/natsclient"
-	pb "n0/proto/gen/go/lensagent/v1"
 )
 
 // MetaClient wraps the MetaService gRPC client.

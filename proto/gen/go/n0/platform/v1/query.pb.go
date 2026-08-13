@@ -2,9 +2,9 @@
 // versions:
 // 	protoc-gen-go v1.36.11
 // 	protoc        v7.34.1
-// source: lensagent/v1/query.proto
+// source: n0/platform/v1/query.proto
 
-package lensagentv1
+package n0v1
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -35,7 +35,7 @@ type SubmitQueryRequest struct {
 
 func (x *SubmitQueryRequest) Reset() {
 	*x = SubmitQueryRequest{}
-	mi := &file_lensagent_v1_query_proto_msgTypes[0]
+	mi := &file_n0_platform_v1_query_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -47,7 +47,7 @@ func (x *SubmitQueryRequest) String() string {
 func (*SubmitQueryRequest) ProtoMessage() {}
 
 func (x *SubmitQueryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_query_proto_msgTypes[0]
+	mi := &file_n0_platform_v1_query_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -60,7 +60,7 @@ func (x *SubmitQueryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubmitQueryRequest.ProtoReflect.Descriptor instead.
 func (*SubmitQueryRequest) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_query_proto_rawDescGZIP(), []int{0}
+	return file_n0_platform_v1_query_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *SubmitQueryRequest) GetTenantId() string {
@@ -108,7 +108,7 @@ type SubmitQueryResponse struct {
 
 func (x *SubmitQueryResponse) Reset() {
 	*x = SubmitQueryResponse{}
-	mi := &file_lensagent_v1_query_proto_msgTypes[1]
+	mi := &file_n0_platform_v1_query_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -120,7 +120,7 @@ func (x *SubmitQueryResponse) String() string {
 func (*SubmitQueryResponse) ProtoMessage() {}
 
 func (x *SubmitQueryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_query_proto_msgTypes[1]
+	mi := &file_n0_platform_v1_query_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -133,7 +133,7 @@ func (x *SubmitQueryResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubmitQueryResponse.ProtoReflect.Descriptor instead.
 func (*SubmitQueryResponse) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_query_proto_rawDescGZIP(), []int{1}
+	return file_n0_platform_v1_query_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *SubmitQueryResponse) GetJobId() string {
@@ -160,7 +160,7 @@ type GetJobStatusRequest struct {
 
 func (x *GetJobStatusRequest) Reset() {
 	*x = GetJobStatusRequest{}
-	mi := &file_lensagent_v1_query_proto_msgTypes[2]
+	mi := &file_n0_platform_v1_query_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -172,7 +172,7 @@ func (x *GetJobStatusRequest) String() string {
 func (*GetJobStatusRequest) ProtoMessage() {}
 
 func (x *GetJobStatusRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_query_proto_msgTypes[2]
+	mi := &file_n0_platform_v1_query_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -185,7 +185,7 @@ func (x *GetJobStatusRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetJobStatusRequest.ProtoReflect.Descriptor instead.
 func (*GetJobStatusRequest) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_query_proto_rawDescGZIP(), []int{2}
+	return file_n0_platform_v1_query_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *GetJobStatusRequest) GetJobId() string {
@@ -213,7 +213,7 @@ type GetJobStatusResponse struct {
 
 func (x *GetJobStatusResponse) Reset() {
 	*x = GetJobStatusResponse{}
-	mi := &file_lensagent_v1_query_proto_msgTypes[3]
+	mi := &file_n0_platform_v1_query_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -225,7 +225,7 @@ func (x *GetJobStatusResponse) String() string {
 func (*GetJobStatusResponse) ProtoMessage() {}
 
 func (x *GetJobStatusResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_query_proto_msgTypes[3]
+	mi := &file_n0_platform_v1_query_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -238,7 +238,7 @@ func (x *GetJobStatusResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetJobStatusResponse.ProtoReflect.Descriptor instead.
 func (*GetJobStatusResponse) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_query_proto_rawDescGZIP(), []int{3}
+	return file_n0_platform_v1_query_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *GetJobStatusResponse) GetJobId() string {
@@ -274,7 +274,7 @@ type GetJobResultRequest struct {
 
 func (x *GetJobResultRequest) Reset() {
 	*x = GetJobResultRequest{}
-	mi := &file_lensagent_v1_query_proto_msgTypes[4]
+	mi := &file_n0_platform_v1_query_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -286,7 +286,7 @@ func (x *GetJobResultRequest) String() string {
 func (*GetJobResultRequest) ProtoMessage() {}
 
 func (x *GetJobResultRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_query_proto_msgTypes[4]
+	mi := &file_n0_platform_v1_query_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -299,7 +299,7 @@ func (x *GetJobResultRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetJobResultRequest.ProtoReflect.Descriptor instead.
 func (*GetJobResultRequest) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_query_proto_rawDescGZIP(), []int{4}
+	return file_n0_platform_v1_query_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GetJobResultRequest) GetJobId() string {
@@ -342,7 +342,7 @@ type GetJobResultResponse struct {
 
 func (x *GetJobResultResponse) Reset() {
 	*x = GetJobResultResponse{}
-	mi := &file_lensagent_v1_query_proto_msgTypes[5]
+	mi := &file_n0_platform_v1_query_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -354,7 +354,7 @@ func (x *GetJobResultResponse) String() string {
 func (*GetJobResultResponse) ProtoMessage() {}
 
 func (x *GetJobResultResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_query_proto_msgTypes[5]
+	mi := &file_n0_platform_v1_query_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -367,7 +367,7 @@ func (x *GetJobResultResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetJobResultResponse.ProtoReflect.Descriptor instead.
 func (*GetJobResultResponse) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_query_proto_rawDescGZIP(), []int{5}
+	return file_n0_platform_v1_query_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *GetJobResultResponse) GetJobId() string {
@@ -409,7 +409,7 @@ type SuggestChartConfigRequest struct {
 
 func (x *SuggestChartConfigRequest) Reset() {
 	*x = SuggestChartConfigRequest{}
-	mi := &file_lensagent_v1_query_proto_msgTypes[6]
+	mi := &file_n0_platform_v1_query_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -421,7 +421,7 @@ func (x *SuggestChartConfigRequest) String() string {
 func (*SuggestChartConfigRequest) ProtoMessage() {}
 
 func (x *SuggestChartConfigRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_query_proto_msgTypes[6]
+	mi := &file_n0_platform_v1_query_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -434,7 +434,7 @@ func (x *SuggestChartConfigRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SuggestChartConfigRequest.ProtoReflect.Descriptor instead.
 func (*SuggestChartConfigRequest) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_query_proto_rawDescGZIP(), []int{6}
+	return file_n0_platform_v1_query_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *SuggestChartConfigRequest) GetTenantId() string {
@@ -468,7 +468,7 @@ type SuggestChartConfigResponse struct {
 
 func (x *SuggestChartConfigResponse) Reset() {
 	*x = SuggestChartConfigResponse{}
-	mi := &file_lensagent_v1_query_proto_msgTypes[7]
+	mi := &file_n0_platform_v1_query_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -480,7 +480,7 @@ func (x *SuggestChartConfigResponse) String() string {
 func (*SuggestChartConfigResponse) ProtoMessage() {}
 
 func (x *SuggestChartConfigResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_query_proto_msgTypes[7]
+	mi := &file_n0_platform_v1_query_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -493,7 +493,7 @@ func (x *SuggestChartConfigResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SuggestChartConfigResponse.ProtoReflect.Descriptor instead.
 func (*SuggestChartConfigResponse) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_query_proto_rawDescGZIP(), []int{7}
+	return file_n0_platform_v1_query_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *SuggestChartConfigResponse) GetChartType() string {
@@ -510,11 +510,11 @@ func (x *SuggestChartConfigResponse) GetConfig() *structpb.Struct {
 	return nil
 }
 
-var File_lensagent_v1_query_proto protoreflect.FileDescriptor
+var File_n0_platform_v1_query_proto protoreflect.FileDescriptor
 
-const file_lensagent_v1_query_proto_rawDesc = "" +
+const file_n0_platform_v1_query_proto_rawDesc = "" +
 	"\n" +
-	"\x18lensagent/v1/query.proto\x12\flensagent.v1\x1a\x1cgoogle/protobuf/struct.proto\"\xc0\x01\n" +
+	"\x1an0/platform/v1/query.proto\x12\x0en0.platform.v1\x1a\x1cgoogle/protobuf/struct.proto\"\xc0\x01\n" +
 	"\x12SubmitQueryRequest\x12\x1b\n" +
 	"\ttenant_id\x18\x01 \x01(\tR\btenantId\x12\x1d\n" +
 	"\n" +
@@ -552,50 +552,50 @@ const file_lensagent_v1_query_proto_rawDesc = "" +
 	"\x1aSuggestChartConfigResponse\x12\x1d\n" +
 	"\n" +
 	"chart_type\x18\x01 \x01(\tR\tchartType\x12/\n" +
-	"\x06config\x18\x02 \x01(\v2\x17.google.protobuf.StructR\x06config2\xf8\x02\n" +
-	"\vQueryEngine\x12R\n" +
-	"\vSubmitQuery\x12 .lensagent.v1.SubmitQueryRequest\x1a!.lensagent.v1.SubmitQueryResponse\x12U\n" +
-	"\fGetJobStatus\x12!.lensagent.v1.GetJobStatusRequest\x1a\".lensagent.v1.GetJobStatusResponse\x12U\n" +
-	"\fGetJobResult\x12!.lensagent.v1.GetJobResultRequest\x1a\".lensagent.v1.GetJobResultResponse\x12g\n" +
-	"\x12SuggestChartConfig\x12'.lensagent.v1.SuggestChartConfigRequest\x1a(.lensagent.v1.SuggestChartConfigResponseB*Z(n0/proto/gen/go/lensagent/v1;lensagentv1b\x06proto3"
+	"\x06config\x18\x02 \x01(\v2\x17.google.protobuf.StructR\x06config2\x88\x03\n" +
+	"\vQueryEngine\x12V\n" +
+	"\vSubmitQuery\x12\".n0.platform.v1.SubmitQueryRequest\x1a#.n0.platform.v1.SubmitQueryResponse\x12Y\n" +
+	"\fGetJobStatus\x12#.n0.platform.v1.GetJobStatusRequest\x1a$.n0.platform.v1.GetJobStatusResponse\x12Y\n" +
+	"\fGetJobResult\x12#.n0.platform.v1.GetJobResultRequest\x1a$.n0.platform.v1.GetJobResultResponse\x12k\n" +
+	"\x12SuggestChartConfig\x12).n0.platform.v1.SuggestChartConfigRequest\x1a*.n0.platform.v1.SuggestChartConfigResponseB:Z8github.com/sickagent/n0/proto/gen/go/n0/platform/v1;n0v1b\x06proto3"
 
 var (
-	file_lensagent_v1_query_proto_rawDescOnce sync.Once
-	file_lensagent_v1_query_proto_rawDescData []byte
+	file_n0_platform_v1_query_proto_rawDescOnce sync.Once
+	file_n0_platform_v1_query_proto_rawDescData []byte
 )
 
-func file_lensagent_v1_query_proto_rawDescGZIP() []byte {
-	file_lensagent_v1_query_proto_rawDescOnce.Do(func() {
-		file_lensagent_v1_query_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_lensagent_v1_query_proto_rawDesc), len(file_lensagent_v1_query_proto_rawDesc)))
+func file_n0_platform_v1_query_proto_rawDescGZIP() []byte {
+	file_n0_platform_v1_query_proto_rawDescOnce.Do(func() {
+		file_n0_platform_v1_query_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_n0_platform_v1_query_proto_rawDesc), len(file_n0_platform_v1_query_proto_rawDesc)))
 	})
-	return file_lensagent_v1_query_proto_rawDescData
+	return file_n0_platform_v1_query_proto_rawDescData
 }
 
-var file_lensagent_v1_query_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
-var file_lensagent_v1_query_proto_goTypes = []any{
-	(*SubmitQueryRequest)(nil),         // 0: lensagent.v1.SubmitQueryRequest
-	(*SubmitQueryResponse)(nil),        // 1: lensagent.v1.SubmitQueryResponse
-	(*GetJobStatusRequest)(nil),        // 2: lensagent.v1.GetJobStatusRequest
-	(*GetJobStatusResponse)(nil),       // 3: lensagent.v1.GetJobStatusResponse
-	(*GetJobResultRequest)(nil),        // 4: lensagent.v1.GetJobResultRequest
-	(*GetJobResultResponse)(nil),       // 5: lensagent.v1.GetJobResultResponse
-	(*SuggestChartConfigRequest)(nil),  // 6: lensagent.v1.SuggestChartConfigRequest
-	(*SuggestChartConfigResponse)(nil), // 7: lensagent.v1.SuggestChartConfigResponse
+var file_n0_platform_v1_query_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_n0_platform_v1_query_proto_goTypes = []any{
+	(*SubmitQueryRequest)(nil),         // 0: n0.platform.v1.SubmitQueryRequest
+	(*SubmitQueryResponse)(nil),        // 1: n0.platform.v1.SubmitQueryResponse
+	(*GetJobStatusRequest)(nil),        // 2: n0.platform.v1.GetJobStatusRequest
+	(*GetJobStatusResponse)(nil),       // 3: n0.platform.v1.GetJobStatusResponse
+	(*GetJobResultRequest)(nil),        // 4: n0.platform.v1.GetJobResultRequest
+	(*GetJobResultResponse)(nil),       // 5: n0.platform.v1.GetJobResultResponse
+	(*SuggestChartConfigRequest)(nil),  // 6: n0.platform.v1.SuggestChartConfigRequest
+	(*SuggestChartConfigResponse)(nil), // 7: n0.platform.v1.SuggestChartConfigResponse
 	(*structpb.Struct)(nil),            // 8: google.protobuf.Struct
 }
-var file_lensagent_v1_query_proto_depIdxs = []int32{
-	8, // 0: lensagent.v1.SubmitQueryRequest.parameters:type_name -> google.protobuf.Struct
-	8, // 1: lensagent.v1.GetJobResultResponse.rows:type_name -> google.protobuf.Struct
-	8, // 2: lensagent.v1.SuggestChartConfigRequest.sample_rows:type_name -> google.protobuf.Struct
-	8, // 3: lensagent.v1.SuggestChartConfigResponse.config:type_name -> google.protobuf.Struct
-	0, // 4: lensagent.v1.QueryEngine.SubmitQuery:input_type -> lensagent.v1.SubmitQueryRequest
-	2, // 5: lensagent.v1.QueryEngine.GetJobStatus:input_type -> lensagent.v1.GetJobStatusRequest
-	4, // 6: lensagent.v1.QueryEngine.GetJobResult:input_type -> lensagent.v1.GetJobResultRequest
-	6, // 7: lensagent.v1.QueryEngine.SuggestChartConfig:input_type -> lensagent.v1.SuggestChartConfigRequest
-	1, // 8: lensagent.v1.QueryEngine.SubmitQuery:output_type -> lensagent.v1.SubmitQueryResponse
-	3, // 9: lensagent.v1.QueryEngine.GetJobStatus:output_type -> lensagent.v1.GetJobStatusResponse
-	5, // 10: lensagent.v1.QueryEngine.GetJobResult:output_type -> lensagent.v1.GetJobResultResponse
-	7, // 11: lensagent.v1.QueryEngine.SuggestChartConfig:output_type -> lensagent.v1.SuggestChartConfigResponse
+var file_n0_platform_v1_query_proto_depIdxs = []int32{
+	8, // 0: n0.platform.v1.SubmitQueryRequest.parameters:type_name -> google.protobuf.Struct
+	8, // 1: n0.platform.v1.GetJobResultResponse.rows:type_name -> google.protobuf.Struct
+	8, // 2: n0.platform.v1.SuggestChartConfigRequest.sample_rows:type_name -> google.protobuf.Struct
+	8, // 3: n0.platform.v1.SuggestChartConfigResponse.config:type_name -> google.protobuf.Struct
+	0, // 4: n0.platform.v1.QueryEngine.SubmitQuery:input_type -> n0.platform.v1.SubmitQueryRequest
+	2, // 5: n0.platform.v1.QueryEngine.GetJobStatus:input_type -> n0.platform.v1.GetJobStatusRequest
+	4, // 6: n0.platform.v1.QueryEngine.GetJobResult:input_type -> n0.platform.v1.GetJobResultRequest
+	6, // 7: n0.platform.v1.QueryEngine.SuggestChartConfig:input_type -> n0.platform.v1.SuggestChartConfigRequest
+	1, // 8: n0.platform.v1.QueryEngine.SubmitQuery:output_type -> n0.platform.v1.SubmitQueryResponse
+	3, // 9: n0.platform.v1.QueryEngine.GetJobStatus:output_type -> n0.platform.v1.GetJobStatusResponse
+	5, // 10: n0.platform.v1.QueryEngine.GetJobResult:output_type -> n0.platform.v1.GetJobResultResponse
+	7, // 11: n0.platform.v1.QueryEngine.SuggestChartConfig:output_type -> n0.platform.v1.SuggestChartConfigResponse
 	8, // [8:12] is the sub-list for method output_type
 	4, // [4:8] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name
@@ -603,26 +603,26 @@ var file_lensagent_v1_query_proto_depIdxs = []int32{
 	0, // [0:4] is the sub-list for field type_name
 }
 
-func init() { file_lensagent_v1_query_proto_init() }
-func file_lensagent_v1_query_proto_init() {
-	if File_lensagent_v1_query_proto != nil {
+func init() { file_n0_platform_v1_query_proto_init() }
+func file_n0_platform_v1_query_proto_init() {
+	if File_n0_platform_v1_query_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_lensagent_v1_query_proto_rawDesc), len(file_lensagent_v1_query_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_n0_platform_v1_query_proto_rawDesc), len(file_n0_platform_v1_query_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_lensagent_v1_query_proto_goTypes,
-		DependencyIndexes: file_lensagent_v1_query_proto_depIdxs,
-		MessageInfos:      file_lensagent_v1_query_proto_msgTypes,
+		GoTypes:           file_n0_platform_v1_query_proto_goTypes,
+		DependencyIndexes: file_n0_platform_v1_query_proto_depIdxs,
+		MessageInfos:      file_n0_platform_v1_query_proto_msgTypes,
 	}.Build()
-	File_lensagent_v1_query_proto = out.File
-	file_lensagent_v1_query_proto_goTypes = nil
-	file_lensagent_v1_query_proto_depIdxs = nil
+	File_n0_platform_v1_query_proto = out.File
+	file_n0_platform_v1_query_proto_goTypes = nil
+	file_n0_platform_v1_query_proto_depIdxs = nil
 }

@@ -7,7 +7,7 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
-	"n0/pkg/shared/adapter"
+	"github.com/sickagent/n0/pkg/shared/adapter"
 )
 
 // MySQLAdapter implements a built-in adapter for MySQL.

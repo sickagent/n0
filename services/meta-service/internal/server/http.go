@@ -10,11 +10,11 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/google/uuid"
+	"github.com/sickagent/n0/pkg/shared/graceful"
+	"github.com/sickagent/n0/pkg/shared/httpserver"
+	pb "github.com/sickagent/n0/proto/gen/go/n0/platform/v1"
+	"github.com/sickagent/n0/services/meta-service/internal/app"
 	"go.uber.org/zap"
-	"n0/pkg/shared/graceful"
-	"n0/pkg/shared/httpserver"
-	pb "n0/proto/gen/go/lensagent/v1"
-	"n0/services/meta-service/internal/app"
 )
 
 // HTTPServer hosts the REST API for meta-service.

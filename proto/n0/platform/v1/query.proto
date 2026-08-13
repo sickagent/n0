@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package lensagent.v1;
+package n0.platform.v1;
 
-option go_package = "n0/proto/gen/go/lensagent/v1;lensagentv1";
+option go_package = "github.com/sickagent/n0/proto/gen/go/n0/platform/v1;n0v1";
 
 import "google/protobuf/struct.proto";
 

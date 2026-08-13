@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	pb "github.com/sickagent/n0/proto/gen/go/n0/platform/v1"
+	"github.com/sickagent/n0/services/meta-service/internal/app"
 	"google.golang.org/protobuf/types/known/structpb"
-	pb "n0/proto/gen/go/lensagent/v1"
-	"n0/services/meta-service/internal/app"
 )
 
 type fakeRepo struct {

@@ -2,9 +2,9 @@
 // versions:
 // 	protoc-gen-go v1.36.11
 // 	protoc        v7.34.1
-// source: lensagent/v1/common.proto
+// source: n0/platform/v1/common.proto
 
-package lensagentv1
+package n0v1
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -29,7 +29,7 @@ type Empty struct {
 
 func (x *Empty) Reset() {
 	*x = Empty{}
-	mi := &file_lensagent_v1_common_proto_msgTypes[0]
+	mi := &file_n0_platform_v1_common_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -41,7 +41,7 @@ func (x *Empty) String() string {
 func (*Empty) ProtoMessage() {}
 
 func (x *Empty) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_common_proto_msgTypes[0]
+	mi := &file_n0_platform_v1_common_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -54,7 +54,7 @@ func (x *Empty) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Empty.ProtoReflect.Descriptor instead.
 func (*Empty) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_common_proto_rawDescGZIP(), []int{0}
+	return file_n0_platform_v1_common_proto_rawDescGZIP(), []int{0}
 }
 
 type Pagination struct {
@@ -67,7 +67,7 @@ type Pagination struct {
 
 func (x *Pagination) Reset() {
 	*x = Pagination{}
-	mi := &file_lensagent_v1_common_proto_msgTypes[1]
+	mi := &file_n0_platform_v1_common_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -79,7 +79,7 @@ func (x *Pagination) String() string {
 func (*Pagination) ProtoMessage() {}
 
 func (x *Pagination) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_common_proto_msgTypes[1]
+	mi := &file_n0_platform_v1_common_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -92,7 +92,7 @@ func (x *Pagination) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Pagination.ProtoReflect.Descriptor instead.
 func (*Pagination) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_common_proto_rawDescGZIP(), []int{1}
+	return file_n0_platform_v1_common_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *Pagination) GetLimit() int32 {
@@ -120,7 +120,7 @@ type ListMeta struct {
 
 func (x *ListMeta) Reset() {
 	*x = ListMeta{}
-	mi := &file_lensagent_v1_common_proto_msgTypes[2]
+	mi := &file_n0_platform_v1_common_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -132,7 +132,7 @@ func (x *ListMeta) String() string {
 func (*ListMeta) ProtoMessage() {}
 
 func (x *ListMeta) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_common_proto_msgTypes[2]
+	mi := &file_n0_platform_v1_common_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -145,7 +145,7 @@ func (x *ListMeta) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListMeta.ProtoReflect.Descriptor instead.
 func (*ListMeta) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_common_proto_rawDescGZIP(), []int{2}
+	return file_n0_platform_v1_common_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *ListMeta) GetTotal() int32 {
@@ -180,7 +180,7 @@ type Column struct {
 
 func (x *Column) Reset() {
 	*x = Column{}
-	mi := &file_lensagent_v1_common_proto_msgTypes[3]
+	mi := &file_n0_platform_v1_common_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -192,7 +192,7 @@ func (x *Column) String() string {
 func (*Column) ProtoMessage() {}
 
 func (x *Column) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_common_proto_msgTypes[3]
+	mi := &file_n0_platform_v1_common_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -205,7 +205,7 @@ func (x *Column) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Column.ProtoReflect.Descriptor instead.
 func (*Column) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_common_proto_rawDescGZIP(), []int{3}
+	return file_n0_platform_v1_common_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *Column) GetName() string {
@@ -239,7 +239,7 @@ type Table struct {
 
 func (x *Table) Reset() {
 	*x = Table{}
-	mi := &file_lensagent_v1_common_proto_msgTypes[4]
+	mi := &file_n0_platform_v1_common_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -251,7 +251,7 @@ func (x *Table) String() string {
 func (*Table) ProtoMessage() {}
 
 func (x *Table) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_common_proto_msgTypes[4]
+	mi := &file_n0_platform_v1_common_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -264,7 +264,7 @@ func (x *Table) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Table.ProtoReflect.Descriptor instead.
 func (*Table) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_common_proto_rawDescGZIP(), []int{4}
+	return file_n0_platform_v1_common_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *Table) GetName() string {
@@ -281,11 +281,11 @@ func (x *Table) GetColumns() []*Column {
 	return nil
 }
 
-var File_lensagent_v1_common_proto protoreflect.FileDescriptor
+var File_n0_platform_v1_common_proto protoreflect.FileDescriptor
 
-const file_lensagent_v1_common_proto_rawDesc = "" +
+const file_n0_platform_v1_common_proto_rawDesc = "" +
 	"\n" +
-	"\x19lensagent/v1/common.proto\x12\flensagent.v1\"\a\n" +
+	"\x1bn0/platform/v1/common.proto\x12\x0en0.platform.v1\"\a\n" +
 	"\x05Empty\":\n" +
 	"\n" +
 	"Pagination\x12\x14\n" +
@@ -298,33 +298,33 @@ const file_lensagent_v1_common_proto_rawDesc = "" +
 	"\x06Column\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1b\n" +
 	"\tdata_type\x18\x02 \x01(\tR\bdataType\x12\x1a\n" +
-	"\bnullable\x18\x03 \x01(\bR\bnullable\"K\n" +
+	"\bnullable\x18\x03 \x01(\bR\bnullable\"M\n" +
 	"\x05Table\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12.\n" +
-	"\acolumns\x18\x02 \x03(\v2\x14.lensagent.v1.ColumnR\acolumnsB*Z(n0/proto/gen/go/lensagent/v1;lensagentv1b\x06proto3"
+	"\x04name\x18\x01 \x01(\tR\x04name\x120\n" +
+	"\acolumns\x18\x02 \x03(\v2\x16.n0.platform.v1.ColumnR\acolumnsB:Z8github.com/sickagent/n0/proto/gen/go/n0/platform/v1;n0v1b\x06proto3"
 
 var (
-	file_lensagent_v1_common_proto_rawDescOnce sync.Once
-	file_lensagent_v1_common_proto_rawDescData []byte
+	file_n0_platform_v1_common_proto_rawDescOnce sync.Once
+	file_n0_platform_v1_common_proto_rawDescData []byte
 )
 
-func file_lensagent_v1_common_proto_rawDescGZIP() []byte {
-	file_lensagent_v1_common_proto_rawDescOnce.Do(func() {
-		file_lensagent_v1_common_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_lensagent_v1_common_proto_rawDesc), len(file_lensagent_v1_common_proto_rawDesc)))
+func file_n0_platform_v1_common_proto_rawDescGZIP() []byte {
+	file_n0_platform_v1_common_proto_rawDescOnce.Do(func() {
+		file_n0_platform_v1_common_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_n0_platform_v1_common_proto_rawDesc), len(file_n0_platform_v1_common_proto_rawDesc)))
 	})
-	return file_lensagent_v1_common_proto_rawDescData
+	return file_n0_platform_v1_common_proto_rawDescData
 }
 
-var file_lensagent_v1_common_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
-var file_lensagent_v1_common_proto_goTypes = []any{
-	(*Empty)(nil),      // 0: lensagent.v1.Empty
-	(*Pagination)(nil), // 1: lensagent.v1.Pagination
-	(*ListMeta)(nil),   // 2: lensagent.v1.ListMeta
-	(*Column)(nil),     // 3: lensagent.v1.Column
-	(*Table)(nil),      // 4: lensagent.v1.Table
+var file_n0_platform_v1_common_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_n0_platform_v1_common_proto_goTypes = []any{
+	(*Empty)(nil),      // 0: n0.platform.v1.Empty
+	(*Pagination)(nil), // 1: n0.platform.v1.Pagination
+	(*ListMeta)(nil),   // 2: n0.platform.v1.ListMeta
+	(*Column)(nil),     // 3: n0.platform.v1.Column
+	(*Table)(nil),      // 4: n0.platform.v1.Table
 }
-var file_lensagent_v1_common_proto_depIdxs = []int32{
-	3, // 0: lensagent.v1.Table.columns:type_name -> lensagent.v1.Column
+var file_n0_platform_v1_common_proto_depIdxs = []int32{
+	3, // 0: n0.platform.v1.Table.columns:type_name -> n0.platform.v1.Column
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
@@ -332,26 +332,26 @@ var file_lensagent_v1_common_proto_depIdxs = []int32{
 	0, // [0:1] is the sub-list for field type_name
 }
 
-func init() { file_lensagent_v1_common_proto_init() }
-func file_lensagent_v1_common_proto_init() {
-	if File_lensagent_v1_common_proto != nil {
+func init() { file_n0_platform_v1_common_proto_init() }
+func file_n0_platform_v1_common_proto_init() {
+	if File_n0_platform_v1_common_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_lensagent_v1_common_proto_rawDesc), len(file_lensagent_v1_common_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_n0_platform_v1_common_proto_rawDesc), len(file_n0_platform_v1_common_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_lensagent_v1_common_proto_goTypes,
-		DependencyIndexes: file_lensagent_v1_common_proto_depIdxs,
-		MessageInfos:      file_lensagent_v1_common_proto_msgTypes,
+		GoTypes:           file_n0_platform_v1_common_proto_goTypes,
+		DependencyIndexes: file_n0_platform_v1_common_proto_depIdxs,
+		MessageInfos:      file_n0_platform_v1_common_proto_msgTypes,
 	}.Build()
-	File_lensagent_v1_common_proto = out.File
-	file_lensagent_v1_common_proto_goTypes = nil
-	file_lensagent_v1_common_proto_depIdxs = nil
+	File_n0_platform_v1_common_proto = out.File
+	file_n0_platform_v1_common_proto_goTypes = nil
+	file_n0_platform_v1_common_proto_depIdxs = nil
 }

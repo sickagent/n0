@@ -40,12 +40,12 @@ const adapterOptions = [
 ];
 
 const defaultParamsByAdapter: Record<string, JsonObject> = {
-  postgres: { host: 'postgres', port: '5432', user: 'postgres', password: 'postgres', database: 'meta', sslmode: 'disable' },
-  clickhouse: { host: 'clickhouse', port: '9000', user: 'default', password: '', database: 'default' },
-  mysql: { host: 'mysql', port: '3306', user: 'root', password: 'root', database: 'meta' },
-  sqlite: { path: ':memory:' },
-  mssql: { host: 'localhost', port: '1433', user: 'sa', password: '', database: 'meta' },
-  bigquery: { project_id: '', location: 'US' },
+  postgres: { host: 'postgres', port: '5432', user: 'postgres', password: 'postgres', database: 'meta', sslmode: 'disable', query_policy: { allowed_tables: [], tenant_column: '' } },
+  clickhouse: { host: 'clickhouse', port: '9000', user: 'default', password: '', database: 'default', query_policy: { allowed_tables: [], tenant_column: '' } },
+  mysql: { host: 'mysql', port: '3306', user: 'root', password: 'root', database: 'meta', query_policy: { allowed_tables: [], tenant_column: '' } },
+  sqlite: { path: ':memory:', query_policy: { allowed_tables: [], tenant_column: '' } },
+  mssql: { host: 'localhost', port: '1433', user: 'sa', password: '', database: 'meta', query_policy: { allowed_tables: [], tenant_column: '' } },
+  bigquery: { project_id: '', location: 'US', query_policy: { allowed_tables: [], tenant_column: '' } },
 };
 
 export function Connections() {

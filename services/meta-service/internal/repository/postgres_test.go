@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"n0/services/meta-service/internal/app"
+	"github.com/sickagent/n0/services/meta-service/internal/app"
 )
 
 func getDSN() string {

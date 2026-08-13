@@ -4,17 +4,38 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"n0/services/meta-service/internal/app"
+	"github.com/sickagent/n0/pkg/shared/audit"
+	"github.com/sickagent/n0/services/meta-service/internal/app"
 )
 
 // PostgresRepository provides PostgreSQL-backed persistence.
 type PostgresRepository struct {
 	pool *pgxpool.Pool
+}
+
+// SaveAuditEvent inserts an immutable event. The ID conflict makes JetStream
+// redelivery idempotent and therefore safe across process restarts.
+func (r *PostgresRepository) SaveAuditEvent(ctx context.Context, event audit.Event) error {
+	metadata, err := json.Marshal(event.Metadata)
+	if err != nil {
+		return fmt.Errorf("marshal audit metadata: %w", err)
+	}
+	const q = `
+		INSERT INTO audit_events
+			(id, tenant_id, actor_id, action, resource_type, resource_id, success, error_message, metadata, occurred_at)
+		VALUES ($1, $2, NULLIF($3, ''), $4, $5, NULLIF($6, ''), $7, NULLIF($8, ''), $9, $10)
+		ON CONFLICT (id) DO NOTHING`
+	if _, err := r.pool.Exec(ctx, q, event.ID, event.TenantID, event.ActorID, event.Action,
+		event.ResourceType, event.ResourceID, event.Success, event.ErrorMessage, metadata, event.OccurredAt); err != nil {
+		return fmt.Errorf("insert audit event: %w", err)
+	}
+	return nil
 }
 
 // NewPostgresRepository creates a repository from a DSN.
@@ -221,18 +242,82 @@ func (r *PostgresRepository) DeleteConnection(ctx context.Context, connectionID,
 // RegisterPlugin inserts a new plugin definition.
 func (r *PostgresRepository) RegisterPlugin(ctx context.Context, p app.PluginDefinition) (uuid.UUID, error) {
 	const q = `
-		INSERT INTO plugin_definitions (plugin_type, name, version, author, endpoint, protocol, status)
-		VALUES ($1, $2, $3, $4, $5, $6, $7)
+		INSERT INTO plugin_definitions (plugin_type, name, version, author, endpoint, protocol, status, tenant_id, is_global)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, NULLIF($8, ''), $9)
 		RETURNING id
 	`
 	var id uuid.UUID
-	if err := r.pool.QueryRow(ctx, q, p.PluginType, p.Name, p.Version, p.Author, p.Endpoint, p.Protocol, p.Status).Scan(&id); err != nil {
+	if err := r.pool.QueryRow(ctx, q, p.PluginType, p.Name, p.Version, p.Author, p.Endpoint, p.Protocol, p.Status, p.TenantID, p.IsGlobal).Scan(&id); err != nil {
 		if pgErr, ok := err.(*pgconn.PgError); ok && pgErr.Code == "23505" {
 			return uuid.Nil, fmt.Errorf("plugin already exists")
 		}
 		return uuid.Nil, fmt.Errorf("insert plugin: %w", err)
 	}
+	if !p.IsGlobal {
+		if _, err := r.pool.Exec(ctx, `INSERT INTO tenant_plugins (tenant_id, plugin_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`, p.TenantID, id); err != nil {
+			return uuid.Nil, fmt.Errorf("enable tenant plugin: %w", err)
+		}
+	}
 	return id, nil
+}
+
+// ListPluginsForHealth returns enabled gRPC plugins watched by the lifecycle manager.
+func (r *PostgresRepository) ListPluginsForHealth(ctx context.Context) ([]app.PluginDefinition, error) {
+	const q = `SELECT id, plugin_type, name, version, author, endpoint, protocol, status,
+		COALESCE(tenant_id, ''), is_global, last_heartbeat_at, COALESCE(last_error, ''), created_at
+		FROM plugin_definitions WHERE status <> 'disabled' ORDER BY created_at`
+	rows, err := r.pool.Query(ctx, q)
+	if err != nil {
+		return nil, fmt.Errorf("query plugins for health: %w", err)
+	}
+	defer rows.Close()
+	var plugins []app.PluginDefinition
+	for rows.Next() {
+		var p app.PluginDefinition
+		if err := rows.Scan(&p.ID, &p.PluginType, &p.Name, &p.Version, &p.Author, &p.Endpoint,
+			&p.Protocol, &p.Status, &p.TenantID, &p.IsGlobal, &p.LastHeartbeatAt, &p.LastError, &p.CreatedAt); err != nil {
+			return nil, fmt.Errorf("scan plugin: %w", err)
+		}
+		plugins = append(plugins, p)
+	}
+	return plugins, rows.Err()
+}
+
+// RecordPluginHealth stores every probe and advances the lifecycle state.
+func (r *PostgresRepository) RecordPluginHealth(ctx context.Context, id uuid.UUID, healthy bool, latency time.Duration, message string) (string, bool, error) {
+	tx, err := r.pool.Begin(ctx)
+	if err != nil {
+		return "", false, err
+	}
+	defer tx.Rollback(ctx)
+	var oldStatus string
+	var failures int
+	if err := tx.QueryRow(ctx, `SELECT status, consecutive_failures FROM plugin_definitions WHERE id=$1 FOR UPDATE`, id).Scan(&oldStatus, &failures); err != nil {
+		return "", false, err
+	}
+	newStatus := "active"
+	if !healthy {
+		failures++
+		if failures < 3 {
+			newStatus = oldStatus
+		} else {
+			newStatus = "degraded"
+		}
+	} else {
+		failures = 0
+	}
+	if _, err := tx.Exec(ctx, `INSERT INTO plugin_healthchecks(plugin_id, healthy, latency_ms, error_message) VALUES ($1,$2,$3,NULLIF($4,''))`, id, healthy, latency.Milliseconds(), message); err != nil {
+		return "", false, err
+	}
+	if _, err := tx.Exec(ctx, `UPDATE plugin_definitions SET status=$2, consecutive_failures=$3,
+		last_heartbeat_at=CASE WHEN $4 THEN now() ELSE last_heartbeat_at END,
+		last_error=NULLIF($5,''), updated_at=now() WHERE id=$1`, id, newStatus, failures, healthy, message); err != nil {
+		return "", false, err
+	}
+	if err := tx.Commit(ctx); err != nil {
+		return "", false, err
+	}
+	return newStatus, newStatus != oldStatus, nil
 }
 
 // CreateUser inserts a new user.

@@ -5,19 +5,21 @@ import (
 	"time"
 
 	"github.com/nats-io/nats.go/jetstream"
+	"github.com/sickagent/n0/pkg/shared/config"
+	"github.com/sickagent/n0/pkg/shared/crypto"
+	"github.com/sickagent/n0/pkg/shared/discovery"
+	"github.com/sickagent/n0/pkg/shared/graceful"
+	"github.com/sickagent/n0/pkg/shared/logger"
+	"github.com/sickagent/n0/pkg/shared/natsclient"
+	"github.com/sickagent/n0/pkg/shared/observability"
+	"github.com/sickagent/n0/services/meta-service/internal/app"
+	"github.com/sickagent/n0/services/meta-service/internal/auditsink"
+	"github.com/sickagent/n0/services/meta-service/internal/client"
+	"github.com/sickagent/n0/services/meta-service/internal/pluginlifecycle"
+	"github.com/sickagent/n0/services/meta-service/internal/repository"
+	"github.com/sickagent/n0/services/meta-service/internal/server"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
-	"n0/pkg/shared/config"
-	"n0/pkg/shared/crypto"
-	"n0/pkg/shared/discovery"
-	"n0/pkg/shared/graceful"
-	"n0/pkg/shared/logger"
-	"n0/pkg/shared/natsclient"
-	"n0/pkg/shared/observability"
-	"n0/services/meta-service/internal/app"
-	"n0/services/meta-service/internal/client"
-	"n0/services/meta-service/internal/repository"
-	"n0/services/meta-service/internal/server"
 )
 
 type Config struct {
@@ -52,7 +54,10 @@ func main() {
 			}
 			defer nc.Close()
 
-			_, err = nc.EnsureStream(ctx, streamConfig("AUDIT"))
+			auditStream, err := nc.EnsureStream(ctx, jetstream.StreamConfig{
+				Name: "AUDIT", Subjects: []string{"audit.events.>"}, Replicas: 1,
+				Retention: jetstream.LimitsPolicy, MaxAge: 30 * 24 * time.Hour,
+			})
 			if err != nil {
 				log.Fatal("stream ensure failed", zap.Error(err))
 			}
@@ -66,6 +71,18 @@ func main() {
 				log.Fatal("repository init failed", zap.Error(err))
 			}
 			defer repo.Close()
+
+			auditConsumer, err := auditStream.CreateOrUpdateConsumer(ctx, jetstream.ConsumerConfig{
+				Durable: "postgres-audit-sink", Name: "postgres-audit-sink",
+				AckPolicy: jetstream.AckExplicitPolicy, AckWait: 30 * time.Second, MaxDeliver: 10,
+			})
+			if err != nil {
+				log.Fatal("audit consumer create failed", zap.Error(err))
+			}
+			sink := auditsink.New(auditConsumer, repo, log)
+			sink.Start(ctx)
+			pluginManager := pluginlifecycle.New(repo, nc.Conn, 15*time.Second, log)
+			go pluginManager.Run(ctx)
 
 			cmCli, err := client.NewCMClient(ctx, nc, cfg.ConnectionManagerAddr)
 			if err != nil {
@@ -109,6 +126,7 @@ func main() {
 			metrics := observability.StartMetricsServer(":9090", log)
 			defer observability.Shutdown(metrics, log)
 			<-ctx.Done()
+			sink.Wait()
 			log.Info("shutting down meta-service")
 		},
 	}

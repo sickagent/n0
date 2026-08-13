@@ -2,9 +2,9 @@
 // versions:
 // 	protoc-gen-go v1.36.11
 // 	protoc        v7.34.1
-// source: lensagent/v1/connection.proto
+// source: n0/platform/v1/connection.proto
 
-package lensagentv1
+package n0v1
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -32,7 +32,7 @@ type TestConnectionRequest struct {
 
 func (x *TestConnectionRequest) Reset() {
 	*x = TestConnectionRequest{}
-	mi := &file_lensagent_v1_connection_proto_msgTypes[0]
+	mi := &file_n0_platform_v1_connection_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -44,7 +44,7 @@ func (x *TestConnectionRequest) String() string {
 func (*TestConnectionRequest) ProtoMessage() {}
 
 func (x *TestConnectionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_connection_proto_msgTypes[0]
+	mi := &file_n0_platform_v1_connection_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -57,7 +57,7 @@ func (x *TestConnectionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TestConnectionRequest.ProtoReflect.Descriptor instead.
 func (*TestConnectionRequest) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_connection_proto_rawDescGZIP(), []int{0}
+	return file_n0_platform_v1_connection_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *TestConnectionRequest) GetAdapterType() string {
@@ -85,7 +85,7 @@ type TestConnectionResponse struct {
 
 func (x *TestConnectionResponse) Reset() {
 	*x = TestConnectionResponse{}
-	mi := &file_lensagent_v1_connection_proto_msgTypes[1]
+	mi := &file_n0_platform_v1_connection_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -97,7 +97,7 @@ func (x *TestConnectionResponse) String() string {
 func (*TestConnectionResponse) ProtoMessage() {}
 
 func (x *TestConnectionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_connection_proto_msgTypes[1]
+	mi := &file_n0_platform_v1_connection_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -110,7 +110,7 @@ func (x *TestConnectionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TestConnectionResponse.ProtoReflect.Descriptor instead.
 func (*TestConnectionResponse) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_connection_proto_rawDescGZIP(), []int{1}
+	return file_n0_platform_v1_connection_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *TestConnectionResponse) GetOk() bool {
@@ -143,7 +143,7 @@ type GetPoolHealthRequest struct {
 
 func (x *GetPoolHealthRequest) Reset() {
 	*x = GetPoolHealthRequest{}
-	mi := &file_lensagent_v1_connection_proto_msgTypes[2]
+	mi := &file_n0_platform_v1_connection_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -155,7 +155,7 @@ func (x *GetPoolHealthRequest) String() string {
 func (*GetPoolHealthRequest) ProtoMessage() {}
 
 func (x *GetPoolHealthRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_connection_proto_msgTypes[2]
+	mi := &file_n0_platform_v1_connection_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -168,7 +168,7 @@ func (x *GetPoolHealthRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPoolHealthRequest.ProtoReflect.Descriptor instead.
 func (*GetPoolHealthRequest) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_connection_proto_rawDescGZIP(), []int{2}
+	return file_n0_platform_v1_connection_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *GetPoolHealthRequest) GetConnectionId() string {
@@ -189,7 +189,7 @@ type GetPoolHealthResponse struct {
 
 func (x *GetPoolHealthResponse) Reset() {
 	*x = GetPoolHealthResponse{}
-	mi := &file_lensagent_v1_connection_proto_msgTypes[3]
+	mi := &file_n0_platform_v1_connection_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -201,7 +201,7 @@ func (x *GetPoolHealthResponse) String() string {
 func (*GetPoolHealthResponse) ProtoMessage() {}
 
 func (x *GetPoolHealthResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_connection_proto_msgTypes[3]
+	mi := &file_n0_platform_v1_connection_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -214,7 +214,7 @@ func (x *GetPoolHealthResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPoolHealthResponse.ProtoReflect.Descriptor instead.
 func (*GetPoolHealthResponse) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_connection_proto_rawDescGZIP(), []int{3}
+	return file_n0_platform_v1_connection_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *GetPoolHealthResponse) GetHealthy() bool {
@@ -252,7 +252,7 @@ type ExecuteQueryRequest struct {
 
 func (x *ExecuteQueryRequest) Reset() {
 	*x = ExecuteQueryRequest{}
-	mi := &file_lensagent_v1_connection_proto_msgTypes[4]
+	mi := &file_n0_platform_v1_connection_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -264,7 +264,7 @@ func (x *ExecuteQueryRequest) String() string {
 func (*ExecuteQueryRequest) ProtoMessage() {}
 
 func (x *ExecuteQueryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_connection_proto_msgTypes[4]
+	mi := &file_n0_platform_v1_connection_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -277,7 +277,7 @@ func (x *ExecuteQueryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ExecuteQueryRequest.ProtoReflect.Descriptor instead.
 func (*ExecuteQueryRequest) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_connection_proto_rawDescGZIP(), []int{4}
+	return file_n0_platform_v1_connection_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *ExecuteQueryRequest) GetConnectionId() string {
@@ -331,7 +331,7 @@ type Row struct {
 
 func (x *Row) Reset() {
 	*x = Row{}
-	mi := &file_lensagent_v1_connection_proto_msgTypes[5]
+	mi := &file_n0_platform_v1_connection_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -343,7 +343,7 @@ func (x *Row) String() string {
 func (*Row) ProtoMessage() {}
 
 func (x *Row) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_connection_proto_msgTypes[5]
+	mi := &file_n0_platform_v1_connection_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -356,7 +356,7 @@ func (x *Row) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Row.ProtoReflect.Descriptor instead.
 func (*Row) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_connection_proto_rawDescGZIP(), []int{5}
+	return file_n0_platform_v1_connection_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *Row) GetValues() []*structpb.Value {
@@ -378,7 +378,7 @@ type ExecuteQueryResponse struct {
 
 func (x *ExecuteQueryResponse) Reset() {
 	*x = ExecuteQueryResponse{}
-	mi := &file_lensagent_v1_connection_proto_msgTypes[6]
+	mi := &file_n0_platform_v1_connection_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -390,7 +390,7 @@ func (x *ExecuteQueryResponse) String() string {
 func (*ExecuteQueryResponse) ProtoMessage() {}
 
 func (x *ExecuteQueryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_connection_proto_msgTypes[6]
+	mi := &file_n0_platform_v1_connection_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -403,7 +403,7 @@ func (x *ExecuteQueryResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ExecuteQueryResponse.ProtoReflect.Descriptor instead.
 func (*ExecuteQueryResponse) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_connection_proto_rawDescGZIP(), []int{6}
+	return file_n0_platform_v1_connection_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ExecuteQueryResponse) GetColumns() []string {
@@ -445,7 +445,7 @@ type GetConnectionSchemaRequest struct {
 
 func (x *GetConnectionSchemaRequest) Reset() {
 	*x = GetConnectionSchemaRequest{}
-	mi := &file_lensagent_v1_connection_proto_msgTypes[7]
+	mi := &file_n0_platform_v1_connection_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -457,7 +457,7 @@ func (x *GetConnectionSchemaRequest) String() string {
 func (*GetConnectionSchemaRequest) ProtoMessage() {}
 
 func (x *GetConnectionSchemaRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_connection_proto_msgTypes[7]
+	mi := &file_n0_platform_v1_connection_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -470,7 +470,7 @@ func (x *GetConnectionSchemaRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetConnectionSchemaRequest.ProtoReflect.Descriptor instead.
 func (*GetConnectionSchemaRequest) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_connection_proto_rawDescGZIP(), []int{7}
+	return file_n0_platform_v1_connection_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *GetConnectionSchemaRequest) GetConnectionId() string {
@@ -503,7 +503,7 @@ type GetConnectionSchemaResponse struct {
 
 func (x *GetConnectionSchemaResponse) Reset() {
 	*x = GetConnectionSchemaResponse{}
-	mi := &file_lensagent_v1_connection_proto_msgTypes[8]
+	mi := &file_n0_platform_v1_connection_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -515,7 +515,7 @@ func (x *GetConnectionSchemaResponse) String() string {
 func (*GetConnectionSchemaResponse) ProtoMessage() {}
 
 func (x *GetConnectionSchemaResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_connection_proto_msgTypes[8]
+	mi := &file_n0_platform_v1_connection_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -528,7 +528,7 @@ func (x *GetConnectionSchemaResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetConnectionSchemaResponse.ProtoReflect.Descriptor instead.
 func (*GetConnectionSchemaResponse) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_connection_proto_rawDescGZIP(), []int{8}
+	return file_n0_platform_v1_connection_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *GetConnectionSchemaResponse) GetTables() []*Table {
@@ -538,11 +538,11 @@ func (x *GetConnectionSchemaResponse) GetTables() []*Table {
 	return nil
 }
 
-var File_lensagent_v1_connection_proto protoreflect.FileDescriptor
+var File_n0_platform_v1_connection_proto protoreflect.FileDescriptor
 
-const file_lensagent_v1_connection_proto_rawDesc = "" +
+const file_n0_platform_v1_connection_proto_rawDesc = "" +
 	"\n" +
-	"\x1dlensagent/v1/connection.proto\x12\flensagent.v1\x1a\x1cgoogle/protobuf/struct.proto\x1a\x19lensagent/v1/common.proto\"k\n" +
+	"\x1fn0/platform/v1/connection.proto\x12\x0en0.platform.v1\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1bn0/platform/v1/common.proto\"k\n" +
 	"\x15TestConnectionRequest\x12!\n" +
 	"\fadapter_type\x18\x01 \x01(\tR\vadapterType\x12/\n" +
 	"\x06params\x18\x02 \x01(\v2\x17.google.protobuf.StructR\x06params\"l\n" +
@@ -565,66 +565,66 @@ const file_lensagent_v1_connection_proto_rawDesc = "" +
 	"\fadapter_type\x18\x05 \x01(\tR\vadapterType\x12/\n" +
 	"\x06params\x18\x06 \x01(\v2\x17.google.protobuf.StructR\x06params\"5\n" +
 	"\x03Row\x12.\n" +
-	"\x06values\x18\x01 \x03(\v2\x16.google.protobuf.ValueR\x06values\"\x92\x01\n" +
+	"\x06values\x18\x01 \x03(\v2\x16.google.protobuf.ValueR\x06values\"\x94\x01\n" +
 	"\x14ExecuteQueryResponse\x12\x18\n" +
-	"\acolumns\x18\x01 \x03(\tR\acolumns\x12%\n" +
-	"\x04rows\x18\x02 \x03(\v2\x11.lensagent.v1.RowR\x04rows\x12\x1b\n" +
+	"\acolumns\x18\x01 \x03(\tR\acolumns\x12'\n" +
+	"\x04rows\x18\x02 \x03(\v2\x13.n0.platform.v1.RowR\x04rows\x12\x1b\n" +
 	"\trow_count\x18\x03 \x01(\x03R\browCount\x12\x1c\n" +
 	"\ttruncated\x18\x04 \x01(\bR\ttruncated\"\x95\x01\n" +
 	"\x1aGetConnectionSchemaRequest\x12#\n" +
 	"\rconnection_id\x18\x01 \x01(\tR\fconnectionId\x12!\n" +
 	"\fadapter_type\x18\x02 \x01(\tR\vadapterType\x12/\n" +
-	"\x06params\x18\x03 \x01(\v2\x17.google.protobuf.StructR\x06params\"J\n" +
-	"\x1bGetConnectionSchemaResponse\x12+\n" +
-	"\x06tables\x18\x01 \x03(\v2\x13.lensagent.v1.TableR\x06tables2\x83\x03\n" +
-	"\x11ConnectionManager\x12[\n" +
-	"\x0eTestConnection\x12#.lensagent.v1.TestConnectionRequest\x1a$.lensagent.v1.TestConnectionResponse\x12X\n" +
-	"\rGetPoolHealth\x12\".lensagent.v1.GetPoolHealthRequest\x1a#.lensagent.v1.GetPoolHealthResponse\x12U\n" +
-	"\fExecuteQuery\x12!.lensagent.v1.ExecuteQueryRequest\x1a\".lensagent.v1.ExecuteQueryResponse\x12`\n" +
-	"\tGetSchema\x12(.lensagent.v1.GetConnectionSchemaRequest\x1a).lensagent.v1.GetConnectionSchemaResponseB*Z(n0/proto/gen/go/lensagent/v1;lensagentv1b\x06proto3"
+	"\x06params\x18\x03 \x01(\v2\x17.google.protobuf.StructR\x06params\"L\n" +
+	"\x1bGetConnectionSchemaResponse\x12-\n" +
+	"\x06tables\x18\x01 \x03(\v2\x15.n0.platform.v1.TableR\x06tables2\x93\x03\n" +
+	"\x11ConnectionManager\x12_\n" +
+	"\x0eTestConnection\x12%.n0.platform.v1.TestConnectionRequest\x1a&.n0.platform.v1.TestConnectionResponse\x12\\\n" +
+	"\rGetPoolHealth\x12$.n0.platform.v1.GetPoolHealthRequest\x1a%.n0.platform.v1.GetPoolHealthResponse\x12Y\n" +
+	"\fExecuteQuery\x12#.n0.platform.v1.ExecuteQueryRequest\x1a$.n0.platform.v1.ExecuteQueryResponse\x12d\n" +
+	"\tGetSchema\x12*.n0.platform.v1.GetConnectionSchemaRequest\x1a+.n0.platform.v1.GetConnectionSchemaResponseB:Z8github.com/sickagent/n0/proto/gen/go/n0/platform/v1;n0v1b\x06proto3"
 
 var (
-	file_lensagent_v1_connection_proto_rawDescOnce sync.Once
-	file_lensagent_v1_connection_proto_rawDescData []byte
+	file_n0_platform_v1_connection_proto_rawDescOnce sync.Once
+	file_n0_platform_v1_connection_proto_rawDescData []byte
 )
 
-func file_lensagent_v1_connection_proto_rawDescGZIP() []byte {
-	file_lensagent_v1_connection_proto_rawDescOnce.Do(func() {
-		file_lensagent_v1_connection_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_lensagent_v1_connection_proto_rawDesc), len(file_lensagent_v1_connection_proto_rawDesc)))
+func file_n0_platform_v1_connection_proto_rawDescGZIP() []byte {
+	file_n0_platform_v1_connection_proto_rawDescOnce.Do(func() {
+		file_n0_platform_v1_connection_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_n0_platform_v1_connection_proto_rawDesc), len(file_n0_platform_v1_connection_proto_rawDesc)))
 	})
-	return file_lensagent_v1_connection_proto_rawDescData
+	return file_n0_platform_v1_connection_proto_rawDescData
 }
 
-var file_lensagent_v1_connection_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
-var file_lensagent_v1_connection_proto_goTypes = []any{
-	(*TestConnectionRequest)(nil),       // 0: lensagent.v1.TestConnectionRequest
-	(*TestConnectionResponse)(nil),      // 1: lensagent.v1.TestConnectionResponse
-	(*GetPoolHealthRequest)(nil),        // 2: lensagent.v1.GetPoolHealthRequest
-	(*GetPoolHealthResponse)(nil),       // 3: lensagent.v1.GetPoolHealthResponse
-	(*ExecuteQueryRequest)(nil),         // 4: lensagent.v1.ExecuteQueryRequest
-	(*Row)(nil),                         // 5: lensagent.v1.Row
-	(*ExecuteQueryResponse)(nil),        // 6: lensagent.v1.ExecuteQueryResponse
-	(*GetConnectionSchemaRequest)(nil),  // 7: lensagent.v1.GetConnectionSchemaRequest
-	(*GetConnectionSchemaResponse)(nil), // 8: lensagent.v1.GetConnectionSchemaResponse
+var file_n0_platform_v1_connection_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_n0_platform_v1_connection_proto_goTypes = []any{
+	(*TestConnectionRequest)(nil),       // 0: n0.platform.v1.TestConnectionRequest
+	(*TestConnectionResponse)(nil),      // 1: n0.platform.v1.TestConnectionResponse
+	(*GetPoolHealthRequest)(nil),        // 2: n0.platform.v1.GetPoolHealthRequest
+	(*GetPoolHealthResponse)(nil),       // 3: n0.platform.v1.GetPoolHealthResponse
+	(*ExecuteQueryRequest)(nil),         // 4: n0.platform.v1.ExecuteQueryRequest
+	(*Row)(nil),                         // 5: n0.platform.v1.Row
+	(*ExecuteQueryResponse)(nil),        // 6: n0.platform.v1.ExecuteQueryResponse
+	(*GetConnectionSchemaRequest)(nil),  // 7: n0.platform.v1.GetConnectionSchemaRequest
+	(*GetConnectionSchemaResponse)(nil), // 8: n0.platform.v1.GetConnectionSchemaResponse
 	(*structpb.Struct)(nil),             // 9: google.protobuf.Struct
 	(*structpb.Value)(nil),              // 10: google.protobuf.Value
-	(*Table)(nil),                       // 11: lensagent.v1.Table
+	(*Table)(nil),                       // 11: n0.platform.v1.Table
 }
-var file_lensagent_v1_connection_proto_depIdxs = []int32{
-	9,  // 0: lensagent.v1.TestConnectionRequest.params:type_name -> google.protobuf.Struct
-	9,  // 1: lensagent.v1.ExecuteQueryRequest.params:type_name -> google.protobuf.Struct
-	10, // 2: lensagent.v1.Row.values:type_name -> google.protobuf.Value
-	5,  // 3: lensagent.v1.ExecuteQueryResponse.rows:type_name -> lensagent.v1.Row
-	9,  // 4: lensagent.v1.GetConnectionSchemaRequest.params:type_name -> google.protobuf.Struct
-	11, // 5: lensagent.v1.GetConnectionSchemaResponse.tables:type_name -> lensagent.v1.Table
-	0,  // 6: lensagent.v1.ConnectionManager.TestConnection:input_type -> lensagent.v1.TestConnectionRequest
-	2,  // 7: lensagent.v1.ConnectionManager.GetPoolHealth:input_type -> lensagent.v1.GetPoolHealthRequest
-	4,  // 8: lensagent.v1.ConnectionManager.ExecuteQuery:input_type -> lensagent.v1.ExecuteQueryRequest
-	7,  // 9: lensagent.v1.ConnectionManager.GetSchema:input_type -> lensagent.v1.GetConnectionSchemaRequest
-	1,  // 10: lensagent.v1.ConnectionManager.TestConnection:output_type -> lensagent.v1.TestConnectionResponse
-	3,  // 11: lensagent.v1.ConnectionManager.GetPoolHealth:output_type -> lensagent.v1.GetPoolHealthResponse
-	6,  // 12: lensagent.v1.ConnectionManager.ExecuteQuery:output_type -> lensagent.v1.ExecuteQueryResponse
-	8,  // 13: lensagent.v1.ConnectionManager.GetSchema:output_type -> lensagent.v1.GetConnectionSchemaResponse
+var file_n0_platform_v1_connection_proto_depIdxs = []int32{
+	9,  // 0: n0.platform.v1.TestConnectionRequest.params:type_name -> google.protobuf.Struct
+	9,  // 1: n0.platform.v1.ExecuteQueryRequest.params:type_name -> google.protobuf.Struct
+	10, // 2: n0.platform.v1.Row.values:type_name -> google.protobuf.Value
+	5,  // 3: n0.platform.v1.ExecuteQueryResponse.rows:type_name -> n0.platform.v1.Row
+	9,  // 4: n0.platform.v1.GetConnectionSchemaRequest.params:type_name -> google.protobuf.Struct
+	11, // 5: n0.platform.v1.GetConnectionSchemaResponse.tables:type_name -> n0.platform.v1.Table
+	0,  // 6: n0.platform.v1.ConnectionManager.TestConnection:input_type -> n0.platform.v1.TestConnectionRequest
+	2,  // 7: n0.platform.v1.ConnectionManager.GetPoolHealth:input_type -> n0.platform.v1.GetPoolHealthRequest
+	4,  // 8: n0.platform.v1.ConnectionManager.ExecuteQuery:input_type -> n0.platform.v1.ExecuteQueryRequest
+	7,  // 9: n0.platform.v1.ConnectionManager.GetSchema:input_type -> n0.platform.v1.GetConnectionSchemaRequest
+	1,  // 10: n0.platform.v1.ConnectionManager.TestConnection:output_type -> n0.platform.v1.TestConnectionResponse
+	3,  // 11: n0.platform.v1.ConnectionManager.GetPoolHealth:output_type -> n0.platform.v1.GetPoolHealthResponse
+	6,  // 12: n0.platform.v1.ConnectionManager.ExecuteQuery:output_type -> n0.platform.v1.ExecuteQueryResponse
+	8,  // 13: n0.platform.v1.ConnectionManager.GetSchema:output_type -> n0.platform.v1.GetConnectionSchemaResponse
 	10, // [10:14] is the sub-list for method output_type
 	6,  // [6:10] is the sub-list for method input_type
 	6,  // [6:6] is the sub-list for extension type_name
@@ -632,27 +632,27 @@ var file_lensagent_v1_connection_proto_depIdxs = []int32{
 	0,  // [0:6] is the sub-list for field type_name
 }
 
-func init() { file_lensagent_v1_connection_proto_init() }
-func file_lensagent_v1_connection_proto_init() {
-	if File_lensagent_v1_connection_proto != nil {
+func init() { file_n0_platform_v1_connection_proto_init() }
+func file_n0_platform_v1_connection_proto_init() {
+	if File_n0_platform_v1_connection_proto != nil {
 		return
 	}
-	file_lensagent_v1_common_proto_init()
+	file_n0_platform_v1_common_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_lensagent_v1_connection_proto_rawDesc), len(file_lensagent_v1_connection_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_n0_platform_v1_connection_proto_rawDesc), len(file_n0_platform_v1_connection_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_lensagent_v1_connection_proto_goTypes,
-		DependencyIndexes: file_lensagent_v1_connection_proto_depIdxs,
-		MessageInfos:      file_lensagent_v1_connection_proto_msgTypes,
+		GoTypes:           file_n0_platform_v1_connection_proto_goTypes,
+		DependencyIndexes: file_n0_platform_v1_connection_proto_depIdxs,
+		MessageInfos:      file_n0_platform_v1_connection_proto_msgTypes,
 	}.Build()
-	File_lensagent_v1_connection_proto = out.File
-	file_lensagent_v1_connection_proto_goTypes = nil
-	file_lensagent_v1_connection_proto_depIdxs = nil
+	File_n0_platform_v1_connection_proto = out.File
+	file_n0_platform_v1_connection_proto_goTypes = nil
+	file_n0_platform_v1_connection_proto_depIdxs = nil
 }

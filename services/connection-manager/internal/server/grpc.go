@@ -2,19 +2,20 @@ package server
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net"
 	"time"
 
+	pb "github.com/sickagent/n0/proto/gen/go/n0/platform/v1"
+	"github.com/sickagent/n0/services/connection-manager/internal/dsn"
+	"github.com/sickagent/n0/services/connection-manager/internal/registry"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/structpb"
-	pb "n0/proto/gen/go/lensagent/v1"
-	"n0/services/connection-manager/internal/dsn"
-	"n0/services/connection-manager/internal/registry"
 )
 
-// GRPCServer implements lensagent.v1.ConnectionManager.
+// GRPCServer implements n0.platform.v1.ConnectionManager.
 type GRPCServer struct {
 	pb.UnimplementedConnectionManagerServer
 	log      *zap.Logger
@@ -32,7 +33,7 @@ func (s *GRPCServer) TestConnection(ctx context.Context, req *pb.TestConnectionR
 	if err != nil {
 		return &pb.TestConnectionResponse{Ok: false, ErrorMessage: err.Error(), LatencyMs: 0}, nil
 	}
-	dsnStr, err := dsn.BuildDSN(req.AdapterType, req.Params)
+	dsnStr, err := s.connectionConfig(req.AdapterType, req.Params)
 	if err != nil {
 		return &pb.TestConnectionResponse{Ok: false, ErrorMessage: err.Error(), LatencyMs: 0}, nil
 	}
@@ -56,9 +57,9 @@ func (s *GRPCServer) ExecuteQuery(ctx context.Context, req *pb.ExecuteQueryReque
 	if err != nil {
 		return nil, err
 	}
-	dsnStr, err := dsn.BuildDSN(req.AdapterType, req.Params)
+	dsnStr, err := s.connectionConfig(req.AdapterType, req.Params)
 	if err != nil {
-		return nil, fmt.Errorf("build dsn: %w", err)
+		return nil, fmt.Errorf("build connection config: %w", err)
 	}
 
 	if err := a.Prepare(req.ConnectionId, dsnStr); err != nil {
@@ -99,7 +100,7 @@ func (s *GRPCServer) GetSchema(ctx context.Context, req *pb.GetConnectionSchemaR
 	if err != nil {
 		return nil, err
 	}
-	dsnStr, err := dsn.BuildDSN(req.AdapterType, req.Params)
+	dsnStr, err := s.connectionConfig(req.AdapterType, req.Params)
 	if err != nil {
 		return nil, err
 	}
@@ -125,6 +126,17 @@ func (s *GRPCServer) GetSchema(ctx context.Context, req *pb.GetConnectionSchemaR
 	}
 
 	return &pb.GetConnectionSchemaResponse{Tables: pbTables}, nil
+}
+
+func (s *GRPCServer) connectionConfig(adapterType string, params *structpb.Struct) (string, error) {
+	if !s.registry.IsExternal(adapterType) {
+		return dsn.BuildDSN(adapterType, params)
+	}
+	payload, err := json.Marshal(params.AsMap())
+	if err != nil {
+		return "", fmt.Errorf("marshal plugin params: %w", err)
+	}
+	return string(payload), nil
 }
 
 // StartGRPC starts the ConnectionManager gRPC server.

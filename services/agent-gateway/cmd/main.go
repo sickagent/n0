@@ -5,16 +5,16 @@ import (
 	"strings"
 	"time"
 
+	"github.com/sickagent/n0/pkg/shared/config"
+	"github.com/sickagent/n0/pkg/shared/graceful"
+	"github.com/sickagent/n0/pkg/shared/jwt"
+	"github.com/sickagent/n0/pkg/shared/logger"
+	"github.com/sickagent/n0/pkg/shared/natsclient"
+	"github.com/sickagent/n0/pkg/shared/observability"
+	"github.com/sickagent/n0/services/agent-gateway/internal/client"
+	"github.com/sickagent/n0/services/agent-gateway/internal/gateway"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
-	"n0/pkg/shared/config"
-	"n0/pkg/shared/graceful"
-	"n0/pkg/shared/jwt"
-	"n0/pkg/shared/logger"
-	"n0/pkg/shared/natsclient"
-	"n0/pkg/shared/observability"
-	"n0/services/agent-gateway/internal/client"
-	"n0/services/agent-gateway/internal/gateway"
 )
 
 type Config struct {

@@ -1,19 +1,20 @@
 package main
 
 import (
+	"encoding/json"
 	"time"
 
 	"github.com/nats-io/nats.go"
+	"github.com/sickagent/n0/pkg/shared/config"
+	"github.com/sickagent/n0/pkg/shared/discovery"
+	"github.com/sickagent/n0/pkg/shared/graceful"
+	"github.com/sickagent/n0/pkg/shared/logger"
+	"github.com/sickagent/n0/pkg/shared/natsclient"
+	"github.com/sickagent/n0/pkg/shared/observability"
+	"github.com/sickagent/n0/services/connection-manager/internal/registry"
+	"github.com/sickagent/n0/services/connection-manager/internal/server"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
-	"n0/pkg/shared/config"
-	"n0/pkg/shared/discovery"
-	"n0/pkg/shared/graceful"
-	"n0/pkg/shared/logger"
-	"n0/pkg/shared/natsclient"
-	"n0/pkg/shared/observability"
-	"n0/services/connection-manager/internal/registry"
-	"n0/services/connection-manager/internal/server"
 )
 
 type Config struct {
@@ -46,15 +47,28 @@ func main() {
 			}
 			defer nc.Close()
 
-			sub, err := nc.Conn.Subscribe("events.plugin.registered", func(msg *nats.Msg) {
-				log.Info("plugin registered", zap.String("data", string(msg.Data)))
+			reg := registry.NewRegistry(log)
+			defer reg.Close()
+			type pluginRoute struct {
+				AdapterType string `json:"adapter_type"`
+				Endpoint    string `json:"endpoint"`
+				Status      string `json:"status"`
+			}
+			sub, err := nc.Conn.Subscribe("events.plugin.route", func(msg *nats.Msg) {
+				var route pluginRoute
+				if err := json.Unmarshal(msg.Data, &route); err != nil {
+					log.Error("invalid plugin route", zap.Error(err))
+					return
+				}
+				if err := reg.RouteExternal(route.AdapterType, route.Endpoint, route.Status); err != nil {
+					log.Error("route plugin failed", zap.Error(err))
+				}
 			})
 			if err != nil {
 				log.Fatal("subscribe failed", zap.Error(err))
 			}
 			defer sub.Unsubscribe()
 
-			reg := registry.NewRegistry(log)
 			grpcSrv, err := server.StartGRPC(cfg.GRPCAddr, log, reg)
 			if err != nil {
 				log.Fatal("grpc start failed", zap.Error(err))

@@ -89,6 +89,26 @@ services:
       timeout: 5s
       retries: 5
 
+  minio:
+    image: minio/minio:latest
+    container_name: n0-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: n0
+      MINIO_ROOT_PASSWORD: n0-development-secret
+    ports:
+      - "9004:9000"
+      - "9005:9001"
+    volumes:
+      - minio-data:/data
+    networks:
+      - n0-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
   meta-service:
     build:
       context: ..
@@ -163,6 +183,12 @@ services:
       WORKER_COUNT: "4"
       META_SERVICE_ADDR: meta-service:8080
       CONNECTION_MANAGER_ADDR: connection-manager:8080
+      REDIS_ADDR: redis:6379
+      S3_ENDPOINT: minio:9000
+      S3_ACCESS_KEY: n0
+      S3_SECRET_KEY: n0-development-secret
+      S3_BUCKET: n0-results
+      S3_USE_SSL: "false"
     ports:
       - "8082:8080"
       - "8087:8082"
@@ -173,6 +199,8 @@ services:
       nats:
         condition: service_healthy
       redis:
+        condition: service_healthy
+      minio:
         condition: service_healthy
 
   agent-gateway:
@@ -221,6 +249,7 @@ volumes:
   clickhouse-data:
   mysql-data:
   redis-data:
+  minio-data:
 
 networks:
   n0-net:

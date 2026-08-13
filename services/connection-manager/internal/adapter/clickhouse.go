@@ -7,7 +7,7 @@ import (
 	"time"
 
 	_ "github.com/ClickHouse/clickhouse-go/v2"
-	"n0/pkg/shared/adapter"
+	"github.com/sickagent/n0/pkg/shared/adapter"
 )
 
 // ClickHouseAdapter implements a built-in adapter for ClickHouse.

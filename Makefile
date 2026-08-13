@@ -23,7 +23,7 @@ proto:
 		--go-grpc_out=proto/gen/go \
 		--go-grpc_opt=paths=source_relative \
 		-I proto \
-		proto/lensagent/v1/*.proto
+		proto/n0/platform/v1/*.proto
 	@echo "Done."
 
 .PHONY: tidy

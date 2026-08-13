@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.6.1
 // - protoc             v7.34.1
-// source: lensagent/v1/connection.proto
+// source: n0/platform/v1/connection.proto
 
-package lensagentv1
+package n0v1
 
 import (
 	context "context"
@@ -19,10 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ConnectionManager_TestConnection_FullMethodName = "/lensagent.v1.ConnectionManager/TestConnection"
-	ConnectionManager_GetPoolHealth_FullMethodName  = "/lensagent.v1.ConnectionManager/GetPoolHealth"
-	ConnectionManager_ExecuteQuery_FullMethodName   = "/lensagent.v1.ConnectionManager/ExecuteQuery"
-	ConnectionManager_GetSchema_FullMethodName      = "/lensagent.v1.ConnectionManager/GetSchema"
+	ConnectionManager_TestConnection_FullMethodName = "/n0.platform.v1.ConnectionManager/TestConnection"
+	ConnectionManager_GetPoolHealth_FullMethodName  = "/n0.platform.v1.ConnectionManager/GetPoolHealth"
+	ConnectionManager_ExecuteQuery_FullMethodName   = "/n0.platform.v1.ConnectionManager/ExecuteQuery"
+	ConnectionManager_GetSchema_FullMethodName      = "/n0.platform.v1.ConnectionManager/GetSchema"
 )
 
 // ConnectionManagerClient is the client API for ConnectionManager service.
@@ -210,7 +210,7 @@ func _ConnectionManager_GetSchema_Handler(srv interface{}, ctx context.Context, 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var ConnectionManager_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "lensagent.v1.ConnectionManager",
+	ServiceName: "n0.platform.v1.ConnectionManager",
 	HandlerType: (*ConnectionManagerServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -231,5 +231,5 @@ var ConnectionManager_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "lensagent/v1/connection.proto",
+	Metadata: "n0/platform/v1/connection.proto",
 }

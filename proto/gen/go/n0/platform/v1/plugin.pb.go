@@ -2,9 +2,9 @@
 // versions:
 // 	protoc-gen-go v1.36.11
 // 	protoc        v7.34.1
-// source: lensagent/v1/plugin.proto
+// source: n0/platform/v1/plugin.proto
 
-package lensagentv1
+package n0v1
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -31,7 +31,7 @@ type GetAdapterInfoRequest struct {
 
 func (x *GetAdapterInfoRequest) Reset() {
 	*x = GetAdapterInfoRequest{}
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[0]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -43,7 +43,7 @@ func (x *GetAdapterInfoRequest) String() string {
 func (*GetAdapterInfoRequest) ProtoMessage() {}
 
 func (x *GetAdapterInfoRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[0]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -56,7 +56,7 @@ func (x *GetAdapterInfoRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAdapterInfoRequest.ProtoReflect.Descriptor instead.
 func (*GetAdapterInfoRequest) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_plugin_proto_rawDescGZIP(), []int{0}
+	return file_n0_platform_v1_plugin_proto_rawDescGZIP(), []int{0}
 }
 
 type GetAdapterInfoResponse struct {
@@ -71,7 +71,7 @@ type GetAdapterInfoResponse struct {
 
 func (x *GetAdapterInfoResponse) Reset() {
 	*x = GetAdapterInfoResponse{}
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[1]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -83,7 +83,7 @@ func (x *GetAdapterInfoResponse) String() string {
 func (*GetAdapterInfoResponse) ProtoMessage() {}
 
 func (x *GetAdapterInfoResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[1]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -96,7 +96,7 @@ func (x *GetAdapterInfoResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAdapterInfoResponse.ProtoReflect.Descriptor instead.
 func (*GetAdapterInfoResponse) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_plugin_proto_rawDescGZIP(), []int{1}
+	return file_n0_platform_v1_plugin_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *GetAdapterInfoResponse) GetName() string {
@@ -136,7 +136,7 @@ type AdapterTestConnectionRequest struct {
 
 func (x *AdapterTestConnectionRequest) Reset() {
 	*x = AdapterTestConnectionRequest{}
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[2]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -148,7 +148,7 @@ func (x *AdapterTestConnectionRequest) String() string {
 func (*AdapterTestConnectionRequest) ProtoMessage() {}
 
 func (x *AdapterTestConnectionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[2]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -161,7 +161,7 @@ func (x *AdapterTestConnectionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AdapterTestConnectionRequest.ProtoReflect.Descriptor instead.
 func (*AdapterTestConnectionRequest) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_plugin_proto_rawDescGZIP(), []int{2}
+	return file_n0_platform_v1_plugin_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *AdapterTestConnectionRequest) GetParams() *structpb.Struct {
@@ -181,7 +181,7 @@ type AdapterTestConnectionResponse struct {
 
 func (x *AdapterTestConnectionResponse) Reset() {
 	*x = AdapterTestConnectionResponse{}
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[3]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -193,7 +193,7 @@ func (x *AdapterTestConnectionResponse) String() string {
 func (*AdapterTestConnectionResponse) ProtoMessage() {}
 
 func (x *AdapterTestConnectionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[3]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -206,7 +206,7 @@ func (x *AdapterTestConnectionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AdapterTestConnectionResponse.ProtoReflect.Descriptor instead.
 func (*AdapterTestConnectionResponse) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_plugin_proto_rawDescGZIP(), []int{3}
+	return file_n0_platform_v1_plugin_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *AdapterTestConnectionResponse) GetOk() bool {
@@ -233,7 +233,7 @@ type AdapterGetSchemaRequest struct {
 
 func (x *AdapterGetSchemaRequest) Reset() {
 	*x = AdapterGetSchemaRequest{}
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[4]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -245,7 +245,7 @@ func (x *AdapterGetSchemaRequest) String() string {
 func (*AdapterGetSchemaRequest) ProtoMessage() {}
 
 func (x *AdapterGetSchemaRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[4]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -258,7 +258,7 @@ func (x *AdapterGetSchemaRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AdapterGetSchemaRequest.ProtoReflect.Descriptor instead.
 func (*AdapterGetSchemaRequest) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_plugin_proto_rawDescGZIP(), []int{4}
+	return file_n0_platform_v1_plugin_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *AdapterGetSchemaRequest) GetParams() *structpb.Struct {
@@ -284,7 +284,7 @@ type AdapterGetSchemaResponse struct {
 
 func (x *AdapterGetSchemaResponse) Reset() {
 	*x = AdapterGetSchemaResponse{}
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[5]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -296,7 +296,7 @@ func (x *AdapterGetSchemaResponse) String() string {
 func (*AdapterGetSchemaResponse) ProtoMessage() {}
 
 func (x *AdapterGetSchemaResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[5]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -309,7 +309,7 @@ func (x *AdapterGetSchemaResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AdapterGetSchemaResponse.ProtoReflect.Descriptor instead.
 func (*AdapterGetSchemaResponse) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_plugin_proto_rawDescGZIP(), []int{5}
+	return file_n0_platform_v1_plugin_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *AdapterGetSchemaResponse) GetTables() []*Table {
@@ -330,7 +330,7 @@ type AdapterExecuteQueryRequest struct {
 
 func (x *AdapterExecuteQueryRequest) Reset() {
 	*x = AdapterExecuteQueryRequest{}
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[6]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -342,7 +342,7 @@ func (x *AdapterExecuteQueryRequest) String() string {
 func (*AdapterExecuteQueryRequest) ProtoMessage() {}
 
 func (x *AdapterExecuteQueryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[6]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -355,7 +355,7 @@ func (x *AdapterExecuteQueryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AdapterExecuteQueryRequest.ProtoReflect.Descriptor instead.
 func (*AdapterExecuteQueryRequest) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_plugin_proto_rawDescGZIP(), []int{6}
+	return file_n0_platform_v1_plugin_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *AdapterExecuteQueryRequest) GetParams() *structpb.Struct {
@@ -391,7 +391,7 @@ type AdapterExecuteQueryResponse struct {
 
 func (x *AdapterExecuteQueryResponse) Reset() {
 	*x = AdapterExecuteQueryResponse{}
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[7]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -403,7 +403,7 @@ func (x *AdapterExecuteQueryResponse) String() string {
 func (*AdapterExecuteQueryResponse) ProtoMessage() {}
 
 func (x *AdapterExecuteQueryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[7]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -416,7 +416,7 @@ func (x *AdapterExecuteQueryResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AdapterExecuteQueryResponse.ProtoReflect.Descriptor instead.
 func (*AdapterExecuteQueryResponse) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_plugin_proto_rawDescGZIP(), []int{7}
+	return file_n0_platform_v1_plugin_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *AdapterExecuteQueryResponse) GetColumns() []string {
@@ -458,7 +458,7 @@ type DialectCapability struct {
 
 func (x *DialectCapability) Reset() {
 	*x = DialectCapability{}
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[8]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -470,7 +470,7 @@ func (x *DialectCapability) String() string {
 func (*DialectCapability) ProtoMessage() {}
 
 func (x *DialectCapability) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[8]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -483,7 +483,7 @@ func (x *DialectCapability) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DialectCapability.ProtoReflect.Descriptor instead.
 func (*DialectCapability) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_plugin_proto_rawDescGZIP(), []int{8}
+	return file_n0_platform_v1_plugin_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *DialectCapability) GetFunctionName() string {
@@ -515,7 +515,7 @@ type GetDialectCapabilitiesRequest struct {
 
 func (x *GetDialectCapabilitiesRequest) Reset() {
 	*x = GetDialectCapabilitiesRequest{}
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[9]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -527,7 +527,7 @@ func (x *GetDialectCapabilitiesRequest) String() string {
 func (*GetDialectCapabilitiesRequest) ProtoMessage() {}
 
 func (x *GetDialectCapabilitiesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[9]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -540,7 +540,7 @@ func (x *GetDialectCapabilitiesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDialectCapabilitiesRequest.ProtoReflect.Descriptor instead.
 func (*GetDialectCapabilitiesRequest) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_plugin_proto_rawDescGZIP(), []int{9}
+	return file_n0_platform_v1_plugin_proto_rawDescGZIP(), []int{9}
 }
 
 type GetDialectCapabilitiesResponse struct {
@@ -553,7 +553,7 @@ type GetDialectCapabilitiesResponse struct {
 
 func (x *GetDialectCapabilitiesResponse) Reset() {
 	*x = GetDialectCapabilitiesResponse{}
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[10]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -565,7 +565,7 @@ func (x *GetDialectCapabilitiesResponse) String() string {
 func (*GetDialectCapabilitiesResponse) ProtoMessage() {}
 
 func (x *GetDialectCapabilitiesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[10]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -578,7 +578,7 @@ func (x *GetDialectCapabilitiesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDialectCapabilitiesResponse.ProtoReflect.Descriptor instead.
 func (*GetDialectCapabilitiesResponse) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_plugin_proto_rawDescGZIP(), []int{10}
+	return file_n0_platform_v1_plugin_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *GetDialectCapabilitiesResponse) GetCapabilities() []*DialectCapability {
@@ -608,7 +608,7 @@ type Capability struct {
 
 func (x *Capability) Reset() {
 	*x = Capability{}
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[11]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -620,7 +620,7 @@ func (x *Capability) String() string {
 func (*Capability) ProtoMessage() {}
 
 func (x *Capability) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[11]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -633,7 +633,7 @@ func (x *Capability) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Capability.ProtoReflect.Descriptor instead.
 func (*Capability) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_plugin_proto_rawDescGZIP(), []int{11}
+	return file_n0_platform_v1_plugin_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *Capability) GetName() string {
@@ -673,7 +673,7 @@ type ListCapabilitiesRequest struct {
 
 func (x *ListCapabilitiesRequest) Reset() {
 	*x = ListCapabilitiesRequest{}
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[12]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -685,7 +685,7 @@ func (x *ListCapabilitiesRequest) String() string {
 func (*ListCapabilitiesRequest) ProtoMessage() {}
 
 func (x *ListCapabilitiesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[12]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -698,7 +698,7 @@ func (x *ListCapabilitiesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListCapabilitiesRequest.ProtoReflect.Descriptor instead.
 func (*ListCapabilitiesRequest) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_plugin_proto_rawDescGZIP(), []int{12}
+	return file_n0_platform_v1_plugin_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *ListCapabilitiesRequest) GetTenantId() string {
@@ -717,7 +717,7 @@ type ListCapabilitiesResponse struct {
 
 func (x *ListCapabilitiesResponse) Reset() {
 	*x = ListCapabilitiesResponse{}
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[13]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -729,7 +729,7 @@ func (x *ListCapabilitiesResponse) String() string {
 func (*ListCapabilitiesResponse) ProtoMessage() {}
 
 func (x *ListCapabilitiesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[13]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -742,7 +742,7 @@ func (x *ListCapabilitiesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListCapabilitiesResponse.ProtoReflect.Descriptor instead.
 func (*ListCapabilitiesResponse) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_plugin_proto_rawDescGZIP(), []int{13}
+	return file_n0_platform_v1_plugin_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *ListCapabilitiesResponse) GetCapabilities() []*Capability {
@@ -763,7 +763,7 @@ type InvokeCapabilityRequest struct {
 
 func (x *InvokeCapabilityRequest) Reset() {
 	*x = InvokeCapabilityRequest{}
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[14]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -775,7 +775,7 @@ func (x *InvokeCapabilityRequest) String() string {
 func (*InvokeCapabilityRequest) ProtoMessage() {}
 
 func (x *InvokeCapabilityRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[14]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -788,7 +788,7 @@ func (x *InvokeCapabilityRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InvokeCapabilityRequest.ProtoReflect.Descriptor instead.
 func (*InvokeCapabilityRequest) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_plugin_proto_rawDescGZIP(), []int{14}
+	return file_n0_platform_v1_plugin_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *InvokeCapabilityRequest) GetTenantId() string {
@@ -823,7 +823,7 @@ type InvokeCapabilityResponse struct {
 
 func (x *InvokeCapabilityResponse) Reset() {
 	*x = InvokeCapabilityResponse{}
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[15]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -835,7 +835,7 @@ func (x *InvokeCapabilityResponse) String() string {
 func (*InvokeCapabilityResponse) ProtoMessage() {}
 
 func (x *InvokeCapabilityResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_plugin_proto_msgTypes[15]
+	mi := &file_n0_platform_v1_plugin_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -848,7 +848,7 @@ func (x *InvokeCapabilityResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use InvokeCapabilityResponse.ProtoReflect.Descriptor instead.
 func (*InvokeCapabilityResponse) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_plugin_proto_rawDescGZIP(), []int{15}
+	return file_n0_platform_v1_plugin_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *InvokeCapabilityResponse) GetOutput() *structpb.Struct {
@@ -872,11 +872,11 @@ func (x *InvokeCapabilityResponse) GetErrorMessage() string {
 	return ""
 }
 
-var File_lensagent_v1_plugin_proto protoreflect.FileDescriptor
+var File_n0_platform_v1_plugin_proto protoreflect.FileDescriptor
 
-const file_lensagent_v1_plugin_proto_rawDesc = "" +
+const file_n0_platform_v1_plugin_proto_rawDesc = "" +
 	"\n" +
-	"\x19lensagent/v1/plugin.proto\x12\flensagent.v1\x1a\x1cgoogle/protobuf/struct.proto\x1a\x19lensagent/v1/common.proto\x1a\x1dlensagent/v1/connection.proto\"\x17\n" +
+	"\x1bn0/platform/v1/plugin.proto\x12\x0en0.platform.v1\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1bn0/platform/v1/common.proto\x1a\x1fn0/platform/v1/connection.proto\"\x17\n" +
 	"\x15GetAdapterInfoRequest\"\x8d\x01\n" +
 	"\x16GetAdapterInfoResponse\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x18\n" +
@@ -890,25 +890,25 @@ const file_lensagent_v1_plugin_proto_rawDesc = "" +
 	"\rerror_message\x18\x02 \x01(\tR\ferrorMessage\"}\n" +
 	"\x17AdapterGetSchemaRequest\x12/\n" +
 	"\x06params\x18\x01 \x01(\v2\x17.google.protobuf.StructR\x06params\x121\n" +
-	"\aoptions\x18\x02 \x01(\v2\x17.google.protobuf.StructR\aoptions\"G\n" +
-	"\x18AdapterGetSchemaResponse\x12+\n" +
-	"\x06tables\x18\x01 \x03(\v2\x13.lensagent.v1.TableR\x06tables\"\x96\x01\n" +
+	"\aoptions\x18\x02 \x01(\v2\x17.google.protobuf.StructR\aoptions\"I\n" +
+	"\x18AdapterGetSchemaResponse\x12-\n" +
+	"\x06tables\x18\x01 \x03(\v2\x15.n0.platform.v1.TableR\x06tables\"\x96\x01\n" +
 	"\x1aAdapterExecuteQueryRequest\x12/\n" +
 	"\x06params\x18\x01 \x01(\v2\x17.google.protobuf.StructR\x06params\x12\x14\n" +
 	"\x05query\x18\x02 \x01(\tR\x05query\x121\n" +
-	"\aoptions\x18\x03 \x01(\v2\x17.google.protobuf.StructR\aoptions\"\x99\x01\n" +
+	"\aoptions\x18\x03 \x01(\v2\x17.google.protobuf.StructR\aoptions\"\x9b\x01\n" +
 	"\x1bAdapterExecuteQueryResponse\x12\x18\n" +
-	"\acolumns\x18\x01 \x03(\tR\acolumns\x12%\n" +
-	"\x04rows\x18\x02 \x03(\v2\x11.lensagent.v1.RowR\x04rows\x12\x1b\n" +
+	"\acolumns\x18\x01 \x03(\tR\acolumns\x12'\n" +
+	"\x04rows\x18\x02 \x03(\v2\x13.n0.platform.v1.RowR\x04rows\x12\x1b\n" +
 	"\trow_count\x18\x03 \x01(\x03R\browCount\x12\x1c\n" +
 	"\ttruncated\x18\x04 \x01(\bR\ttruncated\"l\n" +
 	"\x11DialectCapability\x12#\n" +
 	"\rfunction_name\x18\x01 \x01(\tR\ffunctionName\x12\x1c\n" +
 	"\tsupported\x18\x02 \x01(\bR\tsupported\x12\x14\n" +
 	"\x05notes\x18\x03 \x01(\tR\x05notes\"\x1f\n" +
-	"\x1dGetDialectCapabilitiesRequest\"\x8e\x01\n" +
-	"\x1eGetDialectCapabilitiesResponse\x12C\n" +
-	"\fcapabilities\x18\x01 \x03(\v2\x1f.lensagent.v1.DialectCapabilityR\fcapabilities\x12'\n" +
+	"\x1dGetDialectCapabilitiesRequest\"\x90\x01\n" +
+	"\x1eGetDialectCapabilitiesResponse\x12E\n" +
+	"\fcapabilities\x18\x01 \x03(\v2!.n0.platform.v1.DialectCapabilityR\fcapabilities\x12'\n" +
 	"\x0fsupported_types\x18\x02 \x03(\tR\x0esupportedTypes\"\xbc\x01\n" +
 	"\n" +
 	"Capability\x12\x12\n" +
@@ -917,9 +917,9 @@ const file_lensagent_v1_plugin_proto_rawDesc = "" +
 	"\finput_schema\x18\x03 \x01(\v2\x17.google.protobuf.StructR\vinputSchema\x12<\n" +
 	"\routput_schema\x18\x04 \x01(\v2\x17.google.protobuf.StructR\foutputSchema\"6\n" +
 	"\x17ListCapabilitiesRequest\x12\x1b\n" +
-	"\ttenant_id\x18\x01 \x01(\tR\btenantId\"X\n" +
-	"\x18ListCapabilitiesResponse\x12<\n" +
-	"\fcapabilities\x18\x01 \x03(\v2\x18.lensagent.v1.CapabilityR\fcapabilities\"\x8e\x01\n" +
+	"\ttenant_id\x18\x01 \x01(\tR\btenantId\"Z\n" +
+	"\x18ListCapabilitiesResponse\x12>\n" +
+	"\fcapabilities\x18\x01 \x03(\v2\x1a.n0.platform.v1.CapabilityR\fcapabilities\"\x8e\x01\n" +
 	"\x17InvokeCapabilityRequest\x12\x1b\n" +
 	"\ttenant_id\x18\x01 \x01(\tR\btenantId\x12'\n" +
 	"\x0fcapability_name\x18\x02 \x01(\tR\x0ecapabilityName\x12-\n" +
@@ -927,79 +927,79 @@ const file_lensagent_v1_plugin_proto_rawDesc = "" +
 	"\x18InvokeCapabilityResponse\x12/\n" +
 	"\x06output\x18\x01 \x01(\v2\x17.google.protobuf.StructR\x06output\x12\x18\n" +
 	"\asuccess\x18\x02 \x01(\bR\asuccess\x12#\n" +
-	"\rerror_message\x18\x03 \x01(\tR\ferrorMessage2\x8f\x04\n" +
-	"\x0fDatabaseAdapter\x12[\n" +
-	"\x0eGetAdapterInfo\x12#.lensagent.v1.GetAdapterInfoRequest\x1a$.lensagent.v1.GetAdapterInfoResponse\x12i\n" +
-	"\x0eTestConnection\x12*.lensagent.v1.AdapterTestConnectionRequest\x1a+.lensagent.v1.AdapterTestConnectionResponse\x12Z\n" +
-	"\tGetSchema\x12%.lensagent.v1.AdapterGetSchemaRequest\x1a&.lensagent.v1.AdapterGetSchemaResponse\x12c\n" +
-	"\fExecuteQuery\x12(.lensagent.v1.AdapterExecuteQueryRequest\x1a).lensagent.v1.AdapterExecuteQueryResponse\x12s\n" +
-	"\x16GetDialectCapabilities\x12+.lensagent.v1.GetDialectCapabilitiesRequest\x1a,.lensagent.v1.GetDialectCapabilitiesResponse2\xd7\x01\n" +
-	"\x0fAgentCapability\x12a\n" +
-	"\x10ListCapabilities\x12%.lensagent.v1.ListCapabilitiesRequest\x1a&.lensagent.v1.ListCapabilitiesResponse\x12a\n" +
-	"\x10InvokeCapability\x12%.lensagent.v1.InvokeCapabilityRequest\x1a&.lensagent.v1.InvokeCapabilityResponseB*Z(n0/proto/gen/go/lensagent/v1;lensagentv1b\x06proto3"
+	"\rerror_message\x18\x03 \x01(\tR\ferrorMessage2\xa3\x04\n" +
+	"\x0fDatabaseAdapter\x12_\n" +
+	"\x0eGetAdapterInfo\x12%.n0.platform.v1.GetAdapterInfoRequest\x1a&.n0.platform.v1.GetAdapterInfoResponse\x12m\n" +
+	"\x0eTestConnection\x12,.n0.platform.v1.AdapterTestConnectionRequest\x1a-.n0.platform.v1.AdapterTestConnectionResponse\x12^\n" +
+	"\tGetSchema\x12'.n0.platform.v1.AdapterGetSchemaRequest\x1a(.n0.platform.v1.AdapterGetSchemaResponse\x12g\n" +
+	"\fExecuteQuery\x12*.n0.platform.v1.AdapterExecuteQueryRequest\x1a+.n0.platform.v1.AdapterExecuteQueryResponse\x12w\n" +
+	"\x16GetDialectCapabilities\x12-.n0.platform.v1.GetDialectCapabilitiesRequest\x1a..n0.platform.v1.GetDialectCapabilitiesResponse2\xdf\x01\n" +
+	"\x0fAgentCapability\x12e\n" +
+	"\x10ListCapabilities\x12'.n0.platform.v1.ListCapabilitiesRequest\x1a(.n0.platform.v1.ListCapabilitiesResponse\x12e\n" +
+	"\x10InvokeCapability\x12'.n0.platform.v1.InvokeCapabilityRequest\x1a(.n0.platform.v1.InvokeCapabilityResponseB:Z8github.com/sickagent/n0/proto/gen/go/n0/platform/v1;n0v1b\x06proto3"
 
 var (
-	file_lensagent_v1_plugin_proto_rawDescOnce sync.Once
-	file_lensagent_v1_plugin_proto_rawDescData []byte
+	file_n0_platform_v1_plugin_proto_rawDescOnce sync.Once
+	file_n0_platform_v1_plugin_proto_rawDescData []byte
 )
 
-func file_lensagent_v1_plugin_proto_rawDescGZIP() []byte {
-	file_lensagent_v1_plugin_proto_rawDescOnce.Do(func() {
-		file_lensagent_v1_plugin_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_lensagent_v1_plugin_proto_rawDesc), len(file_lensagent_v1_plugin_proto_rawDesc)))
+func file_n0_platform_v1_plugin_proto_rawDescGZIP() []byte {
+	file_n0_platform_v1_plugin_proto_rawDescOnce.Do(func() {
+		file_n0_platform_v1_plugin_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_n0_platform_v1_plugin_proto_rawDesc), len(file_n0_platform_v1_plugin_proto_rawDesc)))
 	})
-	return file_lensagent_v1_plugin_proto_rawDescData
+	return file_n0_platform_v1_plugin_proto_rawDescData
 }
 
-var file_lensagent_v1_plugin_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
-var file_lensagent_v1_plugin_proto_goTypes = []any{
-	(*GetAdapterInfoRequest)(nil),          // 0: lensagent.v1.GetAdapterInfoRequest
-	(*GetAdapterInfoResponse)(nil),         // 1: lensagent.v1.GetAdapterInfoResponse
-	(*AdapterTestConnectionRequest)(nil),   // 2: lensagent.v1.AdapterTestConnectionRequest
-	(*AdapterTestConnectionResponse)(nil),  // 3: lensagent.v1.AdapterTestConnectionResponse
-	(*AdapterGetSchemaRequest)(nil),        // 4: lensagent.v1.AdapterGetSchemaRequest
-	(*AdapterGetSchemaResponse)(nil),       // 5: lensagent.v1.AdapterGetSchemaResponse
-	(*AdapterExecuteQueryRequest)(nil),     // 6: lensagent.v1.AdapterExecuteQueryRequest
-	(*AdapterExecuteQueryResponse)(nil),    // 7: lensagent.v1.AdapterExecuteQueryResponse
-	(*DialectCapability)(nil),              // 8: lensagent.v1.DialectCapability
-	(*GetDialectCapabilitiesRequest)(nil),  // 9: lensagent.v1.GetDialectCapabilitiesRequest
-	(*GetDialectCapabilitiesResponse)(nil), // 10: lensagent.v1.GetDialectCapabilitiesResponse
-	(*Capability)(nil),                     // 11: lensagent.v1.Capability
-	(*ListCapabilitiesRequest)(nil),        // 12: lensagent.v1.ListCapabilitiesRequest
-	(*ListCapabilitiesResponse)(nil),       // 13: lensagent.v1.ListCapabilitiesResponse
-	(*InvokeCapabilityRequest)(nil),        // 14: lensagent.v1.InvokeCapabilityRequest
-	(*InvokeCapabilityResponse)(nil),       // 15: lensagent.v1.InvokeCapabilityResponse
+var file_n0_platform_v1_plugin_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_n0_platform_v1_plugin_proto_goTypes = []any{
+	(*GetAdapterInfoRequest)(nil),          // 0: n0.platform.v1.GetAdapterInfoRequest
+	(*GetAdapterInfoResponse)(nil),         // 1: n0.platform.v1.GetAdapterInfoResponse
+	(*AdapterTestConnectionRequest)(nil),   // 2: n0.platform.v1.AdapterTestConnectionRequest
+	(*AdapterTestConnectionResponse)(nil),  // 3: n0.platform.v1.AdapterTestConnectionResponse
+	(*AdapterGetSchemaRequest)(nil),        // 4: n0.platform.v1.AdapterGetSchemaRequest
+	(*AdapterGetSchemaResponse)(nil),       // 5: n0.platform.v1.AdapterGetSchemaResponse
+	(*AdapterExecuteQueryRequest)(nil),     // 6: n0.platform.v1.AdapterExecuteQueryRequest
+	(*AdapterExecuteQueryResponse)(nil),    // 7: n0.platform.v1.AdapterExecuteQueryResponse
+	(*DialectCapability)(nil),              // 8: n0.platform.v1.DialectCapability
+	(*GetDialectCapabilitiesRequest)(nil),  // 9: n0.platform.v1.GetDialectCapabilitiesRequest
+	(*GetDialectCapabilitiesResponse)(nil), // 10: n0.platform.v1.GetDialectCapabilitiesResponse
+	(*Capability)(nil),                     // 11: n0.platform.v1.Capability
+	(*ListCapabilitiesRequest)(nil),        // 12: n0.platform.v1.ListCapabilitiesRequest
+	(*ListCapabilitiesResponse)(nil),       // 13: n0.platform.v1.ListCapabilitiesResponse
+	(*InvokeCapabilityRequest)(nil),        // 14: n0.platform.v1.InvokeCapabilityRequest
+	(*InvokeCapabilityResponse)(nil),       // 15: n0.platform.v1.InvokeCapabilityResponse
 	(*structpb.Struct)(nil),                // 16: google.protobuf.Struct
-	(*Table)(nil),                          // 17: lensagent.v1.Table
-	(*Row)(nil),                            // 18: lensagent.v1.Row
+	(*Table)(nil),                          // 17: n0.platform.v1.Table
+	(*Row)(nil),                            // 18: n0.platform.v1.Row
 }
-var file_lensagent_v1_plugin_proto_depIdxs = []int32{
-	16, // 0: lensagent.v1.AdapterTestConnectionRequest.params:type_name -> google.protobuf.Struct
-	16, // 1: lensagent.v1.AdapterGetSchemaRequest.params:type_name -> google.protobuf.Struct
-	16, // 2: lensagent.v1.AdapterGetSchemaRequest.options:type_name -> google.protobuf.Struct
-	17, // 3: lensagent.v1.AdapterGetSchemaResponse.tables:type_name -> lensagent.v1.Table
-	16, // 4: lensagent.v1.AdapterExecuteQueryRequest.params:type_name -> google.protobuf.Struct
-	16, // 5: lensagent.v1.AdapterExecuteQueryRequest.options:type_name -> google.protobuf.Struct
-	18, // 6: lensagent.v1.AdapterExecuteQueryResponse.rows:type_name -> lensagent.v1.Row
-	8,  // 7: lensagent.v1.GetDialectCapabilitiesResponse.capabilities:type_name -> lensagent.v1.DialectCapability
-	16, // 8: lensagent.v1.Capability.input_schema:type_name -> google.protobuf.Struct
-	16, // 9: lensagent.v1.Capability.output_schema:type_name -> google.protobuf.Struct
-	11, // 10: lensagent.v1.ListCapabilitiesResponse.capabilities:type_name -> lensagent.v1.Capability
-	16, // 11: lensagent.v1.InvokeCapabilityRequest.input:type_name -> google.protobuf.Struct
-	16, // 12: lensagent.v1.InvokeCapabilityResponse.output:type_name -> google.protobuf.Struct
-	0,  // 13: lensagent.v1.DatabaseAdapter.GetAdapterInfo:input_type -> lensagent.v1.GetAdapterInfoRequest
-	2,  // 14: lensagent.v1.DatabaseAdapter.TestConnection:input_type -> lensagent.v1.AdapterTestConnectionRequest
-	4,  // 15: lensagent.v1.DatabaseAdapter.GetSchema:input_type -> lensagent.v1.AdapterGetSchemaRequest
-	6,  // 16: lensagent.v1.DatabaseAdapter.ExecuteQuery:input_type -> lensagent.v1.AdapterExecuteQueryRequest
-	9,  // 17: lensagent.v1.DatabaseAdapter.GetDialectCapabilities:input_type -> lensagent.v1.GetDialectCapabilitiesRequest
-	12, // 18: lensagent.v1.AgentCapability.ListCapabilities:input_type -> lensagent.v1.ListCapabilitiesRequest
-	14, // 19: lensagent.v1.AgentCapability.InvokeCapability:input_type -> lensagent.v1.InvokeCapabilityRequest
-	1,  // 20: lensagent.v1.DatabaseAdapter.GetAdapterInfo:output_type -> lensagent.v1.GetAdapterInfoResponse
-	3,  // 21: lensagent.v1.DatabaseAdapter.TestConnection:output_type -> lensagent.v1.AdapterTestConnectionResponse
-	5,  // 22: lensagent.v1.DatabaseAdapter.GetSchema:output_type -> lensagent.v1.AdapterGetSchemaResponse
-	7,  // 23: lensagent.v1.DatabaseAdapter.ExecuteQuery:output_type -> lensagent.v1.AdapterExecuteQueryResponse
-	10, // 24: lensagent.v1.DatabaseAdapter.GetDialectCapabilities:output_type -> lensagent.v1.GetDialectCapabilitiesResponse
-	13, // 25: lensagent.v1.AgentCapability.ListCapabilities:output_type -> lensagent.v1.ListCapabilitiesResponse
-	15, // 26: lensagent.v1.AgentCapability.InvokeCapability:output_type -> lensagent.v1.InvokeCapabilityResponse
+var file_n0_platform_v1_plugin_proto_depIdxs = []int32{
+	16, // 0: n0.platform.v1.AdapterTestConnectionRequest.params:type_name -> google.protobuf.Struct
+	16, // 1: n0.platform.v1.AdapterGetSchemaRequest.params:type_name -> google.protobuf.Struct
+	16, // 2: n0.platform.v1.AdapterGetSchemaRequest.options:type_name -> google.protobuf.Struct
+	17, // 3: n0.platform.v1.AdapterGetSchemaResponse.tables:type_name -> n0.platform.v1.Table
+	16, // 4: n0.platform.v1.AdapterExecuteQueryRequest.params:type_name -> google.protobuf.Struct
+	16, // 5: n0.platform.v1.AdapterExecuteQueryRequest.options:type_name -> google.protobuf.Struct
+	18, // 6: n0.platform.v1.AdapterExecuteQueryResponse.rows:type_name -> n0.platform.v1.Row
+	8,  // 7: n0.platform.v1.GetDialectCapabilitiesResponse.capabilities:type_name -> n0.platform.v1.DialectCapability
+	16, // 8: n0.platform.v1.Capability.input_schema:type_name -> google.protobuf.Struct
+	16, // 9: n0.platform.v1.Capability.output_schema:type_name -> google.protobuf.Struct
+	11, // 10: n0.platform.v1.ListCapabilitiesResponse.capabilities:type_name -> n0.platform.v1.Capability
+	16, // 11: n0.platform.v1.InvokeCapabilityRequest.input:type_name -> google.protobuf.Struct
+	16, // 12: n0.platform.v1.InvokeCapabilityResponse.output:type_name -> google.protobuf.Struct
+	0,  // 13: n0.platform.v1.DatabaseAdapter.GetAdapterInfo:input_type -> n0.platform.v1.GetAdapterInfoRequest
+	2,  // 14: n0.platform.v1.DatabaseAdapter.TestConnection:input_type -> n0.platform.v1.AdapterTestConnectionRequest
+	4,  // 15: n0.platform.v1.DatabaseAdapter.GetSchema:input_type -> n0.platform.v1.AdapterGetSchemaRequest
+	6,  // 16: n0.platform.v1.DatabaseAdapter.ExecuteQuery:input_type -> n0.platform.v1.AdapterExecuteQueryRequest
+	9,  // 17: n0.platform.v1.DatabaseAdapter.GetDialectCapabilities:input_type -> n0.platform.v1.GetDialectCapabilitiesRequest
+	12, // 18: n0.platform.v1.AgentCapability.ListCapabilities:input_type -> n0.platform.v1.ListCapabilitiesRequest
+	14, // 19: n0.platform.v1.AgentCapability.InvokeCapability:input_type -> n0.platform.v1.InvokeCapabilityRequest
+	1,  // 20: n0.platform.v1.DatabaseAdapter.GetAdapterInfo:output_type -> n0.platform.v1.GetAdapterInfoResponse
+	3,  // 21: n0.platform.v1.DatabaseAdapter.TestConnection:output_type -> n0.platform.v1.AdapterTestConnectionResponse
+	5,  // 22: n0.platform.v1.DatabaseAdapter.GetSchema:output_type -> n0.platform.v1.AdapterGetSchemaResponse
+	7,  // 23: n0.platform.v1.DatabaseAdapter.ExecuteQuery:output_type -> n0.platform.v1.AdapterExecuteQueryResponse
+	10, // 24: n0.platform.v1.DatabaseAdapter.GetDialectCapabilities:output_type -> n0.platform.v1.GetDialectCapabilitiesResponse
+	13, // 25: n0.platform.v1.AgentCapability.ListCapabilities:output_type -> n0.platform.v1.ListCapabilitiesResponse
+	15, // 26: n0.platform.v1.AgentCapability.InvokeCapability:output_type -> n0.platform.v1.InvokeCapabilityResponse
 	20, // [20:27] is the sub-list for method output_type
 	13, // [13:20] is the sub-list for method input_type
 	13, // [13:13] is the sub-list for extension type_name
@@ -1007,28 +1007,28 @@ var file_lensagent_v1_plugin_proto_depIdxs = []int32{
 	0,  // [0:13] is the sub-list for field type_name
 }
 
-func init() { file_lensagent_v1_plugin_proto_init() }
-func file_lensagent_v1_plugin_proto_init() {
-	if File_lensagent_v1_plugin_proto != nil {
+func init() { file_n0_platform_v1_plugin_proto_init() }
+func file_n0_platform_v1_plugin_proto_init() {
+	if File_n0_platform_v1_plugin_proto != nil {
 		return
 	}
-	file_lensagent_v1_common_proto_init()
-	file_lensagent_v1_connection_proto_init()
+	file_n0_platform_v1_common_proto_init()
+	file_n0_platform_v1_connection_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_lensagent_v1_plugin_proto_rawDesc), len(file_lensagent_v1_plugin_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_n0_platform_v1_plugin_proto_rawDesc), len(file_n0_platform_v1_plugin_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   2,
 		},
-		GoTypes:           file_lensagent_v1_plugin_proto_goTypes,
-		DependencyIndexes: file_lensagent_v1_plugin_proto_depIdxs,
-		MessageInfos:      file_lensagent_v1_plugin_proto_msgTypes,
+		GoTypes:           file_n0_platform_v1_plugin_proto_goTypes,
+		DependencyIndexes: file_n0_platform_v1_plugin_proto_depIdxs,
+		MessageInfos:      file_n0_platform_v1_plugin_proto_msgTypes,
 	}.Build()
-	File_lensagent_v1_plugin_proto = out.File
-	file_lensagent_v1_plugin_proto_goTypes = nil
-	file_lensagent_v1_plugin_proto_depIdxs = nil
+	File_n0_platform_v1_plugin_proto = out.File
+	file_n0_platform_v1_plugin_proto_goTypes = nil
+	file_n0_platform_v1_plugin_proto_depIdxs = nil
 }

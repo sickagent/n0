@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/sickagent/n0/pkg/shared/adapter"
 	_ "modernc.org/sqlite"
-	"n0/pkg/shared/adapter"
 )
 
 // SQLiteAdapter implements a built-in adapter for SQLite.

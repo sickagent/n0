@@ -14,12 +14,12 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/sickagent/n0/pkg/shared/graceful"
+	"github.com/sickagent/n0/pkg/shared/httpserver"
+	"github.com/sickagent/n0/pkg/shared/jwt"
+	pb "github.com/sickagent/n0/proto/gen/go/n0/platform/v1"
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/structpb"
-	"n0/pkg/shared/graceful"
-	"n0/pkg/shared/httpserver"
-	"n0/pkg/shared/jwt"
-	pb "n0/proto/gen/go/lensagent/v1"
 )
 
 // MetaClient defines the subset of MetaService client used by the gateway.

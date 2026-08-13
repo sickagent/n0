@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"net"
 
+	pb "github.com/sickagent/n0/proto/gen/go/n0/platform/v1"
+	"github.com/sickagent/n0/services/meta-service/internal/app"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
-	pb "n0/proto/gen/go/lensagent/v1"
-	"n0/services/meta-service/internal/app"
 )
 
 // StartGRPC starts the MetaService gRPC server.

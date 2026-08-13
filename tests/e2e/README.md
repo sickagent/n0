@@ -27,7 +27,7 @@ Required healthy containers:
 ## Run Tests
 
 ```bash
-cd /Users/n0byk/Desktop/lad/n0/tests/e2e
+cd /Users/n0byk/Desktop/lad/github.com/sickagent/n0/tests/e2e
 go test -v ./... -count=1
 ```
 

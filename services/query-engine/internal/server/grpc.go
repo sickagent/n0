@@ -8,14 +8,14 @@ import (
 	"strings"
 
 	"github.com/nats-io/nuid"
+	pb "github.com/sickagent/n0/proto/gen/go/n0/platform/v1"
+	"github.com/sickagent/n0/services/query-engine/internal/job"
+	"github.com/sickagent/n0/services/query-engine/internal/worker"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/structpb"
-	pb "n0/proto/gen/go/lensagent/v1"
-	"n0/services/query-engine/internal/job"
-	"n0/services/query-engine/internal/worker"
 )
 
 const querySubject = "QUERIES.jobs"
@@ -24,7 +24,7 @@ type publisher interface {
 	Publish(subject string, data []byte) error
 }
 
-// GRPCServer implements lensagent.v1.QueryEngine.
+// GRPCServer implements n0.platform.v1.QueryEngine.
 type GRPCServer struct {
 	pb.UnimplementedQueryEngineServer
 	log       *zap.Logger
@@ -57,12 +57,15 @@ func (s *GRPCServer) SubmitQuery(ctx context.Context, req *pb.SubmitQueryRequest
 	}
 
 	jobID := "job-" + strings.ToLower(nuid.Next())
-	record := s.store.Create(job.Record{
+	record, err := s.store.CreateContext(ctx, job.Record{
 		ID:           jobID,
 		TenantID:     req.TenantId,
 		ConnectionID: req.ConnectionId,
 		SQL:          req.Sql,
 	})
+	if err != nil {
+		return nil, status.Errorf(codes.Unavailable, "persist job: %v", err)
+	}
 
 	payload, err := json.Marshal(worker.Job{
 		ID:           record.ID,

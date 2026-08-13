@@ -4,9 +4,9 @@ import (
 	"context"
 	"testing"
 
-	"google.golang.org/grpc"
+	pb "github.com/sickagent/n0/proto/gen/go/n0/platform/v1"
 	"go.uber.org/zap"
-	pb "n0/proto/gen/go/lensagent/v1"
+	"google.golang.org/grpc"
 )
 
 type fakeDatabaseAdapterClient struct {
@@ -80,7 +80,7 @@ func TestRegistry_RegisterExternal(t *testing.T) {
 
 func TestExternalAdapter_PrepareRelease(t *testing.T) {
 	a := &externalAdapter{}
-	if err := a.Prepare("cid", "dsn"); err != nil {
+	if err := a.Prepare("cid", `{"host":"db"}`); err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
 	if err := a.Release("cid"); err != nil {
@@ -91,7 +91,7 @@ func TestExternalAdapter_PrepareRelease(t *testing.T) {
 func TestExternalAdapter_TestConnection(t *testing.T) {
 	// externalAdapter with nil client should panic or error; we just verify it doesn't succeed.
 	a := &externalAdapter{client: &fakeDatabaseAdapterClient{}}
-	err := a.TestConnection(context.Background(), "dsn")
+	err := a.TestConnection(context.Background(), `{"host":"db"}`)
 	if err != nil {
 		t.Logf("expected nil error with fake client, got: %v", err)
 	}

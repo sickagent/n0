@@ -1,4 +1,4 @@
-module n0/tests/e2e
+module github.com/sickagent/n0/tests/e2e
 
 go 1.26
 

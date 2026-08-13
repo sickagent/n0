@@ -7,7 +7,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"n0/pkg/shared/adapter"
+	"github.com/sickagent/n0/pkg/shared/adapter"
 )
 
 // PostgresAdapter implements a built-in adapter for PostgreSQL.

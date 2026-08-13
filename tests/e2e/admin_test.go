@@ -119,6 +119,7 @@ func TestAdmin_Plugins_Register(t *testing.T) {
 		"author":      "e2e",
 		"endpoint":    "localhost:50051",
 		"protocol":    "grpc",
+		"tenant_id":   "default",
 		"capabilities": []map[string]any{
 			{
 				"capability_name": "test.query",

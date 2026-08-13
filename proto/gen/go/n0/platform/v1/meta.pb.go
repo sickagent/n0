@@ -2,9 +2,9 @@
 // versions:
 // 	protoc-gen-go v1.36.11
 // 	protoc        v7.34.1
-// source: lensagent/v1/meta.proto
+// source: n0/platform/v1/meta.proto
 
-package lensagentv1
+package n0v1
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -35,7 +35,7 @@ type Workspace struct {
 
 func (x *Workspace) Reset() {
 	*x = Workspace{}
-	mi := &file_lensagent_v1_meta_proto_msgTypes[0]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -47,7 +47,7 @@ func (x *Workspace) String() string {
 func (*Workspace) ProtoMessage() {}
 
 func (x *Workspace) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_meta_proto_msgTypes[0]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -60,7 +60,7 @@ func (x *Workspace) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Workspace.ProtoReflect.Descriptor instead.
 func (*Workspace) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_meta_proto_rawDescGZIP(), []int{0}
+	return file_n0_platform_v1_meta_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Workspace) GetId() string {
@@ -106,7 +106,7 @@ type Connection struct {
 
 func (x *Connection) Reset() {
 	*x = Connection{}
-	mi := &file_lensagent_v1_meta_proto_msgTypes[1]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -118,7 +118,7 @@ func (x *Connection) String() string {
 func (*Connection) ProtoMessage() {}
 
 func (x *Connection) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_meta_proto_msgTypes[1]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -131,7 +131,7 @@ func (x *Connection) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Connection.ProtoReflect.Descriptor instead.
 func (*Connection) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_meta_proto_rawDescGZIP(), []int{1}
+	return file_n0_platform_v1_meta_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *Connection) GetId() string {
@@ -194,7 +194,7 @@ type SchemaSnapshot struct {
 
 func (x *SchemaSnapshot) Reset() {
 	*x = SchemaSnapshot{}
-	mi := &file_lensagent_v1_meta_proto_msgTypes[2]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -206,7 +206,7 @@ func (x *SchemaSnapshot) String() string {
 func (*SchemaSnapshot) ProtoMessage() {}
 
 func (x *SchemaSnapshot) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_meta_proto_msgTypes[2]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -219,7 +219,7 @@ func (x *SchemaSnapshot) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SchemaSnapshot.ProtoReflect.Descriptor instead.
 func (*SchemaSnapshot) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_meta_proto_rawDescGZIP(), []int{2}
+	return file_n0_platform_v1_meta_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *SchemaSnapshot) GetConnectionId() string {
@@ -253,7 +253,7 @@ type GetSchemaRequest struct {
 
 func (x *GetSchemaRequest) Reset() {
 	*x = GetSchemaRequest{}
-	mi := &file_lensagent_v1_meta_proto_msgTypes[3]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -265,7 +265,7 @@ func (x *GetSchemaRequest) String() string {
 func (*GetSchemaRequest) ProtoMessage() {}
 
 func (x *GetSchemaRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_meta_proto_msgTypes[3]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -278,7 +278,7 @@ func (x *GetSchemaRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSchemaRequest.ProtoReflect.Descriptor instead.
 func (*GetSchemaRequest) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_meta_proto_rawDescGZIP(), []int{3}
+	return file_n0_platform_v1_meta_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *GetSchemaRequest) GetConnectionId() string {
@@ -304,7 +304,7 @@ type GetSchemaResponse struct {
 
 func (x *GetSchemaResponse) Reset() {
 	*x = GetSchemaResponse{}
-	mi := &file_lensagent_v1_meta_proto_msgTypes[4]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -316,7 +316,7 @@ func (x *GetSchemaResponse) String() string {
 func (*GetSchemaResponse) ProtoMessage() {}
 
 func (x *GetSchemaResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_meta_proto_msgTypes[4]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -329,7 +329,7 @@ func (x *GetSchemaResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSchemaResponse.ProtoReflect.Descriptor instead.
 func (*GetSchemaResponse) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_meta_proto_rawDescGZIP(), []int{4}
+	return file_n0_platform_v1_meta_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GetSchemaResponse) GetSnapshot() *SchemaSnapshot {
@@ -349,7 +349,7 @@ type ListWorkspacesRequest struct {
 
 func (x *ListWorkspacesRequest) Reset() {
 	*x = ListWorkspacesRequest{}
-	mi := &file_lensagent_v1_meta_proto_msgTypes[5]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -361,7 +361,7 @@ func (x *ListWorkspacesRequest) String() string {
 func (*ListWorkspacesRequest) ProtoMessage() {}
 
 func (x *ListWorkspacesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_meta_proto_msgTypes[5]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -374,7 +374,7 @@ func (x *ListWorkspacesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListWorkspacesRequest.ProtoReflect.Descriptor instead.
 func (*ListWorkspacesRequest) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_meta_proto_rawDescGZIP(), []int{5}
+	return file_n0_platform_v1_meta_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ListWorkspacesRequest) GetTenantId() string {
@@ -401,7 +401,7 @@ type ListWorkspacesResponse struct {
 
 func (x *ListWorkspacesResponse) Reset() {
 	*x = ListWorkspacesResponse{}
-	mi := &file_lensagent_v1_meta_proto_msgTypes[6]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -413,7 +413,7 @@ func (x *ListWorkspacesResponse) String() string {
 func (*ListWorkspacesResponse) ProtoMessage() {}
 
 func (x *ListWorkspacesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_meta_proto_msgTypes[6]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -426,7 +426,7 @@ func (x *ListWorkspacesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListWorkspacesResponse.ProtoReflect.Descriptor instead.
 func (*ListWorkspacesResponse) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_meta_proto_rawDescGZIP(), []int{6}
+	return file_n0_platform_v1_meta_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *ListWorkspacesResponse) GetWorkspaces() []*Workspace {
@@ -456,7 +456,7 @@ type CreateConnectionRequest struct {
 
 func (x *CreateConnectionRequest) Reset() {
 	*x = CreateConnectionRequest{}
-	mi := &file_lensagent_v1_meta_proto_msgTypes[7]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -468,7 +468,7 @@ func (x *CreateConnectionRequest) String() string {
 func (*CreateConnectionRequest) ProtoMessage() {}
 
 func (x *CreateConnectionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_meta_proto_msgTypes[7]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -481,7 +481,7 @@ func (x *CreateConnectionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateConnectionRequest.ProtoReflect.Descriptor instead.
 func (*CreateConnectionRequest) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_meta_proto_rawDescGZIP(), []int{7}
+	return file_n0_platform_v1_meta_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *CreateConnectionRequest) GetWorkspaceId() string {
@@ -528,7 +528,7 @@ type CreateConnectionResponse struct {
 
 func (x *CreateConnectionResponse) Reset() {
 	*x = CreateConnectionResponse{}
-	mi := &file_lensagent_v1_meta_proto_msgTypes[8]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -540,7 +540,7 @@ func (x *CreateConnectionResponse) String() string {
 func (*CreateConnectionResponse) ProtoMessage() {}
 
 func (x *CreateConnectionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_meta_proto_msgTypes[8]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -553,7 +553,7 @@ func (x *CreateConnectionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateConnectionResponse.ProtoReflect.Descriptor instead.
 func (*CreateConnectionResponse) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_meta_proto_rawDescGZIP(), []int{8}
+	return file_n0_platform_v1_meta_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *CreateConnectionResponse) GetConnection() *Connection {
@@ -573,7 +573,7 @@ type GetConnectionRequest struct {
 
 func (x *GetConnectionRequest) Reset() {
 	*x = GetConnectionRequest{}
-	mi := &file_lensagent_v1_meta_proto_msgTypes[9]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -585,7 +585,7 @@ func (x *GetConnectionRequest) String() string {
 func (*GetConnectionRequest) ProtoMessage() {}
 
 func (x *GetConnectionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_meta_proto_msgTypes[9]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -598,7 +598,7 @@ func (x *GetConnectionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetConnectionRequest.ProtoReflect.Descriptor instead.
 func (*GetConnectionRequest) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_meta_proto_rawDescGZIP(), []int{9}
+	return file_n0_platform_v1_meta_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *GetConnectionRequest) GetConnectionId() string {
@@ -624,7 +624,7 @@ type GetConnectionResponse struct {
 
 func (x *GetConnectionResponse) Reset() {
 	*x = GetConnectionResponse{}
-	mi := &file_lensagent_v1_meta_proto_msgTypes[10]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -636,7 +636,7 @@ func (x *GetConnectionResponse) String() string {
 func (*GetConnectionResponse) ProtoMessage() {}
 
 func (x *GetConnectionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_meta_proto_msgTypes[10]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -649,7 +649,7 @@ func (x *GetConnectionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetConnectionResponse.ProtoReflect.Descriptor instead.
 func (*GetConnectionResponse) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_meta_proto_rawDescGZIP(), []int{10}
+	return file_n0_platform_v1_meta_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *GetConnectionResponse) GetConnection() *Connection {
@@ -670,7 +670,7 @@ type ListConnectionsRequest struct {
 
 func (x *ListConnectionsRequest) Reset() {
 	*x = ListConnectionsRequest{}
-	mi := &file_lensagent_v1_meta_proto_msgTypes[11]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -682,7 +682,7 @@ func (x *ListConnectionsRequest) String() string {
 func (*ListConnectionsRequest) ProtoMessage() {}
 
 func (x *ListConnectionsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_meta_proto_msgTypes[11]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -695,7 +695,7 @@ func (x *ListConnectionsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListConnectionsRequest.ProtoReflect.Descriptor instead.
 func (*ListConnectionsRequest) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_meta_proto_rawDescGZIP(), []int{11}
+	return file_n0_platform_v1_meta_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *ListConnectionsRequest) GetTenantId() string {
@@ -729,7 +729,7 @@ type ListConnectionsResponse struct {
 
 func (x *ListConnectionsResponse) Reset() {
 	*x = ListConnectionsResponse{}
-	mi := &file_lensagent_v1_meta_proto_msgTypes[12]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -741,7 +741,7 @@ func (x *ListConnectionsResponse) String() string {
 func (*ListConnectionsResponse) ProtoMessage() {}
 
 func (x *ListConnectionsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_meta_proto_msgTypes[12]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -754,7 +754,7 @@ func (x *ListConnectionsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListConnectionsResponse.ProtoReflect.Descriptor instead.
 func (*ListConnectionsResponse) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_meta_proto_rawDescGZIP(), []int{12}
+	return file_n0_platform_v1_meta_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *ListConnectionsResponse) GetConnections() []*Connection {
@@ -781,7 +781,7 @@ type DeleteConnectionRequest struct {
 
 func (x *DeleteConnectionRequest) Reset() {
 	*x = DeleteConnectionRequest{}
-	mi := &file_lensagent_v1_meta_proto_msgTypes[13]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -793,7 +793,7 @@ func (x *DeleteConnectionRequest) String() string {
 func (*DeleteConnectionRequest) ProtoMessage() {}
 
 func (x *DeleteConnectionRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_meta_proto_msgTypes[13]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -806,7 +806,7 @@ func (x *DeleteConnectionRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteConnectionRequest.ProtoReflect.Descriptor instead.
 func (*DeleteConnectionRequest) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_meta_proto_rawDescGZIP(), []int{13}
+	return file_n0_platform_v1_meta_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *DeleteConnectionRequest) GetConnectionId() string {
@@ -832,7 +832,7 @@ type DeleteConnectionResponse struct {
 
 func (x *DeleteConnectionResponse) Reset() {
 	*x = DeleteConnectionResponse{}
-	mi := &file_lensagent_v1_meta_proto_msgTypes[14]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -844,7 +844,7 @@ func (x *DeleteConnectionResponse) String() string {
 func (*DeleteConnectionResponse) ProtoMessage() {}
 
 func (x *DeleteConnectionResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_meta_proto_msgTypes[14]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -857,7 +857,7 @@ func (x *DeleteConnectionResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteConnectionResponse.ProtoReflect.Descriptor instead.
 func (*DeleteConnectionResponse) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_meta_proto_rawDescGZIP(), []int{14}
+	return file_n0_platform_v1_meta_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *DeleteConnectionResponse) GetDeleted() bool {
@@ -882,7 +882,7 @@ type RegisterPluginRequest struct {
 
 func (x *RegisterPluginRequest) Reset() {
 	*x = RegisterPluginRequest{}
-	mi := &file_lensagent_v1_meta_proto_msgTypes[15]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -894,7 +894,7 @@ func (x *RegisterPluginRequest) String() string {
 func (*RegisterPluginRequest) ProtoMessage() {}
 
 func (x *RegisterPluginRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_meta_proto_msgTypes[15]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -907,7 +907,7 @@ func (x *RegisterPluginRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RegisterPluginRequest.ProtoReflect.Descriptor instead.
 func (*RegisterPluginRequest) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_meta_proto_rawDescGZIP(), []int{15}
+	return file_n0_platform_v1_meta_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *RegisterPluginRequest) GetPluginType() string {
@@ -969,7 +969,7 @@ type RegisterPluginResponse struct {
 
 func (x *RegisterPluginResponse) Reset() {
 	*x = RegisterPluginResponse{}
-	mi := &file_lensagent_v1_meta_proto_msgTypes[16]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -981,7 +981,7 @@ func (x *RegisterPluginResponse) String() string {
 func (*RegisterPluginResponse) ProtoMessage() {}
 
 func (x *RegisterPluginResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_lensagent_v1_meta_proto_msgTypes[16]
+	mi := &file_n0_platform_v1_meta_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -994,7 +994,7 @@ func (x *RegisterPluginResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RegisterPluginResponse.ProtoReflect.Descriptor instead.
 func (*RegisterPluginResponse) Descriptor() ([]byte, []int) {
-	return file_lensagent_v1_meta_proto_rawDescGZIP(), []int{16}
+	return file_n0_platform_v1_meta_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *RegisterPluginResponse) GetPluginId() string {
@@ -1011,11 +1011,11 @@ func (x *RegisterPluginResponse) GetStatus() string {
 	return ""
 }
 
-var File_lensagent_v1_meta_proto protoreflect.FileDescriptor
+var File_n0_platform_v1_meta_proto protoreflect.FileDescriptor
 
-const file_lensagent_v1_meta_proto_rawDesc = "" +
+const file_n0_platform_v1_meta_proto_rawDesc = "" +
 	"\n" +
-	"\x17lensagent/v1/meta.proto\x12\flensagent.v1\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x19lensagent/v1/common.proto\"\x87\x01\n" +
+	"\x19n0/platform/v1/meta.proto\x12\x0en0.platform.v1\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bn0/platform/v1/common.proto\"\x87\x01\n" +
 	"\tWorkspace\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1b\n" +
 	"\ttenant_id\x18\x02 \x01(\tR\btenantId\x12\x12\n" +
@@ -1031,53 +1031,53 @@ const file_lensagent_v1_meta_proto_rawDesc = "" +
 	"\fadapter_type\x18\x05 \x01(\tR\vadapterType\x12/\n" +
 	"\x06params\x18\x06 \x01(\v2\x17.google.protobuf.StructR\x06params\x129\n" +
 	"\n" +
-	"created_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\x9f\x01\n" +
+	"created_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xa1\x01\n" +
 	"\x0eSchemaSnapshot\x12#\n" +
-	"\rconnection_id\x18\x01 \x01(\tR\fconnectionId\x12+\n" +
-	"\x06tables\x18\x02 \x03(\v2\x13.lensagent.v1.TableR\x06tables\x12;\n" +
+	"\rconnection_id\x18\x01 \x01(\tR\fconnectionId\x12-\n" +
+	"\x06tables\x18\x02 \x03(\v2\x15.n0.platform.v1.TableR\x06tables\x12;\n" +
 	"\vcaptured_at\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\n" +
 	"capturedAt\"T\n" +
 	"\x10GetSchemaRequest\x12#\n" +
 	"\rconnection_id\x18\x01 \x01(\tR\fconnectionId\x12\x1b\n" +
-	"\ttenant_id\x18\x02 \x01(\tR\btenantId\"M\n" +
-	"\x11GetSchemaResponse\x128\n" +
-	"\bsnapshot\x18\x01 \x01(\v2\x1c.lensagent.v1.SchemaSnapshotR\bsnapshot\"n\n" +
+	"\ttenant_id\x18\x02 \x01(\tR\btenantId\"O\n" +
+	"\x11GetSchemaResponse\x12:\n" +
+	"\bsnapshot\x18\x01 \x01(\v2\x1e.n0.platform.v1.SchemaSnapshotR\bsnapshot\"p\n" +
 	"\x15ListWorkspacesRequest\x12\x1b\n" +
-	"\ttenant_id\x18\x01 \x01(\tR\btenantId\x128\n" +
+	"\ttenant_id\x18\x01 \x01(\tR\btenantId\x12:\n" +
 	"\n" +
-	"pagination\x18\x02 \x01(\v2\x18.lensagent.v1.PaginationR\n" +
-	"pagination\"}\n" +
-	"\x16ListWorkspacesResponse\x127\n" +
+	"pagination\x18\x02 \x01(\v2\x1a.n0.platform.v1.PaginationR\n" +
+	"pagination\"\x81\x01\n" +
+	"\x16ListWorkspacesResponse\x129\n" +
 	"\n" +
-	"workspaces\x18\x01 \x03(\v2\x17.lensagent.v1.WorkspaceR\n" +
-	"workspaces\x12*\n" +
-	"\x04meta\x18\x02 \x01(\v2\x16.lensagent.v1.ListMetaR\x04meta\"\xc1\x01\n" +
+	"workspaces\x18\x01 \x03(\v2\x19.n0.platform.v1.WorkspaceR\n" +
+	"workspaces\x12,\n" +
+	"\x04meta\x18\x02 \x01(\v2\x18.n0.platform.v1.ListMetaR\x04meta\"\xc1\x01\n" +
 	"\x17CreateConnectionRequest\x12!\n" +
 	"\fworkspace_id\x18\x01 \x01(\tR\vworkspaceId\x12\x1b\n" +
 	"\ttenant_id\x18\x02 \x01(\tR\btenantId\x12\x12\n" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12!\n" +
 	"\fadapter_type\x18\x04 \x01(\tR\vadapterType\x12/\n" +
-	"\x06params\x18\x05 \x01(\v2\x17.google.protobuf.StructR\x06params\"T\n" +
-	"\x18CreateConnectionResponse\x128\n" +
+	"\x06params\x18\x05 \x01(\v2\x17.google.protobuf.StructR\x06params\"V\n" +
+	"\x18CreateConnectionResponse\x12:\n" +
 	"\n" +
-	"connection\x18\x01 \x01(\v2\x18.lensagent.v1.ConnectionR\n" +
+	"connection\x18\x01 \x01(\v2\x1a.n0.platform.v1.ConnectionR\n" +
 	"connection\"X\n" +
 	"\x14GetConnectionRequest\x12#\n" +
 	"\rconnection_id\x18\x01 \x01(\tR\fconnectionId\x12\x1b\n" +
-	"\ttenant_id\x18\x02 \x01(\tR\btenantId\"Q\n" +
-	"\x15GetConnectionResponse\x128\n" +
+	"\ttenant_id\x18\x02 \x01(\tR\btenantId\"S\n" +
+	"\x15GetConnectionResponse\x12:\n" +
 	"\n" +
-	"connection\x18\x01 \x01(\v2\x18.lensagent.v1.ConnectionR\n" +
-	"connection\"\x92\x01\n" +
+	"connection\x18\x01 \x01(\v2\x1a.n0.platform.v1.ConnectionR\n" +
+	"connection\"\x94\x01\n" +
 	"\x16ListConnectionsRequest\x12\x1b\n" +
 	"\ttenant_id\x18\x01 \x01(\tR\btenantId\x12!\n" +
-	"\fworkspace_id\x18\x02 \x01(\tR\vworkspaceId\x128\n" +
+	"\fworkspace_id\x18\x02 \x01(\tR\vworkspaceId\x12:\n" +
 	"\n" +
-	"pagination\x18\x03 \x01(\v2\x18.lensagent.v1.PaginationR\n" +
-	"pagination\"\x81\x01\n" +
-	"\x17ListConnectionsResponse\x12:\n" +
-	"\vconnections\x18\x01 \x03(\v2\x18.lensagent.v1.ConnectionR\vconnections\x12*\n" +
-	"\x04meta\x18\x02 \x01(\v2\x16.lensagent.v1.ListMetaR\x04meta\"[\n" +
+	"pagination\x18\x03 \x01(\v2\x1a.n0.platform.v1.PaginationR\n" +
+	"pagination\"\x85\x01\n" +
+	"\x17ListConnectionsResponse\x12<\n" +
+	"\vconnections\x18\x01 \x03(\v2\x1a.n0.platform.v1.ConnectionR\vconnections\x12,\n" +
+	"\x04meta\x18\x02 \x01(\v2\x18.n0.platform.v1.ListMetaR\x04meta\"[\n" +
 	"\x17DeleteConnectionRequest\x12#\n" +
 	"\rconnection_id\x18\x01 \x01(\tR\fconnectionId\x12\x1b\n" +
 	"\ttenant_id\x18\x02 \x01(\tR\btenantId\"4\n" +
@@ -1094,83 +1094,83 @@ const file_lensagent_v1_meta_proto_rawDesc = "" +
 	"\x06global\x18\a \x01(\bR\x06global\"M\n" +
 	"\x16RegisterPluginResponse\x12\x1b\n" +
 	"\tplugin_id\x18\x01 \x01(\tR\bpluginId\x12\x16\n" +
-	"\x06status\x18\x02 \x01(\tR\x06status2\x95\x05\n" +
-	"\vMetaService\x12L\n" +
-	"\tGetSchema\x12\x1e.lensagent.v1.GetSchemaRequest\x1a\x1f.lensagent.v1.GetSchemaResponse\x12[\n" +
-	"\x0eListWorkspaces\x12#.lensagent.v1.ListWorkspacesRequest\x1a$.lensagent.v1.ListWorkspacesResponse\x12a\n" +
-	"\x10CreateConnection\x12%.lensagent.v1.CreateConnectionRequest\x1a&.lensagent.v1.CreateConnectionResponse\x12X\n" +
-	"\rGetConnection\x12\".lensagent.v1.GetConnectionRequest\x1a#.lensagent.v1.GetConnectionResponse\x12^\n" +
-	"\x0fListConnections\x12$.lensagent.v1.ListConnectionsRequest\x1a%.lensagent.v1.ListConnectionsResponse\x12a\n" +
-	"\x10DeleteConnection\x12%.lensagent.v1.DeleteConnectionRequest\x1a&.lensagent.v1.DeleteConnectionResponse\x12[\n" +
-	"\x0eRegisterPlugin\x12#.lensagent.v1.RegisterPluginRequest\x1a$.lensagent.v1.RegisterPluginResponseB*Z(n0/proto/gen/go/lensagent/v1;lensagentv1b\x06proto3"
+	"\x06status\x18\x02 \x01(\tR\x06status2\xb1\x05\n" +
+	"\vMetaService\x12P\n" +
+	"\tGetSchema\x12 .n0.platform.v1.GetSchemaRequest\x1a!.n0.platform.v1.GetSchemaResponse\x12_\n" +
+	"\x0eListWorkspaces\x12%.n0.platform.v1.ListWorkspacesRequest\x1a&.n0.platform.v1.ListWorkspacesResponse\x12e\n" +
+	"\x10CreateConnection\x12'.n0.platform.v1.CreateConnectionRequest\x1a(.n0.platform.v1.CreateConnectionResponse\x12\\\n" +
+	"\rGetConnection\x12$.n0.platform.v1.GetConnectionRequest\x1a%.n0.platform.v1.GetConnectionResponse\x12b\n" +
+	"\x0fListConnections\x12&.n0.platform.v1.ListConnectionsRequest\x1a'.n0.platform.v1.ListConnectionsResponse\x12e\n" +
+	"\x10DeleteConnection\x12'.n0.platform.v1.DeleteConnectionRequest\x1a(.n0.platform.v1.DeleteConnectionResponse\x12_\n" +
+	"\x0eRegisterPlugin\x12%.n0.platform.v1.RegisterPluginRequest\x1a&.n0.platform.v1.RegisterPluginResponseB:Z8github.com/sickagent/n0/proto/gen/go/n0/platform/v1;n0v1b\x06proto3"
 
 var (
-	file_lensagent_v1_meta_proto_rawDescOnce sync.Once
-	file_lensagent_v1_meta_proto_rawDescData []byte
+	file_n0_platform_v1_meta_proto_rawDescOnce sync.Once
+	file_n0_platform_v1_meta_proto_rawDescData []byte
 )
 
-func file_lensagent_v1_meta_proto_rawDescGZIP() []byte {
-	file_lensagent_v1_meta_proto_rawDescOnce.Do(func() {
-		file_lensagent_v1_meta_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_lensagent_v1_meta_proto_rawDesc), len(file_lensagent_v1_meta_proto_rawDesc)))
+func file_n0_platform_v1_meta_proto_rawDescGZIP() []byte {
+	file_n0_platform_v1_meta_proto_rawDescOnce.Do(func() {
+		file_n0_platform_v1_meta_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_n0_platform_v1_meta_proto_rawDesc), len(file_n0_platform_v1_meta_proto_rawDesc)))
 	})
-	return file_lensagent_v1_meta_proto_rawDescData
+	return file_n0_platform_v1_meta_proto_rawDescData
 }
 
-var file_lensagent_v1_meta_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
-var file_lensagent_v1_meta_proto_goTypes = []any{
-	(*Workspace)(nil),                // 0: lensagent.v1.Workspace
-	(*Connection)(nil),               // 1: lensagent.v1.Connection
-	(*SchemaSnapshot)(nil),           // 2: lensagent.v1.SchemaSnapshot
-	(*GetSchemaRequest)(nil),         // 3: lensagent.v1.GetSchemaRequest
-	(*GetSchemaResponse)(nil),        // 4: lensagent.v1.GetSchemaResponse
-	(*ListWorkspacesRequest)(nil),    // 5: lensagent.v1.ListWorkspacesRequest
-	(*ListWorkspacesResponse)(nil),   // 6: lensagent.v1.ListWorkspacesResponse
-	(*CreateConnectionRequest)(nil),  // 7: lensagent.v1.CreateConnectionRequest
-	(*CreateConnectionResponse)(nil), // 8: lensagent.v1.CreateConnectionResponse
-	(*GetConnectionRequest)(nil),     // 9: lensagent.v1.GetConnectionRequest
-	(*GetConnectionResponse)(nil),    // 10: lensagent.v1.GetConnectionResponse
-	(*ListConnectionsRequest)(nil),   // 11: lensagent.v1.ListConnectionsRequest
-	(*ListConnectionsResponse)(nil),  // 12: lensagent.v1.ListConnectionsResponse
-	(*DeleteConnectionRequest)(nil),  // 13: lensagent.v1.DeleteConnectionRequest
-	(*DeleteConnectionResponse)(nil), // 14: lensagent.v1.DeleteConnectionResponse
-	(*RegisterPluginRequest)(nil),    // 15: lensagent.v1.RegisterPluginRequest
-	(*RegisterPluginResponse)(nil),   // 16: lensagent.v1.RegisterPluginResponse
+var file_n0_platform_v1_meta_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
+var file_n0_platform_v1_meta_proto_goTypes = []any{
+	(*Workspace)(nil),                // 0: n0.platform.v1.Workspace
+	(*Connection)(nil),               // 1: n0.platform.v1.Connection
+	(*SchemaSnapshot)(nil),           // 2: n0.platform.v1.SchemaSnapshot
+	(*GetSchemaRequest)(nil),         // 3: n0.platform.v1.GetSchemaRequest
+	(*GetSchemaResponse)(nil),        // 4: n0.platform.v1.GetSchemaResponse
+	(*ListWorkspacesRequest)(nil),    // 5: n0.platform.v1.ListWorkspacesRequest
+	(*ListWorkspacesResponse)(nil),   // 6: n0.platform.v1.ListWorkspacesResponse
+	(*CreateConnectionRequest)(nil),  // 7: n0.platform.v1.CreateConnectionRequest
+	(*CreateConnectionResponse)(nil), // 8: n0.platform.v1.CreateConnectionResponse
+	(*GetConnectionRequest)(nil),     // 9: n0.platform.v1.GetConnectionRequest
+	(*GetConnectionResponse)(nil),    // 10: n0.platform.v1.GetConnectionResponse
+	(*ListConnectionsRequest)(nil),   // 11: n0.platform.v1.ListConnectionsRequest
+	(*ListConnectionsResponse)(nil),  // 12: n0.platform.v1.ListConnectionsResponse
+	(*DeleteConnectionRequest)(nil),  // 13: n0.platform.v1.DeleteConnectionRequest
+	(*DeleteConnectionResponse)(nil), // 14: n0.platform.v1.DeleteConnectionResponse
+	(*RegisterPluginRequest)(nil),    // 15: n0.platform.v1.RegisterPluginRequest
+	(*RegisterPluginResponse)(nil),   // 16: n0.platform.v1.RegisterPluginResponse
 	(*timestamppb.Timestamp)(nil),    // 17: google.protobuf.Timestamp
 	(*structpb.Struct)(nil),          // 18: google.protobuf.Struct
-	(*Table)(nil),                    // 19: lensagent.v1.Table
-	(*Pagination)(nil),               // 20: lensagent.v1.Pagination
-	(*ListMeta)(nil),                 // 21: lensagent.v1.ListMeta
+	(*Table)(nil),                    // 19: n0.platform.v1.Table
+	(*Pagination)(nil),               // 20: n0.platform.v1.Pagination
+	(*ListMeta)(nil),                 // 21: n0.platform.v1.ListMeta
 }
-var file_lensagent_v1_meta_proto_depIdxs = []int32{
-	17, // 0: lensagent.v1.Workspace.created_at:type_name -> google.protobuf.Timestamp
-	18, // 1: lensagent.v1.Connection.params:type_name -> google.protobuf.Struct
-	17, // 2: lensagent.v1.Connection.created_at:type_name -> google.protobuf.Timestamp
-	19, // 3: lensagent.v1.SchemaSnapshot.tables:type_name -> lensagent.v1.Table
-	17, // 4: lensagent.v1.SchemaSnapshot.captured_at:type_name -> google.protobuf.Timestamp
-	2,  // 5: lensagent.v1.GetSchemaResponse.snapshot:type_name -> lensagent.v1.SchemaSnapshot
-	20, // 6: lensagent.v1.ListWorkspacesRequest.pagination:type_name -> lensagent.v1.Pagination
-	0,  // 7: lensagent.v1.ListWorkspacesResponse.workspaces:type_name -> lensagent.v1.Workspace
-	21, // 8: lensagent.v1.ListWorkspacesResponse.meta:type_name -> lensagent.v1.ListMeta
-	18, // 9: lensagent.v1.CreateConnectionRequest.params:type_name -> google.protobuf.Struct
-	1,  // 10: lensagent.v1.CreateConnectionResponse.connection:type_name -> lensagent.v1.Connection
-	1,  // 11: lensagent.v1.GetConnectionResponse.connection:type_name -> lensagent.v1.Connection
-	20, // 12: lensagent.v1.ListConnectionsRequest.pagination:type_name -> lensagent.v1.Pagination
-	1,  // 13: lensagent.v1.ListConnectionsResponse.connections:type_name -> lensagent.v1.Connection
-	21, // 14: lensagent.v1.ListConnectionsResponse.meta:type_name -> lensagent.v1.ListMeta
-	3,  // 15: lensagent.v1.MetaService.GetSchema:input_type -> lensagent.v1.GetSchemaRequest
-	5,  // 16: lensagent.v1.MetaService.ListWorkspaces:input_type -> lensagent.v1.ListWorkspacesRequest
-	7,  // 17: lensagent.v1.MetaService.CreateConnection:input_type -> lensagent.v1.CreateConnectionRequest
-	9,  // 18: lensagent.v1.MetaService.GetConnection:input_type -> lensagent.v1.GetConnectionRequest
-	11, // 19: lensagent.v1.MetaService.ListConnections:input_type -> lensagent.v1.ListConnectionsRequest
-	13, // 20: lensagent.v1.MetaService.DeleteConnection:input_type -> lensagent.v1.DeleteConnectionRequest
-	15, // 21: lensagent.v1.MetaService.RegisterPlugin:input_type -> lensagent.v1.RegisterPluginRequest
-	4,  // 22: lensagent.v1.MetaService.GetSchema:output_type -> lensagent.v1.GetSchemaResponse
-	6,  // 23: lensagent.v1.MetaService.ListWorkspaces:output_type -> lensagent.v1.ListWorkspacesResponse
-	8,  // 24: lensagent.v1.MetaService.CreateConnection:output_type -> lensagent.v1.CreateConnectionResponse
-	10, // 25: lensagent.v1.MetaService.GetConnection:output_type -> lensagent.v1.GetConnectionResponse
-	12, // 26: lensagent.v1.MetaService.ListConnections:output_type -> lensagent.v1.ListConnectionsResponse
-	14, // 27: lensagent.v1.MetaService.DeleteConnection:output_type -> lensagent.v1.DeleteConnectionResponse
-	16, // 28: lensagent.v1.MetaService.RegisterPlugin:output_type -> lensagent.v1.RegisterPluginResponse
+var file_n0_platform_v1_meta_proto_depIdxs = []int32{
+	17, // 0: n0.platform.v1.Workspace.created_at:type_name -> google.protobuf.Timestamp
+	18, // 1: n0.platform.v1.Connection.params:type_name -> google.protobuf.Struct
+	17, // 2: n0.platform.v1.Connection.created_at:type_name -> google.protobuf.Timestamp
+	19, // 3: n0.platform.v1.SchemaSnapshot.tables:type_name -> n0.platform.v1.Table
+	17, // 4: n0.platform.v1.SchemaSnapshot.captured_at:type_name -> google.protobuf.Timestamp
+	2,  // 5: n0.platform.v1.GetSchemaResponse.snapshot:type_name -> n0.platform.v1.SchemaSnapshot
+	20, // 6: n0.platform.v1.ListWorkspacesRequest.pagination:type_name -> n0.platform.v1.Pagination
+	0,  // 7: n0.platform.v1.ListWorkspacesResponse.workspaces:type_name -> n0.platform.v1.Workspace
+	21, // 8: n0.platform.v1.ListWorkspacesResponse.meta:type_name -> n0.platform.v1.ListMeta
+	18, // 9: n0.platform.v1.CreateConnectionRequest.params:type_name -> google.protobuf.Struct
+	1,  // 10: n0.platform.v1.CreateConnectionResponse.connection:type_name -> n0.platform.v1.Connection
+	1,  // 11: n0.platform.v1.GetConnectionResponse.connection:type_name -> n0.platform.v1.Connection
+	20, // 12: n0.platform.v1.ListConnectionsRequest.pagination:type_name -> n0.platform.v1.Pagination
+	1,  // 13: n0.platform.v1.ListConnectionsResponse.connections:type_name -> n0.platform.v1.Connection
+	21, // 14: n0.platform.v1.ListConnectionsResponse.meta:type_name -> n0.platform.v1.ListMeta
+	3,  // 15: n0.platform.v1.MetaService.GetSchema:input_type -> n0.platform.v1.GetSchemaRequest
+	5,  // 16: n0.platform.v1.MetaService.ListWorkspaces:input_type -> n0.platform.v1.ListWorkspacesRequest
+	7,  // 17: n0.platform.v1.MetaService.CreateConnection:input_type -> n0.platform.v1.CreateConnectionRequest
+	9,  // 18: n0.platform.v1.MetaService.GetConnection:input_type -> n0.platform.v1.GetConnectionRequest
+	11, // 19: n0.platform.v1.MetaService.ListConnections:input_type -> n0.platform.v1.ListConnectionsRequest
+	13, // 20: n0.platform.v1.MetaService.DeleteConnection:input_type -> n0.platform.v1.DeleteConnectionRequest
+	15, // 21: n0.platform.v1.MetaService.RegisterPlugin:input_type -> n0.platform.v1.RegisterPluginRequest
+	4,  // 22: n0.platform.v1.MetaService.GetSchema:output_type -> n0.platform.v1.GetSchemaResponse
+	6,  // 23: n0.platform.v1.MetaService.ListWorkspaces:output_type -> n0.platform.v1.ListWorkspacesResponse
+	8,  // 24: n0.platform.v1.MetaService.CreateConnection:output_type -> n0.platform.v1.CreateConnectionResponse
+	10, // 25: n0.platform.v1.MetaService.GetConnection:output_type -> n0.platform.v1.GetConnectionResponse
+	12, // 26: n0.platform.v1.MetaService.ListConnections:output_type -> n0.platform.v1.ListConnectionsResponse
+	14, // 27: n0.platform.v1.MetaService.DeleteConnection:output_type -> n0.platform.v1.DeleteConnectionResponse
+	16, // 28: n0.platform.v1.MetaService.RegisterPlugin:output_type -> n0.platform.v1.RegisterPluginResponse
 	22, // [22:29] is the sub-list for method output_type
 	15, // [15:22] is the sub-list for method input_type
 	15, // [15:15] is the sub-list for extension type_name
@@ -1178,27 +1178,27 @@ var file_lensagent_v1_meta_proto_depIdxs = []int32{
 	0,  // [0:15] is the sub-list for field type_name
 }
 
-func init() { file_lensagent_v1_meta_proto_init() }
-func file_lensagent_v1_meta_proto_init() {
-	if File_lensagent_v1_meta_proto != nil {
+func init() { file_n0_platform_v1_meta_proto_init() }
+func file_n0_platform_v1_meta_proto_init() {
+	if File_n0_platform_v1_meta_proto != nil {
 		return
 	}
-	file_lensagent_v1_common_proto_init()
+	file_n0_platform_v1_common_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_lensagent_v1_meta_proto_rawDesc), len(file_lensagent_v1_meta_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_n0_platform_v1_meta_proto_rawDesc), len(file_n0_platform_v1_meta_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   17,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_lensagent_v1_meta_proto_goTypes,
-		DependencyIndexes: file_lensagent_v1_meta_proto_depIdxs,
-		MessageInfos:      file_lensagent_v1_meta_proto_msgTypes,
+		GoTypes:           file_n0_platform_v1_meta_proto_goTypes,
+		DependencyIndexes: file_n0_platform_v1_meta_proto_depIdxs,
+		MessageInfos:      file_n0_platform_v1_meta_proto_msgTypes,
 	}.Build()
-	File_lensagent_v1_meta_proto = out.File
-	file_lensagent_v1_meta_proto_goTypes = nil
-	file_lensagent_v1_meta_proto_depIdxs = nil
+	File_n0_platform_v1_meta_proto = out.File
+	file_n0_platform_v1_meta_proto_goTypes = nil
+	file_n0_platform_v1_meta_proto_depIdxs = nil
 }

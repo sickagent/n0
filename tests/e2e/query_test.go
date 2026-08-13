@@ -38,6 +38,9 @@ func TestQuery_SubmitLifecycle(t *testing.T) {
 			"password": "postgres",
 			"database": "meta",
 			"sslmode":  "disable",
+			"query_policy": map[string]any{
+				"allowed_tables": []string{"users"},
+			},
 		},
 	}, &createRes)
 	require.NoError(t, err)
@@ -53,7 +56,7 @@ func TestQuery_SubmitLifecycle(t *testing.T) {
 		JobID  string `json:"job_id"`
 		Status string `json:"status"`
 	}
-	err = client.JSON("POST", "/v1/query", map[string]any{"connection_id": connID, "sql": "SELECT 1"}, &res)
+	err = client.JSON("POST", "/v1/query", map[string]any{"connection_id": connID, "sql": "SELECT id FROM users LIMIT 1"}, &res)
 	require.NoError(t, err, "submit query should succeed")
 	require.NotEmpty(t, res.JobID, "job_id should be returned")
 	require.Equal(t, "pending", res.Status, "new jobs should start in pending status")

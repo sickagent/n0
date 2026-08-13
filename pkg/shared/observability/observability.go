@@ -5,9 +5,9 @@ import (
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/sickagent/n0/pkg/shared/graceful"
+	"github.com/sickagent/n0/pkg/shared/httpserver"
 	"go.uber.org/zap"
-	"n0/pkg/shared/graceful"
-	"n0/pkg/shared/httpserver"
 )
 
 // StartMetricsServer starts a background HTTP server on addr exposing /metrics.

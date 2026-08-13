@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.6.1
 // - protoc             v7.34.1
-// source: lensagent/v1/meta.proto
+// source: n0/platform/v1/meta.proto
 
-package lensagentv1
+package n0v1
 
 import (
 	context "context"
@@ -19,13 +19,13 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	MetaService_GetSchema_FullMethodName        = "/lensagent.v1.MetaService/GetSchema"
-	MetaService_ListWorkspaces_FullMethodName   = "/lensagent.v1.MetaService/ListWorkspaces"
-	MetaService_CreateConnection_FullMethodName = "/lensagent.v1.MetaService/CreateConnection"
-	MetaService_GetConnection_FullMethodName    = "/lensagent.v1.MetaService/GetConnection"
-	MetaService_ListConnections_FullMethodName  = "/lensagent.v1.MetaService/ListConnections"
-	MetaService_DeleteConnection_FullMethodName = "/lensagent.v1.MetaService/DeleteConnection"
-	MetaService_RegisterPlugin_FullMethodName   = "/lensagent.v1.MetaService/RegisterPlugin"
+	MetaService_GetSchema_FullMethodName        = "/n0.platform.v1.MetaService/GetSchema"
+	MetaService_ListWorkspaces_FullMethodName   = "/n0.platform.v1.MetaService/ListWorkspaces"
+	MetaService_CreateConnection_FullMethodName = "/n0.platform.v1.MetaService/CreateConnection"
+	MetaService_GetConnection_FullMethodName    = "/n0.platform.v1.MetaService/GetConnection"
+	MetaService_ListConnections_FullMethodName  = "/n0.platform.v1.MetaService/ListConnections"
+	MetaService_DeleteConnection_FullMethodName = "/n0.platform.v1.MetaService/DeleteConnection"
+	MetaService_RegisterPlugin_FullMethodName   = "/n0.platform.v1.MetaService/RegisterPlugin"
 )
 
 // MetaServiceClient is the client API for MetaService service.
@@ -312,7 +312,7 @@ func _MetaService_RegisterPlugin_Handler(srv interface{}, ctx context.Context, d
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var MetaService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "lensagent.v1.MetaService",
+	ServiceName: "n0.platform.v1.MetaService",
 	HandlerType: (*MetaServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -345,5 +345,5 @@ var MetaService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "lensagent/v1/meta.proto",
+	Metadata: "n0/platform/v1/meta.proto",
 }

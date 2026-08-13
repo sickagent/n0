@@ -2,13 +2,17 @@
 
 **Русский** · [English](./README.md)
 
+[![CI](https://github.com/sickagent/n0/actions/workflows/ci.yml/badge.svg)](https://github.com/sickagent/n0/actions/workflows/ci.yml)
+[![Container images](https://github.com/sickagent/n0/actions/workflows/docker.yml/badge.svg)](https://github.com/sickagent/n0/actions/workflows/docker.yml)
+[![Go](https://img.shields.io/badge/Go-1.26-00ADD8?logo=go&logoColor=white)](https://go.dev/)
+
 **Данные становятся инструментом агента. Без прямого доступа к вашим базам.**
 
 AI-BI платформа на Go для безопасного подключения AI-агентов к корпоративным данным. Агент изучает доступные схемы, отправляет аналитический SQL как асинхронную задачу и получает структурированный результат, пригодный для анализа, графиков и отчётов.
 
 `n0` не пытается быть ещё одним чат-ботом или BI-конструктором. Это исполнительный и мета-слой между агентами и источниками данных: он отвечает за подключение, изоляцию арендаторов, проверку запросов, выполнение, жизненный цикл задач и выдачу результатов.
 
-> Проект находится в активной разработке. Основной end-to-end сценарий уже работает, но часть возможностей из ADR — MCP, распределённое хранение результатов, Vault, PostgreSQL RLS и Kubernetes deployment — ещё находится в roadmap. Актуальный статус приведён ниже.
+> Проект находится в активной разработке. Основной end-to-end сценарий, policy-enforced выполнение запросов, durable result storage, health routing плагинов и сохранение аудита уже работают. MCP, Vault, RLS для metadata-таблиц и Kubernetes deployment остаются в roadmap.
 
 [Возможности](#возможности) · [Быстрый запуск](#быстрый-запуск) · [Первый API-запрос](#первый-запрос-через-api) · [Архитектура](#как-выполняется-запрос) · [Безопасность](#production-security) · [Разработка](#разработка) · [Roadmap](#roadmap)
 
@@ -105,10 +109,10 @@ README намеренно разделяет работающие функции
 | Tenant isolation | ✅ Базовый контур | Connections и jobs проверяются по `tenant_id` |
 | Built-in DB adapters | ✅ Работает | PostgreSQL, MySQL, ClickHouse, SQLite, MSSQL, BigQuery |
 | Credential protection | ✅ Базовый контур | AES-256-GCM at rest, redaction на публичной границе |
-| Query sandbox | 🟡 Частично | Guardrails на уровне токенов; AST parser и RLS injection ещё нужны |
-| Plugin platform | 🟡 Частично | Registry и contracts есть; lifecycle/health routing ещё развивается |
-| Result persistence | 🟡 Прототип | Сейчас in-memory; Redis/S3 backend находится в roadmap |
-| Audit pipeline | 🟡 Частично | Событийная архитектура определена; durable audit sink ещё нужен |
+| Query sandbox | ✅ Реализовано | Структурный SELECT parser, table allowlist, tenant predicate injection, контроль statements и LIMIT |
+| Plugin platform | ✅ Реализовано | Валидация регистрации, persistent lifecycle, gRPC health probes, автоматическое добавление/удаление routes |
+| Result persistence | ✅ Реализовано | Redis для job metadata и малых результатов; S3-compatible storage для больших payload с retention |
+| Audit pipeline | ✅ Реализовано | JetStream producer ack, durable consumer, explicit ack и идемпотентный PostgreSQL sink |
 | MCP server | ⏳ Roadmap | Предусмотрен архитектурой, но не подключён к gateway |
 | Vault integration | ⏳ Roadmap | Конфигурация подготовлена, runtime lease flow ещё не реализован |
 | Kubernetes / HA | ⏳ Roadmap | Нужны manifests, HPA, PDB, mTLS и production NATS topology |
@@ -286,6 +290,8 @@ sequenceDiagram
 | **NATS** | Messaging, JetStream queues, discovery и coordination foundation | NATS Core + JetStream |
 | **PostgreSQL** | Метаданные платформы | PostgreSQL 16 в dev compose |
 
+Во всех persistent-таблицах платформы используется `id UUID PRIMARY KEY DEFAULT gen_random_uuid()`. Естественные ключи join-таблиц сохраняются отдельными ограничениями `UNIQUE`: идентификаторы остаются единообразными без потери domain-level дедупликации.
+
 ### Почему несколько сервисов?
 
 - Gateway можно масштабировать по входящему RPS независимо от query workers.
@@ -306,7 +312,15 @@ sequenceDiagram
 | `mssql` | Built-in | host, port, user, password, database |
 | `bigquery` | Built-in | project_id, location и provider credentials |
 
-Registry адаптеров находится в [services/connection-manager/internal/registry](./services/connection-manager/internal/registry). Контракты внешних плагинов описаны в [proto/lensagent/v1/plugin.proto](./proto/lensagent/v1/plugin.proto).
+Registry адаптеров находится в [services/connection-manager/internal/registry](./services/connection-manager/internal/registry). Контракты внешних плагинов описаны в [proto/n0/platform/v1/plugin.proto](./proto/n0/platform/v1/plugin.proto).
+
+Для внешних database adapters реализован persistent lifecycle: при регистрации проверяются contract и endpoint, Meta Service каждые 15 секунд вызывает стандартный gRPC Health service, а три последовательных сбоя переводят плагин в `degraded`. Routes со статусом `active` рассылаются в Connection Manager; degraded и disabled routes удаляются немедленно. После рестарта Connection Manager маршруты восстанавливаются очередным health cycle. Внешний плагин обязан реализовать стандартный `grpc.health.v1.Health` вместе с контрактом n0.
+
+## Надёжность результатов и аудита
+
+Query jobs, их состояния и небольшие результаты сохраняются в Redis с настроенным TTL. Результаты больше `RESULT_INLINE_MAX_BYTES` записываются в prefix `results/` настроенного S3-compatible bucket; при запуске устанавливается соответствующая expiration policy. В production сервис не запускается без Redis, а слишком большой результат fail-closed, если object storage не настроен.
+
+Каждое завершённое выполнение запроса публикует tenant-partitioned событие в `audit.events.{tenant}` через JetStream acknowledged publish. Meta Service читает поток durable consumer `postgres-audit-sink`, вставляет событие со стабильным ID в `audit_events` и подтверждает сообщение только после успешной транзакции. Повторная доставка идемпотентна благодаря primary key таблицы.
 
 ## Query guardrails
 
@@ -320,7 +334,18 @@ Registry адаптеров находится в [services/connection-manager/i
 - отклоняет нечисловой или превышающий максимум `LIMIT`;
 - передаёт execution timeout в database driver.
 
-Это defence-in-depth, а не полноценная SQL security boundary. До production-доступа к чувствительным данным необходимо добавить dialect-aware AST parser, реальный table whitelist, tenant predicate/RLS enforcement и read-only database roles.
+Query Engine разбирает консервативное аналитическое подмножество SELECT, извлекает все базовые таблицы, проверяет их по `query_policy.allowed_tables`, отклоняет неоднозначные конструкции и ограничивает `LIMIT`. Если задан `query_policy.tenant_column`, tenant-предикат внедряется с сохранением приоритета булевых выражений. Неподдерживаемый SQL отклоняется. Учётная запись базы всё равно должна быть read-only — это независимый уровень защиты.
+
+Пример политики соединения:
+
+```json
+{
+  "query_policy": {
+    "allowed_tables": ["public.orders", "public.customers"],
+    "tenant_column": "tenant_id"
+  }
+}
+```
 
 ## Конфигурация
 
@@ -341,7 +366,11 @@ Registry адаптеров находится в [services/connection-manager/i
 | `QUERY_ENGINE_ADDR` | Query Engine gRPC endpoint | `localhost:8082` |
 | `CONNECTION_MANAGER_ADDR` | Connection Manager gRPC endpoint | `localhost:8081` |
 | `WORKER_COUNT` | Количество query workers | `4` |
-| `REDIS_ADDR` | Зарезервировано для distributed result store | `localhost:6379` |
+| `REDIS_ADDR` | Durable job metadata и inline results | `localhost:6379` |
+| `JOB_TTL_HOURS` | Retention jobs/results | `24` |
+| `S3_ENDPOINT` | S3-compatible endpoint для больших результатов | пусто (выключено) |
+| `S3_BUCKET` | Bucket больших результатов | `n0-results` |
+| `RESULT_INLINE_MAX_BYTES` | Порог переноса из Redis в object storage | `1048576` |
 | `VAULT_ADDR` | Зарезервировано для Vault integration | `http://localhost:8200` |
 
 Некорректные integer и boolean environment values приводят к startup error, а не молча игнорируются.
@@ -364,7 +393,7 @@ Registry адаптеров находится в [services/connection-manager/i
 - включить NATS Accounts/ACL и отдельные tenant subjects;
 - создать read-only роли в каждой source database;
 - включить PostgreSQL RLS для metadata tables;
-- подключить durable audit sink;
+- настроить ёмкость и retention JetStream, PostgreSQL audit, Redis и object storage под нагрузку;
 - настроить backup, restore и key rotation procedures;
 - добавить rate limiting и quota storage во внешнем KV;
 - отключить или заменить development credentials из compose.
@@ -433,7 +462,7 @@ n0/
 │   ├── natsclient/        # Core, JetStream and KV client
 │   └── observability/     # metrics and health
 ├── proto/
-│   ├── lensagent/v1/      # source protobuf contracts
+│   ├── n0/platform/v1/    # source protobuf contracts
 │   └── gen/go/            # committed generated Go module
 ├── services/
 │   ├── agent-gateway/
@@ -494,6 +523,11 @@ CI выполняет:
 - ESLint для Web Admin;
 - TypeScript и Vite production build.
 
+Container workflow собирает каждый сервис для `linux/amd64` и `linux/arm64`.
+В pull request выполняется только сборка; push в `main` и version tags публикуют
+образы вида `ghcr.io/sickagent/n0-agent-gateway` в GitHub Container Registry.
+Dependabot отслеживает зависимости Go, npm, Docker и GitHub Actions.
+
 Локально основной набор проверок:
 
 ```bash
@@ -512,15 +546,14 @@ E2E-набор расположен в [tests/e2e](./tests/e2e) и требуе�
 ### Security and tenancy
 
 - PostgreSQL Row-Level Security для metadata;
-- tenant-aware table whitelist и AST-based SQL validation;
+- расширить поддержку SQL-диалектов за пределы консервативного переносимого SELECT subset;
 - mTLS/service identity между внутренними сервисами;
 - agent ownership verification и token revocation lifecycle;
 - distributed rate limiting и quotas через NATS KV или Redis.
 
 ### Reliability and scale
 
-- Redis-backed job metadata вместо process memory;
-- Redis для небольших результатов и S3-compatible storage для больших;
+- compression результатов, storage-class transitions, replication и signed download URLs;
 - idempotency keys и deduplication по `job_id`;
 - retry/DLQ topology согласно ADR;
 - Kubernetes deployments, HPA, PDB и readiness probes;
@@ -536,7 +569,7 @@ E2E-набор расположен в [tests/e2e](./tests/e2e) и требуе�
 
 ### Governance and observability
 
-- durable audit stream и отдельный audit sink;
+- audit archival/export integrations и настраиваемые retention policies;
 - OpenTelemetry traces между gateway, queue и worker;
 - per-tenant usage metrics и budgets;
 - credential rotation через Vault leases;
@@ -558,7 +591,7 @@ E2E-набор расположен в [tests/e2e](./tests/e2e) и требуе�
 
 ## Название
 
-`n0` читается как **«эн-ноль»** и отражает идею нейтрального нулевого слоя между AI-агентом и данными. Агент может меняться, модель может меняться, источник данных может меняться — execution и security contract остаются стабильными.
+`n0` читается как **«эн-ноль»**. Название происходит от нулевой индексации массивов: элемент `0` является первым элементом коллекции. Так и n0 задуман как первый, основополагающий элемент в области, которую представляет проект, — безопасной работы AI-агентов с данными.
 
 ## Участие в разработке
 

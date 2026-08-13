@@ -1,21 +1,27 @@
 package main
 
 import (
+	"context"
+	"strings"
 	"time"
 
+	"github.com/minio/minio-go/v7"
+	"github.com/minio/minio-go/v7/pkg/credentials"
+	"github.com/minio/minio-go/v7/pkg/lifecycle"
 	"github.com/nats-io/nats.go/jetstream"
+	"github.com/sickagent/n0/pkg/shared/audit"
+	"github.com/sickagent/n0/pkg/shared/config"
+	"github.com/sickagent/n0/pkg/shared/discovery"
+	"github.com/sickagent/n0/pkg/shared/graceful"
+	"github.com/sickagent/n0/pkg/shared/logger"
+	"github.com/sickagent/n0/pkg/shared/natsclient"
+	"github.com/sickagent/n0/pkg/shared/observability"
+	"github.com/sickagent/n0/services/query-engine/internal/client"
+	"github.com/sickagent/n0/services/query-engine/internal/job"
+	"github.com/sickagent/n0/services/query-engine/internal/server"
+	"github.com/sickagent/n0/services/query-engine/internal/worker"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
-	"n0/pkg/shared/config"
-	"n0/pkg/shared/discovery"
-	"n0/pkg/shared/graceful"
-	"n0/pkg/shared/logger"
-	"n0/pkg/shared/natsclient"
-	"n0/pkg/shared/observability"
-	"n0/services/query-engine/internal/client"
-	"n0/services/query-engine/internal/job"
-	"n0/services/query-engine/internal/server"
-	"n0/services/query-engine/internal/worker"
 )
 
 type Config struct {
@@ -24,6 +30,15 @@ type Config struct {
 	GRPCAdvertiseAddr     string `mapstructure:"grpc_advertise_addr"`
 	HTTPAddr              string `mapstructure:"http_addr"`
 	RedisAddr             string `mapstructure:"redis_addr"`
+	RedisPassword         string `mapstructure:"redis_password"`
+	RedisDB               int    `mapstructure:"redis_db"`
+	JobTTLHours           int    `mapstructure:"job_ttl_hours"`
+	S3Endpoint            string `mapstructure:"s3_endpoint"`
+	S3AccessKey           string `mapstructure:"s3_access_key"`
+	S3SecretKey           string `mapstructure:"s3_secret_key"`
+	S3Bucket              string `mapstructure:"s3_bucket"`
+	S3UseSSL              bool   `mapstructure:"s3_use_ssl"`
+	ResultInlineMaxBytes  int    `mapstructure:"result_inline_max_bytes"`
 	WorkerCount           int    `mapstructure:"worker_count"`
 	MetaServiceAddr       string `mapstructure:"meta_service_addr"`
 	ConnectionManagerAddr string `mapstructure:"connection_manager_addr"`
@@ -56,6 +71,12 @@ func main() {
 			if err != nil {
 				log.Fatal("stream ensure failed", zap.Error(err))
 			}
+			if _, err := nc.EnsureStream(ctx, jetstream.StreamConfig{
+				Name: "AUDIT", Subjects: []string{"audit.events.>"}, Replicas: 1,
+				Retention: jetstream.LimitsPolicy, MaxAge: 30 * 24 * time.Hour,
+			}); err != nil {
+				log.Fatal("audit stream ensure failed", zap.Error(err))
+			}
 
 			cons, err := queryStream.CreateOrUpdateConsumer(ctx, jetstream.ConsumerConfig{
 				Durable:    "query-workers",
@@ -81,8 +102,33 @@ func main() {
 			}
 			defer cmCli.Close()
 
-			store := job.NewStore()
-			proc := worker.NewQueryProcessor(log, cmCli, metaCli, store)
+			var objectClient *minio.Client
+			if cfg.S3Endpoint != "" {
+				objectClient, err = minio.New(cfg.S3Endpoint, &minio.Options{
+					Creds:  credentials.NewStaticV4(cfg.S3AccessKey, cfg.S3SecretKey, ""),
+					Secure: cfg.S3UseSSL,
+				})
+				if err != nil {
+					log.Fatal("object storage client init failed", zap.Error(err))
+				}
+				if err := ensureBucket(ctx, objectClient, cfg.S3Bucket, cfg.JobTTLHours); err != nil {
+					log.Fatal("object storage bucket init failed", zap.Error(err))
+				}
+			}
+			store, err := job.NewDurableStore(ctx, job.DurableConfig{
+				RedisAddr: cfg.RedisAddr, RedisPassword: cfg.RedisPassword, RedisDB: cfg.RedisDB,
+				TTL: time.Duration(cfg.JobTTLHours) * time.Hour, ObjectClient: objectClient,
+				ObjectBucket: cfg.S3Bucket, InlineMaxBytes: cfg.ResultInlineMaxBytes,
+			})
+			if err != nil {
+				if strings.EqualFold(cfg.Environment, "production") {
+					log.Fatal("durable job store init failed", zap.Error(err))
+				}
+				log.Warn("durable job store unavailable; using development memory store", zap.Error(err))
+				store = job.NewStore()
+			}
+			defer func() { _ = store.Close() }()
+			proc := worker.NewQueryProcessor(log, cmCli, metaCli, store, audit.NewJetStreamPublisher(nc.JS, 5*time.Second))
 			pool := worker.NewPool(cons, proc, log, cfg.WorkerCount)
 			pool.Start(ctx)
 			defer pool.Stop()
@@ -123,10 +169,44 @@ func main() {
 	cmd.Flags().String("grpc_advertise_addr", "", "advertised gRPC address for discovery")
 	cmd.Flags().String("http_addr", ":8082", "HTTP listen address")
 	cmd.Flags().String("redis_addr", "localhost:6379", "Redis address")
+	cmd.Flags().String("redis_password", "", "Redis password")
+	cmd.Flags().Int("redis_db", 0, "Redis database")
+	cmd.Flags().Int("job_ttl_hours", 24, "job metadata and result TTL")
+	cmd.Flags().String("s3_endpoint", "", "S3-compatible endpoint without scheme")
+	cmd.Flags().String("s3_access_key", "", "S3 access key")
+	cmd.Flags().String("s3_secret_key", "", "S3 secret key")
+	cmd.Flags().String("s3_bucket", "n0-results", "S3 result bucket")
+	cmd.Flags().Bool("s3_use_ssl", false, "use TLS for S3 endpoint")
+	cmd.Flags().Int("result_inline_max_bytes", 1048576, "maximum result size stored inline in Redis")
 	cmd.Flags().Int("worker_count", 4, "number of query workers")
 	cmd.Flags().String("meta_service_addr", "localhost:8080", "Meta Service gRPC address")
 	cmd.Flags().String("connection_manager_addr", "localhost:8081", "Connection Manager gRPC address")
 
 	cobra.CheckErr(config.InitCobra(cmd, "N0"))
 	cobra.CheckErr(cmd.Execute())
+}
+
+func ensureBucket(ctx context.Context, client *minio.Client, bucket string, ttlHours int) error {
+	exists, err := client.BucketExists(ctx, bucket)
+	if err != nil {
+		return err
+	}
+	if exists {
+		return ensureBucketLifecycle(ctx, client, bucket, ttlHours)
+	}
+	if err := client.MakeBucket(ctx, bucket, minio.MakeBucketOptions{}); err != nil {
+		return err
+	}
+	return ensureBucketLifecycle(ctx, client, bucket, ttlHours)
+}
+
+func ensureBucketLifecycle(ctx context.Context, client *minio.Client, bucket string, ttlHours int) error {
+	days := (ttlHours + 23) / 24
+	if days < 1 {
+		days = 1
+	}
+	return client.SetBucketLifecycle(ctx, bucket, &lifecycle.Configuration{Rules: []lifecycle.Rule{{
+		ID: "expire-query-results", Status: "Enabled", RuleFilter: lifecycle.Filter{Prefix: "results/"},
+		Expiration: lifecycle.Expiration{Days: lifecycle.ExpirationDays(days)},
+	}}})
 }

@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"n0/pkg/shared/adapter"
+	"github.com/sickagent/n0/pkg/shared/adapter"
 )
 
 // BigQueryAdapter is a stub for Google BigQuery.

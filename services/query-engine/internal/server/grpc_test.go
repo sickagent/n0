@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"testing"
 
-	pb "n0/proto/gen/go/lensagent/v1"
-	"n0/services/query-engine/internal/job"
-	"n0/services/query-engine/internal/worker"
+	pb "github.com/sickagent/n0/proto/gen/go/n0/platform/v1"
+	"github.com/sickagent/n0/services/query-engine/internal/job"
+	"github.com/sickagent/n0/services/query-engine/internal/worker"
 
 	"go.uber.org/zap"
 )

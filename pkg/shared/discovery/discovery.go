@@ -9,8 +9,8 @@ import (
 	"strings"
 
 	"github.com/nats-io/nats.go"
+	"github.com/sickagent/n0/pkg/shared/natsclient"
 	"go.uber.org/zap"
-	"n0/pkg/shared/natsclient"
 )
 
 const grpcDiscoveryPrefix = "discovery.grpc."

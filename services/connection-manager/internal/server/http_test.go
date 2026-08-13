@@ -5,8 +5,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/sickagent/n0/services/connection-manager/internal/registry"
 	"go.uber.org/zap"
-	"n0/services/connection-manager/internal/registry"
 )
 
 func TestHTTPServer_Health(t *testing.T) {

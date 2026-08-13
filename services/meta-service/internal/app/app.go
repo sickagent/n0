@@ -5,15 +5,16 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"fmt"
+	"net"
 	"net/mail"
 	"strings"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/sickagent/n0/pkg/shared/crypto"
+	pb "github.com/sickagent/n0/proto/gen/go/n0/platform/v1"
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/protobuf/types/known/structpb"
-	"n0/pkg/shared/crypto"
-	pb "n0/proto/gen/go/lensagent/v1"
 )
 
 // Repository defines persistence operations required by Meta Service.
@@ -82,15 +83,19 @@ type Connection struct {
 
 // PluginDefinition represents a registered plugin.
 type PluginDefinition struct {
-	ID         uuid.UUID
-	PluginType string
-	Name       string
-	Version    string
-	Author     string
-	Endpoint   string
-	Protocol   string
-	Status     string
-	CreatedAt  time.Time
+	ID              uuid.UUID
+	PluginType      string
+	Name            string
+	Version         string
+	Author          string
+	Endpoint        string
+	Protocol        string
+	Status          string
+	TenantID        string
+	IsGlobal        bool
+	LastHeartbeatAt *time.Time
+	LastError       string
+	CreatedAt       time.Time
 }
 
 // User represents a platform user.
@@ -266,12 +271,22 @@ func (s *MetaService) DeleteConnection(ctx context.Context, connectionID, tenant
 
 // RegisterPlugin registers a new plugin and returns its generated ID.
 func (s *MetaService) RegisterPlugin(ctx context.Context, p PluginDefinition) (uuid.UUID, error) {
-	if p.Status == "" {
-		p.Status = "registered"
+	if p.PluginType == "" || p.Name == "" || p.Version == "" {
+		return uuid.Nil, fmt.Errorf("plugin_type, name, and version are required")
 	}
 	if p.Protocol == "" {
 		p.Protocol = "grpc"
 	}
+	if p.Protocol != "grpc" {
+		return uuid.Nil, fmt.Errorf("unsupported plugin protocol %q", p.Protocol)
+	}
+	if _, _, err := net.SplitHostPort(p.Endpoint); err != nil {
+		return uuid.Nil, fmt.Errorf("plugin endpoint must be host:port: %w", err)
+	}
+	if !p.IsGlobal && strings.TrimSpace(p.TenantID) == "" {
+		return uuid.Nil, fmt.Errorf("tenant_id is required for a non-global plugin")
+	}
+	p.Status = "validated"
 	p.CreatedAt = time.Now().UTC()
 	id, err := s.repo.RegisterPlugin(ctx, p)
 	if err != nil {

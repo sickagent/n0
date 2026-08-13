@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.6.1
 // - protoc             v7.34.1
-// source: lensagent/v1/plugin.proto
+// source: n0/platform/v1/plugin.proto
 
-package lensagentv1
+package n0v1
 
 import (
 	context "context"
@@ -19,11 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	DatabaseAdapter_GetAdapterInfo_FullMethodName         = "/lensagent.v1.DatabaseAdapter/GetAdapterInfo"
-	DatabaseAdapter_TestConnection_FullMethodName         = "/lensagent.v1.DatabaseAdapter/TestConnection"
-	DatabaseAdapter_GetSchema_FullMethodName              = "/lensagent.v1.DatabaseAdapter/GetSchema"
-	DatabaseAdapter_ExecuteQuery_FullMethodName           = "/lensagent.v1.DatabaseAdapter/ExecuteQuery"
-	DatabaseAdapter_GetDialectCapabilities_FullMethodName = "/lensagent.v1.DatabaseAdapter/GetDialectCapabilities"
+	DatabaseAdapter_GetAdapterInfo_FullMethodName         = "/n0.platform.v1.DatabaseAdapter/GetAdapterInfo"
+	DatabaseAdapter_TestConnection_FullMethodName         = "/n0.platform.v1.DatabaseAdapter/TestConnection"
+	DatabaseAdapter_GetSchema_FullMethodName              = "/n0.platform.v1.DatabaseAdapter/GetSchema"
+	DatabaseAdapter_ExecuteQuery_FullMethodName           = "/n0.platform.v1.DatabaseAdapter/ExecuteQuery"
+	DatabaseAdapter_GetDialectCapabilities_FullMethodName = "/n0.platform.v1.DatabaseAdapter/GetDialectCapabilities"
 )
 
 // DatabaseAdapterClient is the client API for DatabaseAdapter service.
@@ -244,7 +244,7 @@ func _DatabaseAdapter_GetDialectCapabilities_Handler(srv interface{}, ctx contex
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var DatabaseAdapter_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "lensagent.v1.DatabaseAdapter",
+	ServiceName: "n0.platform.v1.DatabaseAdapter",
 	HandlerType: (*DatabaseAdapterServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -269,12 +269,12 @@ var DatabaseAdapter_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "lensagent/v1/plugin.proto",
+	Metadata: "n0/platform/v1/plugin.proto",
 }
 
 const (
-	AgentCapability_ListCapabilities_FullMethodName = "/lensagent.v1.AgentCapability/ListCapabilities"
-	AgentCapability_InvokeCapability_FullMethodName = "/lensagent.v1.AgentCapability/InvokeCapability"
+	AgentCapability_ListCapabilities_FullMethodName = "/n0.platform.v1.AgentCapability/ListCapabilities"
+	AgentCapability_InvokeCapability_FullMethodName = "/n0.platform.v1.AgentCapability/InvokeCapability"
 )
 
 // AgentCapabilityClient is the client API for AgentCapability service.
@@ -396,7 +396,7 @@ func _AgentCapability_InvokeCapability_Handler(srv interface{}, ctx context.Cont
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var AgentCapability_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "lensagent.v1.AgentCapability",
+	ServiceName: "n0.platform.v1.AgentCapability",
 	HandlerType: (*AgentCapabilityServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -409,5 +409,5 @@ var AgentCapability_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "lensagent/v1/plugin.proto",
+	Metadata: "n0/platform/v1/plugin.proto",
 }

@@ -4,10 +4,10 @@ import (
 	"context"
 	"testing"
 
+	pb "github.com/sickagent/n0/proto/gen/go/n0/platform/v1"
+	"github.com/sickagent/n0/services/query-engine/internal/job"
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/structpb"
-	pb "n0/proto/gen/go/lensagent/v1"
-	"n0/services/query-engine/internal/job"
 )
 
 type fakeExecutor struct {
@@ -28,7 +28,10 @@ func (f *fakeExecutor) ExecuteQuery(ctx context.Context, req *pb.ExecuteQueryReq
 type fakeLookup struct{}
 
 func (f *fakeLookup) GetConnection(ctx context.Context, req *pb.GetConnectionRequest) (*pb.GetConnectionResponse, error) {
-	params, err := structpb.NewStruct(map[string]any{"host": "postgres"})
+	params, err := structpb.NewStruct(map[string]any{
+		"host":         "postgres",
+		"query_policy": map[string]any{"allowed_tables": []any{"users"}},
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +50,7 @@ func TestQueryProcessorUsesSanitizedSQLWithoutSecondaryLimit(t *testing.T) {
 		ID:           "job-1",
 		ConnectionID: "conn-1",
 		TenantID:     "user-1",
-		SQL:          "SELECT 1",
+		SQL:          "SELECT value FROM users",
 	})
 
 	exec := &fakeExecutor{}
@@ -57,7 +60,7 @@ func TestQueryProcessorUsesSanitizedSQLWithoutSecondaryLimit(t *testing.T) {
 		ID:           "job-1",
 		ConnectionID: "conn-1",
 		TenantID:     "user-1",
-		SQL:          "SELECT 1",
+		SQL:          "SELECT value FROM users",
 	}); err != nil {
 		t.Fatalf("process job: %v", err)
 	}
@@ -68,7 +71,7 @@ func TestQueryProcessorUsesSanitizedSQLWithoutSecondaryLimit(t *testing.T) {
 	if exec.req.Limit != 0 {
 		t.Fatalf("expected limit 0, got %d", exec.req.Limit)
 	}
-	if exec.req.Sql != "SELECT 1 LIMIT 10000" {
+	if exec.req.Sql != "SELECT value FROM users LIMIT 10000" {
 		t.Fatalf("expected sanitized SQL with single limit, got %q", exec.req.Sql)
 	}
 
