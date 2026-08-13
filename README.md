@@ -366,12 +366,21 @@ Configuration is supplied through flags or environment variables. Both regular n
 | `QUERY_ENGINE_ADDR` | Query Engine gRPC endpoint | `localhost:8082` |
 | `CONNECTION_MANAGER_ADDR` | Connection Manager gRPC endpoint | `localhost:8081` |
 | `WORKER_COUNT` | Number of query workers | `4` |
-| `REDIS_ADDR` | Durable job metadata and inline result storage | `localhost:6379` |
+| `REDIS_MODE` | Redis topology: `standalone` or `cluster` | `standalone` |
+| `REDIS_ADDR` | Standalone Redis address (also a backwards-compatible cluster seed) | `localhost:6379` |
+| `REDIS_ADDRS` | Comma-separated Redis Cluster seed addresses; overrides `REDIS_ADDR` | empty |
+| `REDIS_USERNAME` | Optional Redis ACL username | empty |
+| `REDIS_PASSWORD` | Optional Redis password | empty |
+| `REDIS_DB` | Redis database; must be `0` in cluster mode | `0` |
 | `JOB_TTL_HOURS` | Job/result retention | `24` |
 | `S3_ENDPOINT` | S3-compatible endpoint for large results | empty (disabled) |
 | `S3_BUCKET` | Large-result bucket | `n0-results` |
 | `RESULT_INLINE_MAX_BYTES` | Redis-to-object-storage threshold | `1048576` |
 | `VAULT_ADDR` | Reserved for Vault integration | `http://localhost:8200` |
+
+For Redis Cluster, set for example `REDIS_MODE=cluster` and
+`REDIS_ADDRS=redis-0:6379,redis-1:6379,redis-2:6379`. The addresses are seed
+nodes; the client discovers the remaining cluster topology automatically.
 
 Invalid integer and boolean environment values cause a startup error instead of being silently ignored.
 

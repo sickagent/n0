@@ -29,7 +29,10 @@ type Config struct {
 	GRPCAddr              string `mapstructure:"grpc_addr"`
 	GRPCAdvertiseAddr     string `mapstructure:"grpc_advertise_addr"`
 	HTTPAddr              string `mapstructure:"http_addr"`
+	RedisMode             string `mapstructure:"redis_mode"`
 	RedisAddr             string `mapstructure:"redis_addr"`
+	RedisAddrs            string `mapstructure:"redis_addrs"`
+	RedisUsername         string `mapstructure:"redis_username"`
 	RedisPassword         string `mapstructure:"redis_password"`
 	RedisDB               int    `mapstructure:"redis_db"`
 	JobTTLHours           int    `mapstructure:"job_ttl_hours"`
@@ -116,7 +119,8 @@ func main() {
 				}
 			}
 			store, err := job.NewDurableStore(ctx, job.DurableConfig{
-				RedisAddr: cfg.RedisAddr, RedisPassword: cfg.RedisPassword, RedisDB: cfg.RedisDB,
+				RedisMode: cfg.RedisMode, RedisAddr: cfg.RedisAddr, RedisAddrs: strings.Split(cfg.RedisAddrs, ","),
+				RedisUsername: cfg.RedisUsername, RedisPassword: cfg.RedisPassword, RedisDB: cfg.RedisDB,
 				TTL: time.Duration(cfg.JobTTLHours) * time.Hour, ObjectClient: objectClient,
 				ObjectBucket: cfg.S3Bucket, InlineMaxBytes: cfg.ResultInlineMaxBytes,
 			})
@@ -168,7 +172,10 @@ func main() {
 	cmd.Flags().String("grpc_addr", ":8080", "gRPC listen address")
 	cmd.Flags().String("grpc_advertise_addr", "", "advertised gRPC address for discovery")
 	cmd.Flags().String("http_addr", ":8082", "HTTP listen address")
+	cmd.Flags().String("redis_mode", "standalone", "Redis mode: standalone or cluster")
 	cmd.Flags().String("redis_addr", "localhost:6379", "Redis address")
+	cmd.Flags().String("redis_addrs", "", "comma-separated Redis Cluster seed addresses (overrides redis_addr)")
+	cmd.Flags().String("redis_username", "", "Redis ACL username")
 	cmd.Flags().String("redis_password", "", "Redis password")
 	cmd.Flags().Int("redis_db", 0, "Redis database")
 	cmd.Flags().Int("job_ttl_hours", 24, "job metadata and result TTL")

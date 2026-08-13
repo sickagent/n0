@@ -366,12 +366,21 @@ Query Engine разбирает консервативное аналитиче�
 | `QUERY_ENGINE_ADDR` | Query Engine gRPC endpoint | `localhost:8082` |
 | `CONNECTION_MANAGER_ADDR` | Connection Manager gRPC endpoint | `localhost:8081` |
 | `WORKER_COUNT` | Количество query workers | `4` |
-| `REDIS_ADDR` | Durable job metadata и inline results | `localhost:6379` |
+| `REDIS_MODE` | Топология Redis: `standalone` или `cluster` | `standalone` |
+| `REDIS_ADDR` | Адрес standalone Redis (также обратно совместимый seed кластера) | `localhost:6379` |
+| `REDIS_ADDRS` | Адреса seed-узлов Redis Cluster через запятую; имеет приоритет над `REDIS_ADDR` | пусто |
+| `REDIS_USERNAME` | Необязательное имя пользователя Redis ACL | пусто |
+| `REDIS_PASSWORD` | Необязательный пароль Redis | пусто |
+| `REDIS_DB` | База Redis; в cluster mode должна быть `0` | `0` |
 | `JOB_TTL_HOURS` | Retention jobs/results | `24` |
 | `S3_ENDPOINT` | S3-compatible endpoint для больших результатов | пусто (выключено) |
 | `S3_BUCKET` | Bucket больших результатов | `n0-results` |
 | `RESULT_INLINE_MAX_BYTES` | Порог переноса из Redis в object storage | `1048576` |
 | `VAULT_ADDR` | Зарезервировано для Vault integration | `http://localhost:8200` |
+
+Для Redis Cluster задайте, например, `REDIS_MODE=cluster` и
+`REDIS_ADDRS=redis-0:6379,redis-1:6379,redis-2:6379`. Это seed-узлы;
+остальную топологию кластера клиент обнаружит автоматически.
 
 Некорректные integer и boolean environment values приводят к startup error, а не молча игнорируются.
 

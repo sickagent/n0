@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"strings"
 	"sync"
 	"time"
 
@@ -40,7 +41,10 @@ type Record struct {
 
 // DurableConfig configures Redis metadata and S3-compatible large results.
 type DurableConfig struct {
+	RedisMode      string
 	RedisAddr      string
+	RedisAddrs     []string
+	RedisUsername  string
 	RedisPassword  string
 	RedisDB        int
 	TTL            time.Duration
@@ -53,7 +57,7 @@ type DurableConfig struct {
 type Store struct {
 	mu        sync.RWMutex
 	jobs      map[string]*Record
-	redis     *redis.Client
+	redis     redis.UniversalClient
 	ttl       time.Duration
 	objects   *minio.Client
 	bucket    string
@@ -70,10 +74,10 @@ func NewStore() *Store {
 // NewDurableStore creates a Redis-backed store. Large results are moved to
 // S3-compatible object storage when an object client is configured.
 func NewDurableStore(ctx context.Context, cfg DurableConfig) (*Store, error) {
-	if cfg.RedisAddr == "" {
-		return nil, fmt.Errorf("redis address is required")
+	client, err := newRedisClient(cfg)
+	if err != nil {
+		return nil, err
 	}
-	client := redis.NewClient(&redis.Options{Addr: cfg.RedisAddr, Password: cfg.RedisPassword, DB: cfg.RedisDB})
 	if err := client.Ping(ctx).Err(); err != nil {
 		_ = client.Close()
 		return nil, fmt.Errorf("redis ping: %w", err)
@@ -89,6 +93,40 @@ func NewDurableStore(ctx context.Context, cfg DurableConfig) (*Store, error) {
 		return nil, fmt.Errorf("object bucket is required")
 	}
 	return &Store{redis: client, ttl: cfg.TTL, objects: cfg.ObjectClient, bucket: cfg.ObjectBucket, inlineMax: cfg.InlineMaxBytes}, nil
+}
+
+func newRedisClient(cfg DurableConfig) (redis.UniversalClient, error) {
+	addrs := make([]string, 0, len(cfg.RedisAddrs)+1)
+	for _, addr := range cfg.RedisAddrs {
+		if addr = strings.TrimSpace(addr); addr != "" {
+			addrs = append(addrs, addr)
+		}
+	}
+	if len(addrs) == 0 && strings.TrimSpace(cfg.RedisAddr) != "" {
+		addrs = append(addrs, strings.TrimSpace(cfg.RedisAddr))
+	}
+	if len(addrs) == 0 {
+		return nil, fmt.Errorf("redis address is required")
+	}
+
+	switch strings.ToLower(strings.TrimSpace(cfg.RedisMode)) {
+	case "", "standalone", "single":
+		if len(addrs) != 1 {
+			return nil, fmt.Errorf("standalone redis requires exactly one address")
+		}
+		return redis.NewClient(&redis.Options{
+			Addr: addrs[0], Username: cfg.RedisUsername, Password: cfg.RedisPassword, DB: cfg.RedisDB,
+		}), nil
+	case "cluster":
+		if cfg.RedisDB != 0 {
+			return nil, fmt.Errorf("redis cluster does not support redis_db other than 0")
+		}
+		return redis.NewClusterClient(&redis.ClusterOptions{
+			Addrs: addrs, Username: cfg.RedisUsername, Password: cfg.RedisPassword,
+		}), nil
+	default:
+		return nil, fmt.Errorf("unsupported redis mode %q (expected standalone or cluster)", cfg.RedisMode)
+	}
 }
 
 // Close releases external clients.
