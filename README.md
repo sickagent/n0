@@ -316,6 +316,8 @@ The adapter registry lives in [services/connection-manager/internal/registry](./
 
 External database adapters use a persisted lifecycle: registration validates the contract and endpoint, Meta Service probes the standard gRPC Health service every 15 seconds, and three consecutive failures move the plugin to `degraded`. `active` routes are broadcast to Connection Manager; degraded or disabled routes are removed immediately. A restarted Connection Manager is repopulated by the recurring health cycle. External plugins must implement the standard `grpc.health.v1.Health` service in addition to the n0 plugin contract.
 
+A runnable Go implementation is available in [example/plugin](./example/plugin).
+
 ## Result and audit durability
 
 Query jobs, states, and small result sets are stored in Redis with the configured TTL. Results larger than `RESULT_INLINE_MAX_BYTES` are written to the `results/` prefix of the configured S3-compatible bucket; startup installs a matching bucket expiration policy. Production startup fails if Redis is unavailable, and oversized results fail closed if object storage is not configured.

@@ -8,7 +8,7 @@ COMPOSE := docker compose
 PROTOC_IMAGE := namely/protoc-all:1.53_2
 
 SERVICES := services/agent-gateway services/meta-service services/query-engine services/connection-manager
-GO_MODULES := pkg/shared proto/gen/go $(SERVICES)
+GO_MODULES := pkg/shared proto/gen/go example/plugin $(SERVICES)
 
 .PHONY: all
 all: build
@@ -34,6 +34,7 @@ tidy:
 		cd $$svc && $(GO) mod tidy && cd ../..; \
 	done
 	cd pkg/shared && $(GO) mod tidy && cd ../..
+	cd example/plugin && $(GO) mod tidy && cd ../..
 
 .PHONY: build
 build:

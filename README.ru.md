@@ -316,6 +316,8 @@ Registry адаптеров находится в [services/connection-manager/i
 
 Для внешних database adapters реализован persistent lifecycle: при регистрации проверяются contract и endpoint, Meta Service каждые 15 секунд вызывает стандартный gRPC Health service, а три последовательных сбоя переводят плагин в `degraded`. Routes со статусом `active` рассылаются в Connection Manager; degraded и disabled routes удаляются немедленно. После рестарта Connection Manager маршруты восстанавливаются очередным health cycle. Внешний плагин обязан реализовать стандартный `grpc.health.v1.Health` вместе с контрактом n0.
 
+Запускаемый пример на Go находится в [example/plugin](./example/plugin).
+
 ## Надёжность результатов и аудита
 
 Query jobs, их состояния и небольшие результаты сохраняются в Redis с настроенным TTL. Результаты больше `RESULT_INLINE_MAX_BYTES` записываются в prefix `results/` настроенного S3-compatible bucket; при запуске устанавливается соответствующая expiration policy. В production сервис не запускается без Redis, а слишком большой результат fail-closed, если object storage не настроен.
