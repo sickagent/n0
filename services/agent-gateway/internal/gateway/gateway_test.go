@@ -62,9 +62,11 @@ func (c *fakeMetaClient) Close() error { return nil }
 type fakeQueryClient struct {
 	submitResp *pb.SubmitQueryResponse
 	submitErr  error
+	lastSubmit *pb.SubmitQueryRequest
 }
 
 func (c *fakeQueryClient) SubmitQuery(ctx context.Context, req *pb.SubmitQueryRequest) (*pb.SubmitQueryResponse, error) {
+	c.lastSubmit = req
 	if c.submitErr != nil {
 		return nil, c.submitErr
 	}

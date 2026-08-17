@@ -57,6 +57,7 @@ type Server struct {
 	metaHTTPBase   string
 	allowedOrigins map[string]struct{}
 	httpClient     *http.Client
+	mcpHandler     http.Handler
 }
 
 // NewServer creates a new gateway server.
@@ -90,6 +91,7 @@ func NewServer(grpcAddr, httpAddr string, log *zap.Logger, metaCli MetaClient, q
 			s.allowedOrigins[origin] = struct{}{}
 		}
 	}
+	s.mcpHandler = s.newMCPHandler()
 	return s
 }
 
@@ -112,7 +114,8 @@ func (s *Server) corsMiddleware(next http.Handler) http.Handler {
 			w.Header().Set("Vary", "Origin")
 		}
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, Accept, Mcp-Protocol-Version, Mcp-Session-Id")
+		w.Header().Set("Access-Control-Expose-Headers", "Mcp-Protocol-Version, Mcp-Session-Id")
 		if r.Method == "OPTIONS" {
 			w.WriteHeader(http.StatusOK)
 			return
@@ -171,6 +174,7 @@ func (s *Server) handler() http.Handler {
 	// Protected routes
 	r.Group(func(r chi.Router) {
 		r.Use(s.jwtMiddleware)
+		r.Handle("/mcp", s.mcpHandler)
 		r.Get("/v1/auth/me", s.proxyToMetaHTTP)
 		r.Get("/v1/agents", s.proxyToMetaHTTP)
 		r.Post("/v1/agents", s.proxyToMetaHTTP)

@@ -12,7 +12,7 @@ n0 is a Go-based AI-BI platform for connecting AI agents to enterprise data safe
 
 n0 is not another chatbot or dashboard builder. It is an execution and metadata layer between agents and data sources. The platform owns authentication, tenant isolation, connection management, query validation, execution, job lifecycle, and result delivery.
 
-> n0 is under active development. The primary end-to-end flow, policy-enforced query execution, durable result storage, plugin health routing, and audit persistence work today. MCP, Vault, metadata-table RLS, and Kubernetes deployment remain on the roadmap.
+> n0 is under active development. The primary end-to-end flow, policy-enforced query execution, durable result storage, plugin health routing, audit persistence, and the JWT-protected MCP endpoint work today. Vault, metadata-table RLS, and Kubernetes deployment remain on the roadmap.
 
 [Features](#features) · [Quick start](#quick-start) · [First API query](#your-first-query-through-the-api) · [Architecture](#how-a-query-runs) · [Security](#production-security) · [Development](#development) · [Roadmap](#roadmap)
 
@@ -113,7 +113,7 @@ This README deliberately separates implemented behavior from the target architec
 | Plugin platform | ✅ Implemented | Registration validation, persistent lifecycle, gRPC health probes, automatic route add/remove |
 | Result persistence | ✅ Implemented | Redis job metadata and small results; S3-compatible storage for large payloads, both with retention |
 | Audit pipeline | ✅ Implemented | JetStream producer acknowledgement, durable consumer, explicit ack, idempotent PostgreSQL sink |
-| MCP server | ⏳ Roadmap | Included in the architecture but not connected to Agent Gateway yet |
+| MCP server | ✅ Working | Streamable HTTP at `/mcp`, JWT-protected and connected to tenant-scoped schema/query tools |
 | Vault integration | ⏳ Roadmap | Configuration exists; runtime lease management is not implemented yet |
 | Kubernetes / HA | ⏳ Roadmap | Manifests, HPA, PDB, mTLS, and a production NATS topology are still needed |
 
@@ -151,6 +151,7 @@ docker compose -f deployments/docker-compose.yml ps
 
 - Web Admin: [http://localhost:3000](http://localhost:3000)
 - Agent Gateway REST API: [http://localhost:8083](http://localhost:8083)
+- MCP endpoint: `http://localhost:8083/mcp` (use an Agent Token as a Bearer token)
 - NATS monitoring: [http://localhost:8222](http://localhost:8222)
 
 Create a user with a password between 12 and 64 characters. The platform automatically creates a `Default Workspace` after registration.
@@ -572,7 +573,6 @@ The end-to-end suite lives in [tests/e2e](./tests/e2e) and requires the Docker C
 
 ### Agent platform
 
-- an MCP server in Agent Gateway;
 - an external gRPC API for enterprise agents;
 - dynamic capability discovery;
 - complete plugin lifecycle: validation, health, degraded, deprecated, revoked;
