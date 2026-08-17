@@ -8,7 +8,7 @@ require (
 	github.com/sickagent/n0/pkg/shared v0.0.0
 	github.com/sickagent/n0/proto/gen/go v0.0.0
 	github.com/spf13/cobra v1.8.1
-	go.uber.org/zap v1.27.1
+	go.uber.org/zap v1.28.0
 	google.golang.org/grpc v1.64.1
 	google.golang.org/protobuf v1.34.2
 )
