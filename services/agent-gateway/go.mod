@@ -3,7 +3,7 @@ module github.com/sickagent/n0/services/agent-gateway
 go 1.26
 
 require (
-	github.com/go-chi/chi/v5 v5.2.5
+	github.com/go-chi/chi/v5 v5.3.1
 	github.com/modelcontextprotocol/go-sdk v1.7.0
 	github.com/sickagent/n0/pkg/shared v0.0.0
 	github.com/sickagent/n0/proto/gen/go v0.0.0
