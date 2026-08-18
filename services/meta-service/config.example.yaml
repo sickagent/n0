@@ -1,0 +1,12 @@
+# Reference configuration for Kubernetes.
+# The binary reads environment variables or flags, not YAML directly.
+APP_NAME: "meta-service"
+ENVIRONMENT: "production"
+LOG_LEVEL: "info"
+NATS_URL: "nats://nats.n0.svc.cluster.local:4222"
+GRPC_ADDR: ":8080"
+GRPC_ADVERTISE_ADDR: "meta-service.n0.svc.cluster.local:8080"
+HTTP_ADDR: ":8081"
+POSTGRES_DSN: "postgres://n0_meta:<password>@postgres.n0.svc.cluster.local:5432/n0_meta?sslmode=require"
+CONNECTION_MANAGER_ADDR: "connection-manager.n0.svc.cluster.local:8080"
+# ENCRYPTION_KEY must come from a Kubernetes Secret.

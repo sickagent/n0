@@ -1,0 +1,22 @@
+# Reference configuration for Kubernetes.
+# The binary reads environment variables or flags, not YAML directly.
+APP_NAME: "query-engine"
+ENVIRONMENT: "production"
+LOG_LEVEL: "info"
+NATS_URL: "nats://nats.n0.svc.cluster.local:4222"
+GRPC_ADDR: ":8080"
+GRPC_ADVERTISE_ADDR: "query-engine.n0.svc.cluster.local:8080"
+HTTP_ADDR: ":8082"
+META_SERVICE_ADDR: "meta-service.n0.svc.cluster.local:8080"
+CONNECTION_MANAGER_ADDR: "connection-manager.n0.svc.cluster.local:8080"
+WORKER_COUNT: "8"
+REDIS_MODE: "standalone"
+REDIS_ADDR: "redis.n0.svc.cluster.local:6379"
+REDIS_DB: "0"
+JOB_TTL_HOURS: "24"
+S3_ENDPOINT: "s3.example.com"
+S3_BUCKET: "n0-results"
+S3_USE_SSL: "true"
+RESULT_INLINE_MAX_BYTES: "1048576"
+# REDIS_USERNAME, REDIS_PASSWORD, S3_ACCESS_KEY and S3_SECRET_KEY must come
+# from a Kubernetes Secret.

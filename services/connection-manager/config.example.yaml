@@ -1,0 +1,10 @@
+# Reference configuration for Kubernetes.
+# The binary reads environment variables or flags, not YAML directly.
+APP_NAME: "connection-manager"
+ENVIRONMENT: "production"
+LOG_LEVEL: "info"
+NATS_URL: "nats://nats.n0.svc.cluster.local:4222"
+GRPC_ADDR: ":8080"
+GRPC_ADVERTISE_ADDR: "connection-manager.n0.svc.cluster.local:8080"
+HTTP_ADDR: ":8082"
+VAULT_ADDR: "https://vault.n0.svc.cluster.local:8200"

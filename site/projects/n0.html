@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="n0 — AI-BI платформа на Go для безопасного подключения AI-агентов к корпоративным данным." />
+    <meta name="author" content="sickagent" />
+    <meta name="theme-color" content="#f2f0e8" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="n0 — проект sickagent" />
+    <meta property="og:description" content="Execution layer между AI-агентами и базами данных: policy checks, async jobs, tenant isolation и audit." />
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="canonical" href="https://sickagent.github.io/n0/projects/n0.html" />
+    <title>n0 — проект sickagent</title>
+  </head>
+  <body data-page="project">
+    <a class="skip-link" href="#main-content">к содержимому</a>
+    <header class="site-header shell">
+      <a class="wordmark" href="../index.html" aria-label="sickagent, на главную">sickagent<span>.</span></a>
+      <a class="back-link" href="../index.html">← назад к проектам</a>
+      <div class="site-controls" aria-label="Настройки сайта"><button class="control-button" type="button" data-language-toggle>EN</button><button class="control-button theme-button" type="button" data-theme-toggle aria-label="Переключить тему">◐</button></div>
+    </header>
+
+    <main id="main-content" class="project-page shell">
+      <p class="eyebrow"><span class="status-dot"></span> n0 · AI-BI platform · active</p>
+      <h1>n<span>0</span></h1>
+      <p class="project-lede">Безопасный execution layer между AI-агентами и корпоративными источниками данных.</p>
+
+      <div class="project-intro-grid">
+        <div>
+          <div class="section-label"><span>01</span> проблема</div>
+          <h2>Дать агенту<br />данные без прямого доступа.</h2>
+        </div>
+        <div class="long-copy">
+          <p>AI-агент может написать SQL, но не должен знать постоянные пароли от production-баз или подключаться к источникам напрямую. n0 принимает аналитическую задачу через Agent Gateway, проверяет её политиками и передаёт выполнение в изолированный Query Engine.</p>
+          <p>Проект находится в активной разработке. Уже работают основной end-to-end сценарий, policy-enforced query execution, durable result storage, health routing плагинов и сохранение аудита.</p>
+        </div>
+      </div>
+
+      <section class="principles" aria-labelledby="principles-title">
+        <div class="section-label"><span>02</span> возможности</div>
+        <h2 id="principles-title">Что делает n0</h2>
+        <div class="principle-grid">
+          <article><span>01</span><h3>Проверяет запросы</h3><p>Разрешает одиночные SELECT, ограничивает строки и блокирует опасные операции.</p></article>
+          <article><span>02</span><h3>Выполняет async jobs</h3><p>Отправляет аналитические запросы в NATS JetStream и возвращает результат через polling.</p></article>
+          <article><span>03</span><h3>Изолирует tenants</h3><p>Проверяет владельца connection и job на каждой публичной операции.</p></article>
+        </div>
+      </section>
+
+      <div class="project-cta">
+        <div><p class="eyebrow">исходный код</p><h2>Архитектура и<br />запуск — в docs.</h2></div>
+        <div class="cta-actions"><a class="button button-dark" href="n0/docs.html">читать документацию <span>→</span></a><a class="text-link" href="https://github.com/sickagent/n0" target="_blank" rel="noreferrer">открыть репозиторий n0 ↗</a></div>
+      </div>
+    </main>
+
+    <footer class="site-footer shell"><span>© sickagent</span><a href="../index.html">sickagent.</a></footer>
+    <script src="../site.js" defer></script>
+  </body>
+</html>

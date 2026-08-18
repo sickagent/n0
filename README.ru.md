@@ -12,9 +12,13 @@ AI-BI платформа на Go для безопасного подключе�
 
 `n0` не пытается быть ещё одним чат-ботом или BI-конструктором. Это исполнительный и мета-слой между агентами и источниками данных: он отвечает за подключение, изоляцию арендаторов, проверку запросов, выполнение, жизненный цикл задач и выдачу результатов.
 
-> Проект находится в активной разработке. Основной end-to-end сценарий, policy-enforced выполнение запросов, durable result storage, health routing плагинов и сохранение аудита уже работают. MCP, Vault, RLS для metadata-таблиц и Kubernetes deployment остаются в roadmap.
+> Проект находится в активной разработке. Основной end-to-end сценарий, policy-enforced выполнение запросов, durable result storage, health routing плагинов, сохранение аудита и JWT-защищённый MCP endpoint уже работают. Vault, RLS для metadata-таблиц и Kubernetes deployment остаются в roadmap.
 
 [Возможности](#возможности) · [Быстрый запуск](#быстрый-запуск) · [Первый API-запрос](#первый-запрос-через-api) · [Архитектура](#как-выполняется-запрос) · [Безопасность](#production-security) · [Разработка](#разработка) · [Roadmap](#roadmap)
+
+Подробное описание сервисов, портов и примеров конфигурации: [docs/services.md](./docs/services.md).
+
+Примеры YAML-конфигурации для сервисов и заметки по Kubernetes: [deployments/k8s/README.md](./deployments/k8s/README.md).
 
 ## Что такое n0?
 
@@ -113,7 +117,7 @@ README намеренно разделяет работающие функции
 | Plugin platform | ✅ Реализовано | Валидация регистрации, persistent lifecycle, gRPC health probes, автоматическое добавление/удаление routes |
 | Result persistence | ✅ Реализовано | Redis для job metadata и малых результатов; S3-compatible storage для больших payload с retention |
 | Audit pipeline | ✅ Реализовано | JetStream producer ack, durable consumer, explicit ack и идемпотентный PostgreSQL sink |
-| MCP server | ⏳ Roadmap | Предусмотрен архитектурой, но не подключён к gateway |
+| MCP server | ✅ Работает | Streamable HTTP на `/mcp`, JWT-защита и tenant-scoped tools для схем и query jobs |
 | Vault integration | ⏳ Roadmap | Конфигурация подготовлена, runtime lease flow ещё не реализован |
 | Kubernetes / HA | ⏳ Roadmap | Нужны manifests, HPA, PDB, mTLS и production NATS topology |
 
@@ -151,6 +155,7 @@ docker compose -f deployments/docker-compose.yml ps
 
 - Web Admin: [http://localhost:3000](http://localhost:3000)
 - Agent Gateway REST API: [http://localhost:8083](http://localhost:8083)
+- MCP endpoint: `http://localhost:8083/mcp` (используйте Agent Token как Bearer token)
 - NATS monitoring: [http://localhost:8222](http://localhost:8222)
 
 Создайте пользователя с паролем длиной от 12 до 64 символов. После входа платформа автоматически создаст `Default Workspace`.
@@ -572,7 +577,6 @@ E2E-набор расположен в [tests/e2e](./tests/e2e) и требуе�
 
 ### Agent platform
 
-- MCP server в Agent Gateway;
 - внешний gRPC API для enterprise agents;
 - dynamic capability discovery;
 - полный plugin lifecycle: validation, health, degraded, deprecated, revoked;

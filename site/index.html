@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="sickagent — проекты, статьи и инструменты для AI, разработки и работы с данными." />
+    <meta name="author" content="sickagent" />
+    <meta name="theme-color" content="#f2f0e8" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="sickagent — projects, writing, tools" />
+    <meta property="og:description" content="Проекты, статьи и инструменты sickagent для AI, разработки и данных." />
+    <meta property="og:url" content="https://sickagent.github.io/n0/" />
+    <link rel="canonical" href="https://sickagent.github.io/n0/" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>sickagent — проекты и n0</title>
+  </head>
+  <body data-page="home">
+    <a class="skip-link" href="#main-content">к содержимому</a>
+    <header class="site-header shell">
+      <a class="wordmark" href="index.html" aria-label="sickagent, на главную">sickagent<span>.</span></a>
+      <nav aria-label="Основная навигация">
+        <a href="#about">о профиле</a>
+        <a href="#projects">проекты</a>
+        <a href="#writing">статьи</a>
+        <a class="nav-github" href="https://github.com/sickagent" target="_blank" rel="noreferrer">github ↗</a>
+      </nav>
+      <div class="site-controls" aria-label="Настройки сайта"><button class="control-button" type="button" data-language-toggle>EN</button><button class="control-button theme-button" type="button" data-theme-toggle aria-label="Переключить тему">◐</button></div>
+    </header>
+
+    <main id="main-content">
+      <section class="hero shell" aria-labelledby="hero-title">
+        <p class="eyebrow"><span class="status-dot"></span> sickagent · developer tools</p>
+        <h1 id="hero-title">Проекты,<br /><em>статьи, инструменты.</em></h1>
+        <p class="hero-copy">sickagent — личное пространство для open source проектов, инженерных заметок и инструментов на стыке AI, разработки и данных.</p>
+        <div class="hero-actions">
+          <a class="button button-dark" href="#projects">смотреть проекты <span>↓</span></a>
+          <a class="text-link" href="https://github.com/sickagent" target="_blank" rel="noreferrer">открыть GitHub ↗</a>
+        </div>
+      </section>
+
+      <section class="about shell" id="about" aria-labelledby="about-title">
+        <div class="section-label"><span>01</span> профиль</div>
+        <div class="about-grid">
+          <h2 id="about-title">Код, контекст<br />и результат.</h2>
+          <div class="about-copy">
+            <p>n0 — исполнительный и мета-слой между AI-агентами и источниками данных. Он отвечает за подключения, изоляцию арендаторов, проверку запросов, выполнение jobs и выдачу структурированных результатов.</p>
+            <p class="muted">Стек проекта: Go, REST API, PostgreSQL, NATS JetStream, Redis, S3-compatible storage и database adapters.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="projects shell" id="projects" aria-labelledby="projects-title">
+        <div class="section-label"><span>02</span> проекты</div>
+        <div class="projects-heading">
+          <h2 id="projects-title">Проекты</h2>
+            <p>Инструменты и системы<br />для реальных задач.</p>
+        </div>
+        <article class="project-card">
+          <div class="project-number">01 / 01</div>
+          <div class="project-main">
+            <div class="project-topline"><span class="project-kind">open source · active</span><span>n0</span></div>
+            <h3>n0</h3>
+            <p>AI-BI платформа для безопасного подключения AI-агентов к PostgreSQL, MySQL, ClickHouse, SQLite, MSSQL и BigQuery через единый execution layer.</p>
+            <div class="tags"><span>AI-BI</span><span>GO</span><span>DATA</span></div>
+            <div class="project-actions"><a class="project-link" href="projects/n0.html">читать о проекте <span>→</span></a><a class="repo-link" href="https://github.com/sickagent/n0" target="_blank" rel="noreferrer">репозиторий ↗</a></div>
+          </div>
+          <div class="project-mark" aria-hidden="true">n<span>0</span></div>
+        </article>
+      </section>
+
+      <section class="writing shell" id="writing" aria-labelledby="writing-title">
+        <div class="section-label"><span>03</span> статьи</div>
+        <div class="writing-heading">
+          <h2 id="writing-title">Статьи<br />и разборы</h2>
+          <p>Инженерные заметки<br />о том, как всё устроено.</p>
+        </div>
+        <a class="article-card" href="projects/n0/docs.html">
+          <span class="article-meta">01 / architecture · n0</span>
+          <span class="article-title">Как дать AI-агенту доступ к данным без прямого подключения к базе</span>
+          <span class="article-arrow">→</span>
+        </a>
+      </section>
+    </main>
+
+    <footer class="site-footer shell">
+      <span>© sickagent</span>
+      <span>сделано с вниманием к деталям</span>
+      <a href="https://github.com/sickagent" target="_blank" rel="noreferrer">github ↗</a>
+    </footer>
+    <script src="site.js" defer></script>
+  </body>
+</html>

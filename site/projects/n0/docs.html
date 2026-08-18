@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Документация n0: назначение, рабочий процесс и сценарии использования проекта sickagent." />
+    <meta name="author" content="sickagent" />
+    <meta name="theme-color" content="#f2f0e8" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="n0 — документация и сценарии использования" />
+    <meta property="og:description" content="Как n0 связывает задачи, файлы, заметки и AI-инструменты в одном рабочем пространстве." />
+    <link rel="canonical" href="https://sickagent.github.io/n0/projects/n0/docs.html" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <title>n0 — документация</title>
+  </head>
+  <body data-page="docs">
+    <a class="skip-link" href="#main-content">к содержимому</a>
+    <header class="site-header shell">
+      <a class="wordmark" href="../../index.html" aria-label="sickagent, на главную">sickagent<span>.</span></a>
+      <a class="back-link" href="../n0.html">← страница n0</a>
+      <div class="site-controls" aria-label="Настройки сайта"><button class="control-button" type="button" data-language-toggle>EN</button><button class="control-button theme-button" type="button" data-theme-toggle aria-label="Переключить тему">◐</button></div>
+    </header>
+
+    <main id="main-content" class="docs-page shell">
+      <div class="docs-layout">
+        <aside class="docs-sidebar" aria-label="Содержание документации">
+          <p class="eyebrow"><span class="status-dot"></span> n0 · docs</p>
+          <p class="docs-version">AI-BI платформа<br />Go 1.26 · active development</p>
+          <nav class="docs-nav">
+            <a href="#overview">Обзор</a>
+            <a href="#workflow">Рабочий процесс</a>
+            <a href="#cases">Сценарии</a>
+            <a href="#principles">Принципы</a>
+          </nav>
+        </aside>
+
+        <article class="docs-content">
+          <p class="eyebrow">проект / документация</p>
+          <h1>n0</h1>
+          <p class="docs-lede">AI-BI execution layer для безопасного подключения AI-агентов к корпоративным данным.</p>
+
+          <section id="overview" class="docs-section">
+            <p class="section-label"><span>01</span> обзор</p>
+            <h2>Контролируемый слой<br />между агентом и данными.</h2>
+            <p>AI-агент умеет сформировать SQL, но не должен получать постоянный connection string, напрямую подключаться к production-базе или самостоятельно решать вопросы доступа, retries, timeouts и аудита.</p>
+            <p>n0 принимает задачу через Agent Gateway, добавляет tenant context, проверяет запрос политиками, ставит его в асинхронную очередь и возвращает структурированный результат для анализа, графиков или отчётов.</p>
+            <div class="docs-note"><strong>Коротко</strong><span>Агент решает, что спросить. n0 контролирует, кто имеет доступ, какой запрос допустим и как он будет исполнен.</span></div>
+          </section>
+
+          <section id="workflow" class="docs-section">
+            <p class="section-label"><span>02</span> workflow</p>
+            <h2>Путь аналитического запроса</h2>
+            <ol class="workflow-list">
+              <li><span>01</span><div><h3>Gateway</h3><p>Agent или Web Admin отправляет запрос по REST API. Gateway проверяет JWT, workspace и tenant context.</p></div></li>
+              <li><span>02</span><div><h3>Query guardrails</h3><p>n0 принимает только одиночные SELECT, проверяет разрешённые таблицы, добавляет ограничения и блокирует DDL/DML.</p></div></li>
+              <li><span>03</span><div><h3>JetStream job</h3><p>Запрос становится асинхронной job. Query Engine и worker выполняют её с bounded timeouts и контролируемыми retries.</p></div></li>
+              <li><span>04</span><div><h3>Результат и аудит</h3><p>Клиент получает status и постраничный result. Метаданные и большие payload сохраняются, действия попадают в audit pipeline.</p></div></li>
+            </ol>
+          </section>
+
+          <section id="cases" class="docs-section">
+            <p class="section-label"><span>03</span> сценарии</p>
+            <h2>Реальные сценарии<br />интеграции</h2>
+            <div class="case-grid">
+              <article class="case-card"><span>CASE 01</span><h3>AI data analyst</h3><p>Корпоративный агент изучает доступные схемы и отвечает на вопросы по данным без прямого connection string.</p><strong>Результат →</strong><em>SQL и данные проходят через единый контур доступа и проверок.</em></article>
+              <article class="case-card"><span>CASE 02</span><h3>Embedded analytics</h3><p>Продукт отправляет аналитические задачи через стабильный API и получает структурированные строки для собственного UI.</p><strong>Результат →</strong><em>Графики и dashboards остаются на стороне продукта.</em></article>
+              <article class="case-card"><span>CASE 03</span><h3>Self-service data access</h3><p>Команды регистрируют разрешённые источники и выполняют ограниченные read-only запросы через единый gateway.</p><strong>Результат →</strong><em>Подключения и jobs изолированы по tenant_id.</em></article>
+              <article class="case-card"><span>CASE 04</span><h3>Adapter ecosystem</h3><p>Команда добавляет специфичный DWH или корпоративный источник через adapter/plugin, не меняя потребителей API.</p><strong>Результат →</strong><em>Новые источники подключаются к общей модели execution layer.</em></article>
+            </div>
+          </section>
+
+          <section id="principles" class="docs-section">
+            <p class="section-label"><span>04</span> принципы</p>
+            <h2>Безопасность<br />и границы</h2>
+            <div class="principle-rows">
+              <div><strong>Zero trust к агенту</strong><span>Агент не получает прямой доступ к базе и не считается доверенной стороной.</span></div>
+              <div><strong>Tenant isolation</strong><span>Владение connection и job проверяется на каждой публичной операции.</span></div>
+              <div><strong>Query sandbox</strong><span>Одиночные SELECT, table allowlist, tenant predicate injection и контроль LIMIT.</span></div>
+              <div><strong>Credential protection</strong><span>Параметры подключения шифруются AES-256-GCM и не возвращаются клиенту.</span></div>
+            </div>
+          </section>
+
+          <div class="docs-footer-cta"><p>Исходный код и статус разработки</p><a class="button button-dark" href="https://github.com/sickagent/n0" target="_blank" rel="noreferrer">открыть репозиторий n0 ↗</a></div>
+        </article>
+      </div>
+    </main>
+
+    <footer class="site-footer shell"><span>© sickagent</span><a href="../../index.html">sickagent.</a></footer>
+    <script src="../../site.js" defer></script>
+  </body>
+</html>

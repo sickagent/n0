@@ -1,0 +1,5 @@
+# Reference build-time configuration for Kubernetes.
+# Vite substitutes these values during `npm run build`; it does not read this
+# YAML file at runtime. Use build args or a generated .env.production file.
+VITE_API_BASE_URL: "https://api.example.com"
+VITE_CM_API_BASE_URL: "https://connection-manager.example.com"
